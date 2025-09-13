@@ -1,0 +1,21 @@
+/* NOTE: All selectors in this file must be scoped to the #vlsm-calculator-tool container to avoid global style leaks. */
+/* VLSM Calculator Tool CSS */
+#vlsm-calculator-tool .tool-header h2 {
+  color: #1976d2;
+}
+#vlsm-calculator-tool .results-table th, #vlsm-calculator-tool .results-table td {
+  padding: 0.25em 0.75em;
+  text-align: left;
+}
+#vlsm-calculator-tool .progress-indicator {
+  color: #1976d2;
+  font-weight: 500;
+}
+#vlsm-calculator-tool .user-feedback {
+  color: #1976d2;
+  font-style: italic;
+}
+#vlsm-calculator-tool .error-message {
+  color: #d32f2f;
+  font-weight: 500;
+}

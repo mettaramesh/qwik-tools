@@ -1,0 +1,91 @@
+/* Sidebar and navigation styles for Qwik Tools */
+
+.category-header {
+  padding: 8px 18px 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+.category-header span {
+  font-size: 1.08rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #1a237e;
+  font-family: inherit;
+}
+
+.category-items {
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+}
+.category-items.expanded {
+  display: flex;
+  flex-direction: column;
+}
+
+.chevron {
+  transition: transform 0.3s ease;
+}
+.chevron.rotate {
+  transform: rotate(180deg);
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 10px 38px 10px 32px;
+  border-radius: 6px;
+  transition: background 0.15s, color 0.15s;
+  position: relative;
+  margin-bottom: 4px;
+  font-size: 1rem;
+  font-family: inherit;
+  color: #222;
+  background: none;
+  text-decoration: none;
+  white-space: normal;
+  overflow: visible;
+}
+.nav-item .tool-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: block;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #222;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+}
+.nav-item .star-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 1em;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1;
+  pointer-events: auto;
+}
+.nav-item:hover, .nav-item.active {
+  background: #e3f1ff;
+  color: #1976d2 !important;
+}
+.nav-item:hover .star-btn {
+  color: #1976d2;
+}
+
+.nav-category {
+  margin-bottom: 10px;
+}
+.nav-category.collapsed .category-items {
+  display: none !important;
+}

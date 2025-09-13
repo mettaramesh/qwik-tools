@@ -1,0 +1,9 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:import/recommended",
+    "plugin:sonarjs/recommended",
+    "plugin:security/recommended"
+  ],
+  "env": { "browser": true, "es2020": true, "node": true }
+}
