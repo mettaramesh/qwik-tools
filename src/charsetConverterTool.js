@@ -461,7 +461,7 @@ export function setupCharsetConverterTool(container) {
   // Capability note
   if (!hasTextDecoder) {
     const warn=document.createElement('div');
-    warn.className='small'; warn.style.color='var(--color-error, #c0392b)';
+  warn.className='small charset-error-color';
     warn.textContent='Limited mode: This browser lacks TextDecoder; built-in CP037 still works; other decoders unavailable.';
     compatBox.appendChild(warn);
   }
