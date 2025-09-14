@@ -4,19 +4,22 @@
 const fs = require('fs');
 const path = require('path');
 
+// Get all .css and .js files in the project root (excluding node_modules, dist, scripts)
+const rootDir = path.resolve(__dirname, '..');
+const distDir = path.resolve(rootDir, 'dist');
+
+function getRootFilesByExt(ext) {
+  return fs.readdirSync(rootDir)
+    .filter(f => f.endsWith(ext) && fs.statSync(path.join(rootDir, f)).isFile());
+}
+
 const filesToCopy = [
-  'js-yaml.min.js',
-  'xmllint.js',
-  'sidebar.js',
-  'service-worker.js',
-  'cron-js-parser.min.js'
+  ...getRootFilesByExt('.js'),
+  ...getRootFilesByExt('.css')
 ];
 
-const srcDir = path.resolve(__dirname, '..');
-const distDir = path.resolve(__dirname, '../dist');
-
 filesToCopy.forEach(file => {
-  const src = path.join(srcDir, file);
+  const src = path.join(rootDir, file);
   const dest = path.join(distDir, file);
   if (fs.existsSync(src)) {
     fs.copyFileSync(src, dest);
