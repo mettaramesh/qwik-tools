@@ -119,7 +119,7 @@ let __cronLibsReady;
 async function ensureCronLibsLoaded() {
   if (!__cronLibsReady) {
     __cronLibsReady = (async () => {
-      await loadScript('/cron-js-parser.min.js');
+  await loadScript('./cron-js-parser.min.js');
       // normalize various globals into window["cron-js-parser"]
       if (!window["cron-js-parser"]) {
         const maybe = window.CronParser || window.cronParser || window.CRON_PARSER;
