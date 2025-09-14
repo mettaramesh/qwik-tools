@@ -8,7 +8,7 @@ export function loadHexViewerTool(container) {
             <p>Paste or type text below. Display each character's UTF-8 hex or code point. Hover hex to see character.</p>
         </div>
         <div class="tool-interface">
-            <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px;">
+            <div class="flex-row gap-10 align-center mb-8">
                 <textarea id="hexInput" rows="4" placeholder="Type or paste text here..."></textarea>
                 <button id="hexShowBtn" class="hex-btn">Show Hex Codes</button>
             </div>
@@ -16,7 +16,19 @@ export function loadHexViewerTool(container) {
                 <label><input type="radio" name="hexViewMode" value="hex" checked> Hexcode</label>
                 <label><input type="radio" name="hexViewMode" value="codepoint"> Code Point</label>
             </div>
-            <div class="hex-output-toolbar" style="display:flex;gap:12px;margin-bottom:8px;align-items:center;">
+            <div class="hex-output-toolbar flex-row gap-12 mb-8 align-center">
+// Load external stylesheet for hexViewerTool
+function ensureHexViewerToolStyle(){
+    if (!document.getElementById('hex-viewer-tool-style-link')) {
+        const link = document.createElement('link');
+        link.id = 'hex-viewer-tool-style-link';
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = './hexViewerTool.css';
+        document.head.appendChild(link);
+    }
+}
+ensureHexViewerToolStyle();
                 <button id="hexCopyBtn" class="hex-btn">Copy Output</button>
                 <button id="hexClearBtn" class="hex-btn">Clear Output</button>
             </div>

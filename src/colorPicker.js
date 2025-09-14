@@ -1,3 +1,15 @@
+// Load external stylesheet for color picker tool
+function ensureColorPickerStyle(){
+    if (!document.getElementById('color-picker-style-link')) {
+        const link = document.createElement('link');
+        link.id = 'color-picker-style-link';
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = './colorPicker.css';
+        document.head.appendChild(link);
+    }
+}
+ensureColorPickerStyle();
 import { hexToRgb, rgbToHsl } from './utils.js';
 window.hexToRgb = hexToRgb;
 window.rgbToHsl = rgbToHsl;
@@ -23,7 +35,7 @@ export function loadColorPicker(container) {
                     <input type="text" id="hex-input" class="form-control text-mono" value="#3B82F6">
                 </div>
             </div>
-            <div class="color-preview" id="color-preview" style="background-color: #3B82F6;"></div>
+            <div class="color-preview" id="color-preview"></div>
             <div class="color-info">
                 <div class="color-value">
                     <label>HEX</label>

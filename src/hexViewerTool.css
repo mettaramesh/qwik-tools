@@ -1,0 +1,6 @@
+/* Extracted from hexViewerTool.js */
+.flex-row { display: flex !important; }
+.gap-10 { gap: 10px !important; }
+.gap-12 { gap: 12px !important; }
+.align-center { align-items: center !important; }
+.mb-8 { margin-bottom: 8px !important; }

@@ -29,9 +29,21 @@ export function loadHexAsciiConverter(container) {
                 <div class="metrics" id="hexMetrics"></div>
             </div>
         </div>
-        <div class="row" style="margin-top:18px;justify-content:center">
+        <div class="row mt-18 jc-center">
             <button class="btn btn--outline" id="btnSwap">Swap ⮂</button>
         </div>
+// Load external stylesheet for hexAsciiConverter tool
+function ensureHexAsciiConverterStyle(){
+    if (!document.getElementById('hex-ascii-converter-style-link')) {
+        const link = document.createElement('link');
+        link.id = 'hex-ascii-converter-style-link';
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = './hexAsciiConverter.css';
+        document.head.appendChild(link);
+    }
+}
+ensureHexAsciiConverterStyle();
     `;
     setupHexAsciiConverter();
 }

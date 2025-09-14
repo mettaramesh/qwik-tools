@@ -1,0 +1,26 @@
+/* Extracted from charsetConverterTool.js */
+.mt-8 { margin-top: 8px !important; }
+.mt-16 { margin-top: 16px !important; }
+.mt-24 { margin-top: 24px !important; }
+.mb-10 { margin-bottom: 10px !important; }
+.ml-10 { margin-left: 10px !important; }
+.ml-12 { margin-left: 12px !important; }
+.ml-18 { margin-left: 18px !important; }
+.align-end { align-items: flex-end !important; }
+.flex-1 { flex: 1 !important; }
+.minw-180 { min-width: 180px !important; }
+.w-100 { width: 100% !important; }
+.d-none { display: none !important; }
+.fw-400 { font-weight: 400 !important; }
+.ebc-preview {
+  margin-top: 8px;
+  min-height: 120px;
+  background: var(--color-background,#f9f9f9);
+  border: 1.5px solid var(--color-border,#e0e0e0);
+  color: var(--color-text,#13343b);
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 1.05em;
+  width: 100%;
+  resize: vertical;
+}

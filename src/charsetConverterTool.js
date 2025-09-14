@@ -1,3 +1,15 @@
+// Load external stylesheet for charset converter tool
+function ensureCharsetConverterStyle(){
+  if (!document.getElementById('charset-converter-style-link')) {
+    const link = document.createElement('link');
+    link.id = 'charset-converter-style-link';
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = './charsetConverterTool.css';
+    document.head.appendChild(link);
+  }
+}
+ensureCharsetConverterStyle();
 // Charset Converter Tool + ASCII↔EBCDIC (IBM 037) + NEL toggle + Quick Panel
 // Browser-native, no polyfills. Keeps your UI/style tokens intact.
 
@@ -23,11 +35,11 @@ export function loadCharsetConverterTool(container) {
             <span class="small">Used when the input mode provides bytes (Base64/Hex/File).</span>
           </div>
         </div>
-        <div class="row small" style="margin-top:8px">
-          <label><input type="checkbox" id="normalizeNEL" checked> Normalize NEL (U+0085) → LF</label>
+        <div class="row small mt-8">
+          <label><input type="checkbox" id="normalizeNEL" checked> Normalize NEL (U+0085)  LF</label>
         </div>
 
-        <div id="fileBox" class="file row" style="display:none">
+        <div id="fileBox" class="file row d-none">
           <input type="file" id="fileInput" />
           <span id="fileInfo" class="small"></span>
         </div>
@@ -35,7 +47,7 @@ export function loadCharsetConverterTool(container) {
         <textarea id="inputArea" rows="10" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="Paste your text / Base64 / Hex / URL-encoded here..."></textarea>
 
         <div class="row">
-          <button class="btn btn--primary" id="btnConvert">Convert ⮕</button>
+          <button class="btn btn--primary" id="btnConvert">Convert 5</button>
           <button class="btn btn--outline" id="btnSwap">Swap panels</button>
           <button class="btn btn--outline" id="btnClear">Clear</button>
         </div>
@@ -54,7 +66,7 @@ export function loadCharsetConverterTool(container) {
           <div class="row">
             <label for="encodeWith">Encode string as</label>
             <select id="encodeWith" class="base-select"></select>
-            <label style="margin-left:10px;"><input type="checkbox" id="addBOM"> Add BOM</label>
+            <label class="ml-10"><input type="checkbox" id="addBOM"> Add BOM</label>
           </div>
         </div>
         <textarea id="outputArea" rows="10" readonly placeholder="Converted output will appear here..."></textarea>
@@ -69,33 +81,33 @@ export function loadCharsetConverterTool(container) {
       </div>
     </div>
 
-    <!-- QUICK PANEL: EBCDIC (CP037) file → ASCII -->
-    <div class="card card--quick-ebc" style="margin-top:24px;">
-      <h3 style="margin-bottom:10px;">Quick Convert: <span class="hl">EBCDIC (CP037)</span> file <span style="font-weight:400">→</span> ASCII</h3>
-      <div class="row" style="margin-bottom:10px;align-items:flex-end;">
-        <div style="flex:1;min-width:180px;">
+    <!-- QUICK PANEL: EBCDIC (CP037) file  ASCII -->
+    <div class="card card--quick-ebc mt-24">
+      <h3 class="mb-10">Quick Convert: <span class="hl">EBCDIC (CP037)</span> file <span class="fw-400"></span> ASCII</h3>
+      <div class="row mb-10 align-end">
+        <div class="flex-1 minw-180">
           <label class="form-label" for="ebcFileInput">Select EBCDIC file</label>
-          <input type="file" id="ebcFileInput" class="form-control" style="width:100%;" />
+          <input type="file" id="ebcFileInput" class="form-control w-100" />
         </div>
-        <span id="ebcFileInfo" class="small" style="margin-left:12px;"></span>
+        <span id="ebcFileInfo" class="small ml-12"></span>
       </div>
-      <div class="row small" style="margin-bottom:10px;">
-        <label><input type="checkbox" id="ebcNormalizeNEL" checked> Normalize NEL (U+0085) → LF</label>
-        <label style="margin-left:18px;"><input type="checkbox" id="ebcCRLF"> Use CRLF line endings in download</label>
+      <div class="row small mb-10">
+        <label><input type="checkbox" id="ebcNormalizeNEL" checked> Normalize NEL (U+0085)  LF</label>
+        <label class="ml-18"><input type="checkbox" id="ebcCRLF"> Use CRLF line endings in download</label>
       </div>
-      <div class="row" style="margin-bottom:10px;">
+      <div class="row mb-10">
         <button class="btn btn--primary" id="btnEbcPreview">Preview</button>
         <button class="btn btn--outline" id="btnEbcDownload">Download ASCII .txt</button>
       </div>
-      <textarea id="ebcPreview" rows="8" readonly placeholder="Preview (first 2,000 chars)…" style="margin-top:8px;min-height:120px;background:var(--color-background,#f9f9f9);border:1.5px solid var(--color-border,#e0e0e0);color:var(--color-text,#13343b);padding:10px 12px;border-radius:8px;font-size:1.05em;width:100%;resize:vertical;"></textarea>
-      <div class="footer small" style="margin-top:8px;">This panel ignores other encoders/decoders and always treats input as CP037 bytes → ASCII/Unicode text.</div>
+      <textarea id="ebcPreview" rows="8" readonly placeholder="Preview (first 2,000 chars)" class="ebc-preview"></textarea>
+      <div class="footer small mt-8">This panel ignores other encoders/decoders and always treats input as CP037 bytes  ASCII/Unicode text.</div>
     </div>
 
-    <div class="card" style="margin-top:16px">
+    <div class="card mt-16">
       <h3>Notes</h3>
       <ul class="small">
         <li><strong>CP037</strong> is U.S./Canada EBCDIC; other locales use different pages (e.g., 1140 adds the euro symbol).</li>
-        <li><strong>NEL</strong> is an EBCDIC newline; many web tools don’t treat <code>U+0085</code> as a line break. Toggle normalization as needed.</li>
+        <li><strong>NEL</strong> is an EBCDIC newline; many web tools dont treat <code>U+0085</code> as a line break. Toggle normalization as needed.</li>
       </ul>
     </div>
   `;

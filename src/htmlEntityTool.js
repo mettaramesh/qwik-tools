@@ -21,20 +21,20 @@ export function loadHTMLEntityTool(container) {
         <textarea id="htmlInput" class="form-control" rows="6" placeholder="Paste or type HTML or text..."></textarea>
       </div>
 
-      <div class="row" style="margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+  <div class="row mt-12 d-flex gap-8 align-center flex-wrap">
         <button class="btn btn--primary" id="btnEncode">Encode HTML</button>
         <button class="btn btn--outline" id="btnDecode">Decode HTML</button>
         <button class="btn btn--outline" id="btnClear">Clear</button>
         <button class="btn btn--outline" id="btnCopy">Copy Output</button>
 
         <!-- Visible toggles -->
-        <label style="margin-left:8px;display:flex;align-items:center;gap:6px;font-size:.9rem;">
+  <label class="ml-8 d-flex align-center gap-6 fs-09">
           <input id="toggleNumericEncode" type="checkbox" />
           Numeric-encode non-ASCII
         </label>
 
-        <label style="display:flex;align-items:center;gap:6px;font-size:.9rem;">
-          <select id="sanitizationLevel" style="font-size:.9rem;padding:4px;border-radius:4px;">
+  <label class="d-flex align-center gap-6 fs-09">
+          <select id="sanitizationLevel" class="fs-09 p-4 br-4">
             <option value="off">Sanitize: Off</option>
             <option value="moderate" selected>Sanitize: Moderate</option>
             <option value="aggressive">Sanitize: Aggressive</option>
@@ -42,23 +42,35 @@ export function loadHTMLEntityTool(container) {
         </label>
       </div>
 
-      <div class="row" style="margin-top:12px;">
+  <div class="row mt-12">
         <label for="htmlOutput" class="form-label">Output</label>
         <textarea id="htmlOutput" class="form-control" rows="6" readonly placeholder="Result will appear here..."></textarea>
       </div>
-      <div class="row" style="margin-top:8px;">
+  <div class="row mt-8">
         <span id="htmlStatus" class="small muted"></span>
       </div>
-      <div class="row" style="margin-top:12px;">
+  <div class="row mt-12">
         <button class="btn btn--outline" id="btnToggleView">Show Preview</button>
       </div>
 
       <!-- Preview container: iframe (rendered preview) + escaped block + caption -->
-      <div class="row" style="margin-top:12px;">
-        <div id="htmlPreviewContainer" class="form-control" style="min-height:120px;background:#f8f9fa;border:1.5px solid var(--color-border,#e0e0e0);border-radius:8px;padding:12px 14px;font-size:0.95rem;overflow:auto;">
-          <iframe id="htmlPreviewFrame" sandbox style="width:100%;height:260px;border:1px solid rgba(0,0,0,0.06);border-radius:6px;display:none;background:white;"></iframe>
-          <pre id="htmlPreviewEscaped" style="white-space:pre-wrap;word-wrap:break-word;margin:0;display:none;background:transparent;border:none;padding:0;"></pre>
-          <div id="htmlPreviewCaption" class="small muted" style="margin-top:8px;color:var(--muted,#666);"></div>
+  <div class="row mt-12">
+  <div id="htmlPreviewContainer" class="form-control html-preview-container">
+          <iframe id="htmlPreviewFrame" sandbox class="html-preview-frame"></iframe>
+          <pre id="htmlPreviewEscaped" class="html-preview-escaped"></pre>
+          <div id="htmlPreviewCaption" class="small muted mt-8 color-muted"></div>
+// Load external stylesheet for htmlEntityTool
+function ensureHtmlEntityToolStyle(){
+  if (!document.getElementById('html-entity-tool-style-link')) {
+    const link = document.createElement('link');
+    link.id = 'html-entity-tool-style-link';
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = './htmlEntityTool.css';
+    document.head.appendChild(link);
+  }
+}
+ensureHtmlEntityToolStyle();
         </div>
       </div>
     </div>

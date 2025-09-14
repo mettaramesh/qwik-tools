@@ -1,0 +1,39 @@
+/* Extracted from htmlEntityTool.js */
+.mt-8 { margin-top: 8px !important; }
+.mt-12 { margin-top: 12px !important; }
+.ml-8 { margin-left: 8px !important; }
+.gap-8 { gap: 8px !important; }
+.gap-6 { gap: 6px !important; }
+.d-flex { display: flex !important; }
+.align-center { align-items: center !important; }
+.flex-wrap { flex-wrap: wrap !important; }
+.fs-09 { font-size: .9rem !important; }
+.p-4 { padding: 4px !important; }
+.br-4 { border-radius: 4px !important; }
+.color-muted { color: var(--muted,#666) !important; }
+.html-preview-container {
+  min-height: 120px;
+  background: #f8f9fa;
+  border: 1.5px solid var(--color-border,#e0e0e0);
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 0.95rem;
+  overflow: auto;
+}
+.html-preview-frame {
+  width: 100%;
+  height: 260px;
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 6px;
+  display: none;
+  background: white;
+}
+.html-preview-escaped {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin: 0;
+  display: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
