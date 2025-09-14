@@ -7,3 +7,8 @@
 #cronInfoBox.cron-info-visible {
   display: flex !important;
 }
+
+.cron-input-lg {
+  font-size: 1.1em;
+  width: 100%;
+}

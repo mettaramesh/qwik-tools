@@ -178,7 +178,7 @@ function getBuilderPanelHTML() {
     <div id="tab-advanced" class="hidden card card--section stack">
       <div class="field">
         <label>Advanced Expression</label>
-        <input id="advanced-cron" type="text" class="code" placeholder="e.g. 0 0/5 1,15 * 1-5" style="font-size:1.1em;width:100%;" />
+  <input id="advanced-cron" type="text" class="code cron-input-lg" placeholder="e.g. 0 0/5 1,15 * 1-5" />
       </div>
       <div class="field">
         <label>Quick Info</label>
@@ -192,7 +192,7 @@ function getBuilderPanelHTML() {
     <div id="tab-special" class="hidden card card--section stack">
       <div class="field">
         <label>Special Expression (W/L/?/#)</label>
-        <input id="special-cron" type="text" class="code" placeholder="e.g. 0 0 1W * ?" style="font-size:1.1em;width:100%;" />
+  <input id="special-cron" type="text" class="code cron-input-lg" placeholder="e.g. 0 0 1W * ?" />
       </div>
       <div class="field">
         <label>Quick Info</label>
@@ -205,7 +205,7 @@ function getBuilderPanelHTML() {
     <div id="tab-parse" class="hidden card card--section stack">
       <div class="field">
         <label>Paste or Enter Any Cron Expression</label>
-        <input id="parse-cron" type="text" class="code" placeholder="e.g. 0 12 * * MON-FRI" style="font-size:1.1em;width:100%;" />
+  <input id="parse-cron" type="text" class="code cron-input-lg" placeholder="e.g. 0 12 * * MON-FRI" />
       </div>
       <div class="btns"><button id="btnParse" class="btn btn--primary">Parse</button></div>
       <div class="field"><label>Explanation</label><div class="status" id="parseExplainBox"><div id="parseExplainText" class="small">—</div></div></div>
