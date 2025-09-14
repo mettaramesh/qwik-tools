@@ -1453,3 +1453,44 @@ select.form-control {
   border-radius: var(--radius-lg, 12px) !important;
   /* Remove box-shadow override to preserve UI */
 }
+
+.why-qwik-header-btn {
+  font-weight: bold;
+  color: #1976d2;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin: 0 8px;
+}
+
+.nav-favourites-header {
+  cursor: default;
+}
+
+.clipboard-modal-center {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.35);
+  align-items: center;
+  justify-content: center;
+}
+.clipboard-modal-content {
+  background: #fff;
+  padding: 2em 2.5em;
+  border-radius: 10px;
+  max-width: 400px;
+  margin: auto;
+  box-shadow: 0 4px 32px 0 rgba(0,0,0,0.18);
+  text-align: center;
+}
+.clipboard-modal-title {
+  margin-top: 0;
+}
+.clipboard-modal-btn {
+  margin: 0 8px;
+}
