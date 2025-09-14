@@ -39,40 +39,10 @@ function validateJSONSchema(json, schema) {
     return validate(json, schema, '');
 }
 
-export function load(container) {
-  container.innerHTML = `
-    <div class="tool-header"><h2>JSON Validator</h2><p>Validate your JSON against a JSON Schema (Draft 7 subset supported)</p></div>
-    <div class="tool-interface">
-      <div class="tool-controls">
-        <button class="btn btn--secondary" id="json-validate-btn">Validate</button>
-        <button class="btn btn--outline" id="json-clear-btn">Clear</button>
-      </div>
-      <div class="io-container">
-        <div class="input-section">
-          <div class="section-header">
-            <label class="form-label">Input JSON</label>
-            <button class="btn btn--sm copy-btn" data-target="json-validator-input">Copy</button>
-          </div>
-          <textarea id="json-validator-input" class="form-control code-input" placeholder="Paste or type your JSON here..." rows="10"></textarea>
-        </div>
-        <div class="input-section">
-          <div class="section-header">
-            <label class="form-label">JSON Schema (optional)</label>
-            <button class="btn btn--sm copy-btn" data-target="json-validator-schema">Copy</button>
-          </div>
-          <textarea id="json-validator-schema" class="form-control code-input" placeholder="Paste your JSON Schema here..." rows="8"></textarea>
-        </div>
-        <div class="output-section">
-          <div class="section-header">
-            <label class="form-label">Validation Result</label>
-            <button class="btn btn--sm copy-btn" data-target="json-validator-output">Copy</button>
-          </div>
-          <textarea id="json-validator-output" class="form-control code-input" readonly rows="4"></textarea>
-        </div>
-      </div>
-      <div id="json-validator-error" class="error-message hidden"></div>
-    </div>
-  `;
+export async function load(container) {
+  const resp = await fetch('jsonValidator.html');
+  const html = await resp.text();
+  container.innerHTML = html;
   setup();
 }
 

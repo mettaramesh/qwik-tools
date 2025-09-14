@@ -49,40 +49,11 @@ function isValidYAML(str) {
   }
 }
 
-export function loadJSONYamlTool(container) {
-    container.innerHTML = `
-        <div class="tool-header">
-            <h2>JSON ↔ YAML Converter</h2>
-            <p>Convert between JSON and YAML formats</p>
-        </div>
-        <div class="tool-interface">
-            <button class="btn btn--secondary" id="to-yaml">JSON → YAML</button>
-            <button class="btn btn--outline" id="to-json">YAML → JSON</button>
-            <button class="btn btn--outline" id="json-yaml-clear-btn">Clear</button>
-            <label style="margin-left:16px;font-size:0.98em;vertical-align:middle;">
-                <input type="checkbox" id="force-quotes-checkbox" style="vertical-align:middle;margin-right:4px;">Quote all keys in YAML
-            </label>
-            <div class="io-container">
-                <div class="input-section">
-                    <div class="section-header">
-                        <label class="form-label">Input</label>
-                        <button class="btn btn--sm copy-btn" data-target="json-yaml-input">Copy</button>
-                    </div>
-                    <textarea id="json-yaml-input" class="form-control code-input" placeholder="Paste or type JSON or YAML here..." rows="12"></textarea>
-                </div>
-                <div class="output-section">
-                    <div class="section-header">
-                        <label class="form-label">Output</label>
-                        <button class="btn btn--sm copy-btn" data-target="json-yaml-output">Copy</button>
-                    </div>
-                    <textarea id="json-yaml-output" class="form-control code-input" readonly rows="12"></textarea>
-                </div>
-            </div>
-            <div id="json-yaml-status" class="hidden"></div>
-        </div>
-    `;
-
-    setTimeout(() => {
+export async function loadJSONYamlTool(container) {
+  const resp = await fetch('jsonYamlTool.html');
+  const html = await resp.text();
+  container.innerHTML = html;
+  setTimeout(() => {
         const input = document.getElementById('json-yaml-input');
         const output = document.getElementById('json-yaml-output');
         const status = document.getElementById('json-yaml-status');
@@ -145,6 +116,6 @@ export function loadJSONYamlTool(container) {
     }, 0);
 }
 
-export function load(container, toolId) {
-    loadJSONYamlTool(container);
+export async function load(container, toolId) {
+  await loadJSONYamlTool(container);
 }

@@ -1,0 +1,24 @@
+<!-- Text Comparer Tool HTML (template only, logic in JS) -->
+<div class="tc-app" role="application" aria-label="Text Comparer">
+  <div class="tc-header">
+    <div>
+      <div class="tc-title">Text Comparer</div>
+      <div class="tc-sub">Local, fast, structured-aware diffs for JSON / XML / CSV / plain text</div>
+    </div>
+    <div class="tc-top">
+      <div class="tc-options">
+        <label><input type="checkbox" id="tc-word-level"> Word-level</label>
+        <label><input type="checkbox" id="tc-ignore-ws"> Ignore whitespace</label>
+        <label><input type="checkbox" id="tc-ignore-case"> Ignore case</label>
+        <label><input type="checkbox" id="tc-show-lines" checked> Show lines</label>
+      </div>
+      <input id="tc-search" class="tc-search" placeholder="Search..." aria-label="Search diff" />
+      <button id="tc-search-prev" class="tc-btn" title="Previous match">&#8593;</button>
+      <button id="tc-search-next" class="tc-btn" title="Next match">&#8595;</button>
+      <div class="tc-controls">
+        <button id="tc-compare" class="tc-btn primary" title="Compare (Ctrl/Cmd+B)">Compare</button>
+      </div>
+    </div>
+  </div>
+  <!-- ...rest of the template (editors, result, etc.)... -->
+</div>

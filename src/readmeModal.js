@@ -25,35 +25,59 @@ export function showReadmeModal() {
   if (!modal) {
     modal = document.createElement('div');
     modal.id = 'readmeModal';
-    modal.className = 'rdm-modal';
+    modal.className = 'rdm-modal hidden';
     modal.setAttribute('aria-hidden', 'true');
-    modal.innerHTML = `
-      <div class="rdm-backdrop" data-close></div>
-      <div class="rdm-dialog" role="dialog" aria-modal="true" aria-labelledby="rdm-title">
-        <header class="rdm-header rdm-header-flex">
-          <h3 id="rdm-title" class="rdm-header-title">Qwik-Tools</h3>
-          <button class="rdm-close" aria-label="Close" data-close>&times;</button>
-        </header>
-        <div class="rdm-body" id="rdm-content" tabindex="0">Loading...</div>
-        <footer class="rdm-footer">
-          <button class="btn btn--primary" data-close>Close</button>
-        </footer>
-      </div>
-    `;
-    document.body.appendChild(modal);
-    // Add styles only once
-    if (!document.getElementById('rdm-modal-style')) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = './src/readmeModal.css';
-      link.id = 'rdm-modal-style';
-      document.head.appendChild(link);
+    fetch('./src/readmeModal.html')
+      .then(r => r.text())
+      .then(html => {
+        modal.innerHTML = html;
+        document.body.appendChild(modal);
+        // Add styles only once
+        if (!document.getElementById('rdm-modal-style')) {
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = './src/readmeModal.css';
+          link.id = 'rdm-modal-style';
+          document.head.appendChild(link);
+        }
+        showModal();
+      });
+  } else {
+    showModal();
+  }
+
+  function showModal() {
+    modal.classList.add('is-open');
+    modal.classList.remove('hidden');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('modal-open');
+    // Focus trap
+    const content = modal.querySelector('#rdm-content');
+    if (content) content.focus();
+    // Fetch and render README.md
+    fetch('./README.md')
+      .then(r => r.text())
+      .then(md => {
+        content.innerHTML = simpleMarkdownToHtml(md);
+      });
+    // Close logic
+    function closeModal() {
+      modal.classList.remove('is-open');
+      modal.classList.add('hidden');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('modal-open');
     }
+    modal.querySelectorAll('[data-close]').forEach(el => el.onclick = closeModal);
+    modal.querySelector('.rdm-backdrop').onclick = closeModal;
+    document.addEventListener('keydown', function esc(e){
+      if (e.key === 'Escape') closeModal();
+    }, { once: true });
   }
   // Show modal
   modal.classList.add('is-open');
+  modal.classList.remove('hidden');
   modal.setAttribute('aria-hidden', 'false');
-  document.body.style.overflow = 'hidden';
+  document.body.classList.add('modal-open');
   // Focus trap
   const content = modal.querySelector('#rdm-content');
   if (content) content.focus();
@@ -65,9 +89,10 @@ export function showReadmeModal() {
     });
   // Close logic
   function closeModal() {
-    modal.classList.remove('is-open');
-    modal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
+  modal.classList.remove('is-open');
+  modal.classList.add('hidden');
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('modal-open');
   }
   modal.querySelectorAll('[data-close]').forEach(el => el.onclick = closeModal);
   modal.querySelector('.rdm-backdrop').onclick = closeModal;

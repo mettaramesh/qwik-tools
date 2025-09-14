@@ -2,42 +2,10 @@
 // 100% code coverage: Handles lorem ipsum text generation and UI setup.
 import { escapeHtml } from './utils.js';
 
-export function loadLoremIpsum(container) {
-    // 100% code coverage: Renders the Lorem Ipsum Generator tool UI.
-    container.innerHTML = `
-        <div class="tool-header">
-            <h2>Lorem Ipsum Generator</h2>
-            <p>Generate Lorem Ipsum placeholder text</p>
-        </div>
-        <div class="tool-interface">
-            <div class="tool-form-row">
-                <div class="form-group">
-                    <label class="form-label">Type</label>
-                    <select id="lorem-type" class="form-control">
-                        <option value="words">Words</option>
-                        <option value="sentences">Sentences</option>
-                        <option value="paragraphs" selected>Paragraphs</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Count</label>
-                    <input type="number" id="lorem-count" class="form-control" value="3" min="1" max="50">
-                </div>
-                <div class="form-group">
-                    <button class="btn btn--secondary" id="lorem-generate-btn">Generate</button>
-                </div>
-            </div>
-            <div class="single-input-tool">
-                <div class="output-section">
-                    <div class="section-header">
-                        <label class="form-label">Generated Text</label>
-                        <button class="btn btn--sm copy-btn" data-target="lorem-output">Copy</button>
-                    </div>
-                    <textarea id="lorem-output" class="form-control" readonly rows="15"></textarea>
-                </div>
-            </div>
-        </div>
-    `;
+export async function loadLoremIpsum(container) {
+    // Load HTML template from external file
+    const html = await fetch('src/loremIpsum.html').then(r => r.text());
+    container.innerHTML = html;
 }
 
 export function setupLoremIpsum() {

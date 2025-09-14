@@ -542,50 +542,12 @@ function cleanJsonFromXml(obj) {
   return obj;
 }
 
-export function load(toolContent) {
-    toolContent.innerHTML = `
-        <div class="tool-header">
-            <h2>JSON ↔ XML Converter</h2>
-            <p>Convert between JSON and XML formats. Input must be valid and well-formed.</p>
-        </div>
-        <div class="tool-interface">
-            <div class="tool-controls">
-                <button class="btn btn--secondary" id="to-xml">JSON → XML</button>
-                <button class="btn btn--outline" id="to-json">XML → JSON</button>
-                <button class="btn btn--outline" id="json-xml-clear-btn">Clear</button>
-            </div>
-            <div class="io-container">
-                <div class="input-section">
-                    <div class="section-header">
-                        <label class="form-label">Input JSON or XML</label>
-                        <button class="btn btn--sm copy-btn" data-target="json-xml-input">Copy</button>
-                    </div>
-                    <textarea id="json-xml-input" class="form-control code-input" placeholder="Paste or type JSON or XML here..." rows="12"></textarea>
-                </div>
-                <div class="output-section">
-                    <div class="section-header">
-                        <label class="form-label">Output</label>
-                        <button class="btn btn--sm copy-btn" data-target="json-xml-output">Copy</button>
-                    </div>
-                    <textarea id="json-xml-output" class="form-control code-input" readonly rows="12"></textarea>
-                </div>
-            </div>
-            <div id="json-xml-status" class="hidden"></div>
-        </div>
-        <style>
-        .tool-header { margin-bottom: 12px; }
-        .tool-interface { background: var(--color-bg-card,#fff); border-radius: 14px; box-shadow: 0 2px 12px #0001; padding: 18px 18px 24px 18px; }
-        .tool-controls { display: flex; gap: 12px; margin-bottom: 18px; }
-        .io-container { display: flex; gap: 24px; flex-wrap: wrap; }
-        .input-section, .output-section { flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; }
-        .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
-        .form-label { font-weight: 600; font-size: 1.08em; }
-        .code-input { font-family: var(--font-mono,monospace); font-size: 1.08em; border-radius: 8px; border: 1px solid var(--color-border,#d0d7de); background: var(--color-bg-muted,#f7f9fa); padding: 10px 12px; }
-        @media (max-width: 900px) { .io-container { flex-direction: column; gap: 0; } .input-section, .output-section { margin-bottom: 18px; } }
-        </style>
-    `;
-    setupCopyButtons();
-    setupJSONXmlTool();
+export async function load(toolContent) {
+  const resp = await fetch('jsonXmlConverter.html');
+  const html = await resp.text();
+  toolContent.innerHTML = html;
+  setupCopyButtons();
+  setupJSONXmlTool();
 }
 
 export function setupJSONXmlTool() {

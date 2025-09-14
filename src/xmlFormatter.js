@@ -73,37 +73,10 @@ function unescapeXML(xml) {
     .replace(/&quot;/g, '"');
 }
 
-export function load(container) {
-  container.innerHTML = `
-    <div class="tool-header"><h2>XML Formatter</h2><p>Format, beautify, minify, or escape XML</p></div>
-    <div class="tool-interface">
-      <div class="tool-controls">
-        <button class="btn btn--secondary" id="xml-format-btn">Format</button>
-        <button class="btn btn--outline" id="xml-minify-btn">Minify</button>
-        <button class="btn btn--outline" id="xml-escape-btn">Escape</button>
-        <button class="btn btn--outline" id="xml-unescape-btn">Unescape</button>
-        <button class="btn btn--outline" id="xml-validate-btn">Syntax Validate</button>
-        <button class="btn btn--outline" id="xml-clear-btn">Clear</button>
-      </div>
-      <div class="io-container">
-        <div class="input-section">
-          <div class="section-header">
-            <label class="form-label">Input XML</label>
-            <button class="btn btn--sm copy-btn" data-target="xml-input">Copy</button>
-          </div>
-          <textarea id="xml-input" class="form-control code-input" placeholder="Paste or type your XML here..." rows="10"></textarea>
-        </div>
-        <div class="output-section">
-          <div class="section-header">
-            <label class="form-label">Formatted Output</label>
-            <button class="btn btn--sm copy-btn" data-target="xml-output">Copy</button>
-          </div>
-          <textarea id="xml-output" class="form-control code-input" readonly rows="10"></textarea>
-        </div>
-      </div>
-      <div id="xml-error" class="error-message hidden"></div>
-    </div>
-  `;
+export async function load(container) {
+  const resp = await fetch('xmlFormatter.html');
+  const html = await resp.text();
+  container.innerHTML = html;
   // Call setup after DOM is updated
   if (typeof setup === 'function') setup();
 }

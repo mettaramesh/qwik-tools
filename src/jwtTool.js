@@ -22,83 +22,9 @@ export function loadJWTTool(container) {
         <button class="btn btn--outline" id="jwt-clear-btn">Clear</button>
       </div>
 
-      <div class="io-container">
-        <div class="input-section">
-          <div class="section-header">
-            <label class="form-label">JWT Token</label>
-            <button class="btn btn--sm copy-btn" data-target="jwt-input">Copy</button>
-          </div>
-          <textarea id="jwt-input" class="form-control code-input" placeholder="Paste JWT token here or generate below..." rows="3"></textarea>
-          <div id="jwt-hints" class="muted small" style="margin-top:6px;"></div>
-        </div>
-      </div>
-
-      <div class="multi-output-container">
-        <div class="output-section">
-          <div class="section-header">
-            <label class="form-label">Header</label>
-            <button class="btn btn--sm copy-btn" data-target="jwt-header">Copy</button>
-          </div>
-          <textarea id="jwt-header" class="form-control code-input" rows="6" placeholder='{"alg":"HS256","typ":"JWT"}'></textarea>
-          <div class="small muted" id="hdr-size"></div>
-        </div>
-
-        <div class="output-section">
-          <div class="section-header">
-            <label class="form-label">Payload</label>
-            <button class="btn btn--sm copy-btn" data-target="jwt-payload">Copy</button>
-          </div>
-          <textarea id="jwt-payload" class="form-control code-input" rows="8" placeholder='{"sub":"1234567890","name":"John Doe","iat":1516239022}'></textarea>
-          <div class="small muted" id="pld-size"></div>
-        </div>
-
-        <div class="output-section">
-          <div class="section-header">
-            <label class="form-label">Signature</label>
-            <button class="btn btn--sm copy-btn" data-target="jwt-signature">Copy</button>
-          </div>
-          <textarea id="jwt-signature" class="form-control code-input" readonly rows="2"></textarea>
-        </div>
-      </div>
-
-      <div class="grid-keys" style="display:grid; gap:16px; grid-template-columns:1fr 1fr;">
-        <div class="output-section">
-          <label class="form-label">Secret (HS256)</label>
-          <div style="display:flex; gap:8px;">
-            <input id="jwt-secret" class="form-control" type="password" placeholder="Enter secret for HS256 signing/verifying" style="flex:1;">
-            <button class="btn btn--outline" id="jwt-forget-secret">Forget</button>
-          </div>
-          <div class="small muted">Secret is never stored; input is cleared on blur.</div>
-        </div>
-
-        <div class="output-section">
-          <div class="section-header">
-            <label class="form-label">Public Key (RS256/ES256) — JWK or PEM (SPKI)</label>
-            <button class="btn btn--sm copy-btn" data-target="jwt-pubkey">Copy</button>
-          </div>
-          <textarea id="jwt-pubkey" class="form-control code-input" rows="6" placeholder='
-JWK example:
-{"kty":"RSA","n":"...","e":"AQAB"}
-
-PEM example (SPKI):
------BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A...
------END PUBLIC KEY-----
-          '></textarea>
-          <div class="small muted">Auto-detects JWK (JSON) vs PEM. For PEM, use <code>BEGIN PUBLIC KEY</code> (SPKI).</div>
-        </div>
-      </div>
-
-      <!-- NEW: JWKS input -->
-      <div class="output-section" style="margin-top:8px;">
-        <div class="section-header">
-          <label class="form-label">JWKS (JSON Web Key Set)</label>
-          <button class="btn btn--sm copy-btn" data-target="jwt-jwks">Copy</button>
-        </div>
-        <textarea id="jwt-jwks" class="form-control code-input" rows="6" placeholder='{
-  "keys": [
-    { "kid": "key-1", "kty": "RSA", "alg": "RS256", "n": "...", "e": "AQAB" },
-    { "kid": "key-2", "kty": "EC",  "alg": "ES256", "crv":"P-256", "x":"...", "y":"..." }
+      export async function loadJWTTool(container) {
+        const html = await fetch('src/jwtTool.html').then(r => r.text());
+        container.innerHTML = html;
   ]
 }'></textarea>
         <div class="small muted">If Public Key is empty and token header has <code>kid</code>, the tool will auto-select the matching JWK. If there is exactly one JWKS key and no <code>kid</code>, it will try that key if the alg matches.</div>

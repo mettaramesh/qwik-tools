@@ -17,41 +17,10 @@ window.rgbToHsl = rgbToHsl;
 // Color Picker module
 // 100% code coverage: Handles color picking, conversion, and UI setup.
 
-export function loadColorPicker(container) {
-    // 100% code coverage: Renders the Color Picker tool UI.
-    container.innerHTML = `
-        <div class="tool-header">
-            <h2>Color Picker & Contrast</h2>
-            <p>Pick colors and check contrast ratios</p>
-        </div>
-        <div class="tool-interface">
-            <div class="tool-form-row">
-                <div class="form-group">
-                    <label class="form-label">Color</label>
-                    <input type="color" id="color-picker" class="form-control" value="#3B82F6">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Hex Value</label>
-                    <input type="text" id="hex-input" class="form-control text-mono" value="#3B82F6">
-                </div>
-            </div>
-            <div class="color-preview" id="color-preview"></div>
-            <div class="color-info">
-                <div class="color-value">
-                    <label>HEX</label>
-                    <input type="text" id="hex-value" class="form-control text-mono" readonly>
-                </div>
-                <div class="color-value">
-                    <label>RGB</label>
-                    <input type="text" id="rgb-value" class="form-control text-mono" readonly>
-                </div>
-                <div class="color-value">
-                    <label>HSL</label>
-                    <input type="text" id="hsl-value" class="form-control text-mono" readonly>
-                </div>
-            </div>
-        </div>
-    `;
+export async function loadColorPicker(container) {
+    // Load HTML template from external file
+    const html = await fetch('src/colorPicker.html').then(r => r.text());
+    container.innerHTML = html;
 }
 
 export function setupColorPicker() {

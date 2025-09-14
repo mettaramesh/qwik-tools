@@ -1,38 +1,10 @@
 // JSON Formatter module
 // 100% code coverage: Handles JSON formatting, minifying, validating, and UI setup.
-export function loadJSONFormatter(container) {
-    // 100% code coverage: Renders the JSON Formatter tool UI.
-    container.innerHTML = `
-        <div class="tool-header">
-            <h2>JSON Formatter</h2>
-            <p>Format, beautify, and minify JSON data</p>
-        </div>
-        <div class="tool-interface">
-            <div class="tool-controls">
-                <button class="btn btn--secondary" id="json-format-btn">Format</button>
-                <button class="btn btn--outline" id="json-minify-btn">Minify</button>
-                <button class="btn btn--outline" id="json-validate-btn">Validate</button>
-                <button class="btn btn--outline" id="json-clear-btn">Clear</button>
-            </div>
-            <div class="io-container">
-                <div class="input-section">
-                    <div class="section-header">
-                        <label class="form-label">Input JSON</label>
-                        <button class="btn btn--sm copy-btn" data-target="json-input">Copy</button>
-                    </div>
-                    <textarea id="json-input" class="form-control code-input" placeholder="Paste or type your JSON here..." rows="12"></textarea>
-                </div>
-                <div class="output-section">
-                    <div class="section-header">
-                        <label class="form-label">Formatted Output</label>
-                        <button class="btn btn--sm copy-btn" data-target="json-output">Copy</button>
-                    </div>
-                    <textarea id="json-output" class="form-control code-input" readonly rows="12"></textarea>
-                </div>
-            </div>
-            <div id="json-status" class="hidden"></div>
-        </div>
-    `;
+export async function loadJSONFormatter(container) {
+    // Loads the JSON Formatter tool UI from external HTML template.
+    const resp = await fetch('jsonFormatter.html');
+    const html = await resp.text();
+    container.innerHTML = html;
 }
 
 export function setupJSONFormatter() {
@@ -123,6 +95,6 @@ export function setupJSONFormatter() {
     if (typeof window.setupCopyButtons === 'function') window.setupCopyButtons();
 }
 
-export function load(container, toolId) {
-    loadJSONFormatter(container);
+export async function load(container, toolId) {
+    await loadJSONFormatter(container);
 }

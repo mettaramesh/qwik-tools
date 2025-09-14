@@ -2,33 +2,9 @@
 // Uses the 'marked' library for full markdown support
 // To use: add <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> in your HTML, or load dynamically below
 
-export function load(container) {
-  container.innerHTML = `
-    <div class="tool-header"><h2>Markdown Preview</h2><p>Preview your Markdown as HTML</p></div>
-    <div class="tool-interface">
-      <div class="tool-controls">
-        <button class="btn btn--secondary" id="md-preview-btn">Preview</button>
-        <button class="btn btn--outline" id="md-clear-btn">Clear</button>
-      </div>
-      <div class="io-container">
-        <div class="input-section">
-          <div class="section-header">
-            <label class="form-label">Markdown Input</label>
-            <button class="btn btn--sm copy-btn" data-target="md-input">Copy</button>
-          </div>
-          <textarea id="md-input" class="form-control code-input" placeholder="Paste or type your Markdown here..." rows="10"></textarea>
-        </div>
-        <div class="output-section">
-          <div class="section-header">
-            <label class="form-label">HTML Preview</label>
-            <button class="btn btn--sm copy-btn" data-target="md-output">Copy</button>
-          </div>
-          <div id="md-output" class="form-control code-input markdown-preview" style="background:#fff;color:#111; min-height:10em; overflow:auto;"></div>
-        </div>
-      </div>
-      <div id="md-error" class="error-message hidden"></div>
-    </div>
-  `;
+export async function load(container) {
+  const html = await fetch('src/markdownPreview.html').then(r => r.text());
+  container.innerHTML = html;
   if (typeof setup === 'function') setup();
 }
 

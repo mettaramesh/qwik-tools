@@ -9,72 +9,10 @@
 //  - Shift+Click Encode forces numeric encoding
 //  - Keyboard shortcuts: Ctrl/Cmd+E (Encode), Ctrl/Cmd+D (Decode), Ctrl/Cmd+K (Clear), Ctrl/Cmd+Shift+C (Copy)
 
-export function loadHTMLEntityTool(container) {
-  container.innerHTML = `
-    <div class="tool-header">
-      <h2>HTML Encoder/Decoder</h2>
-      <p class="small">Encode or decode HTML entities. Supports named and numeric entities. Useful for escaping/unescaping HTML in text, code, or data.</p>
-    </div>
-    <div class="card">
-      <div class="row">
-        <label for="htmlInput" class="form-label">Input</label>
-        <textarea id="htmlInput" class="form-control" rows="6" placeholder="Paste or type HTML or text..."></textarea>
-      </div>
-
-  <div class="row mt-12 d-flex gap-8 align-center flex-wrap">
-        <button class="btn btn--primary" id="btnEncode">Encode HTML</button>
-        <button class="btn btn--outline" id="btnDecode">Decode HTML</button>
-        <button class="btn btn--outline" id="btnClear">Clear</button>
-        <button class="btn btn--outline" id="btnCopy">Copy Output</button>
-
-        <!-- Visible toggles -->
-  <label class="ml-8 d-flex align-center gap-6 fs-09">
-          <input id="toggleNumericEncode" type="checkbox" />
-          Numeric-encode non-ASCII
-        </label>
-
-  <label class="d-flex align-center gap-6 fs-09">
-          <select id="sanitizationLevel" class="fs-09 p-4 br-4">
-            <option value="off">Sanitize: Off</option>
-            <option value="moderate" selected>Sanitize: Moderate</option>
-            <option value="aggressive">Sanitize: Aggressive</option>
-          </select>
-        </label>
-      </div>
-
-  <div class="row mt-12">
-        <label for="htmlOutput" class="form-label">Output</label>
-        <textarea id="htmlOutput" class="form-control" rows="6" readonly placeholder="Result will appear here..."></textarea>
-      </div>
-  <div class="row mt-8">
-        <span id="htmlStatus" class="small muted"></span>
-      </div>
-  <div class="row mt-12">
-        <button class="btn btn--outline" id="btnToggleView">Show Preview</button>
-      </div>
-
-      <!-- Preview container: iframe (rendered preview) + escaped block + caption -->
-  <div class="row mt-12">
-  <div id="htmlPreviewContainer" class="form-control html-preview-container">
-          <iframe id="htmlPreviewFrame" sandbox class="html-preview-frame"></iframe>
-          <pre id="htmlPreviewEscaped" class="html-preview-escaped"></pre>
-          <div id="htmlPreviewCaption" class="small muted mt-8 color-muted"></div>
-// Load external stylesheet for htmlEntityTool
-function ensureHtmlEntityToolStyle(){
-  if (!document.getElementById('html-entity-tool-style-link')) {
-    const link = document.createElement('link');
-    link.id = 'html-entity-tool-style-link';
-    link.rel = 'stylesheet';
-    link.type = 'text/css';
-    link.href = './htmlEntityTool.css';
-    document.head.appendChild(link);
-  }
-}
-ensureHtmlEntityToolStyle();
-        </div>
-      </div>
-    </div>
-  `;
+export async function loadHTMLEntityTool(container) {
+  // Load HTML template from external file
+  const html = await fetch('src/htmlEntityTool.html').then(r => r.text());
+  container.innerHTML = html;
 }
 
 export function setupHTMLEntityTool(container) {

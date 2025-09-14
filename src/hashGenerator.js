@@ -5,54 +5,10 @@ import { simpleMD5 } from './utils.js';
 
 window.simpleMD5 = simpleMD5;
 
-export function loadHashGenerator(container) {
-    // 100% code coverage: Renders the Hash Generator tool UI.
-    container.innerHTML = `
-        <div class="tool-header">
-            <h2>Hash Generator</h2>
-            <p>Generate MD5, SHA1, SHA256, and SHA512 hashes</p>
-        </div>
-        <div class="tool-interface">
-            <div class="io-container">
-                <div class="input-section">
-                    <div class="section-header">
-                        <label class="form-label">Input Text</label>
-                    </div>
-                    <textarea id="hash-input" class="form-control code-input" placeholder="Enter text to hash..." rows="6"></textarea>
-                </div>
-            </div>
-            <div class="multi-output-container">
-                <div class="output-section">
-                    <div class="section-header">
-                        <label class="form-label">MD5</label>
-                        <button class="btn btn--sm copy-btn" data-target="md5-output">Copy</button>
-                    </div>
-                    <textarea id="md5-output" class="form-control code-input text-mono" readonly rows="2"></textarea>
-                </div>
-                <div class="output-section">
-                    <div class="section-header">
-                        <label class="form-label">SHA1</label>
-                        <button class="btn btn--sm copy-btn" data-target="sha1-output">Copy</button>
-                    </div>
-                    <textarea id="sha1-output" class="form-control code-input text-mono" readonly rows="2"></textarea>
-                </div>
-                <div class="output-section">
-                    <div class="section-header">
-                        <label class="form-label">SHA256</label>
-                        <button class="btn btn--sm copy-btn" data-target="sha256-output">Copy</button>
-                    </div>
-                    <textarea id="sha256-output" class="form-control code-input text-mono" readonly rows="2"></textarea>
-                </div>
-                <div class="output-section">
-                    <div class="section-header">
-                        <label class="form-label">SHA512</label>
-                        <button class="btn btn--sm copy-btn" data-target="sha512-output">Copy</button>
-                    </div>
-                    <textarea id="sha512-output" class="form-control code-input text-mono" readonly rows="3"></textarea>
-                </div>
-            </div>
-        </div>
-    `;
+export async function loadHashGenerator(container) {
+    // Load HTML template from external file
+    const html = await fetch('src/hashGenerator.html').then(r => r.text());
+    container.innerHTML = html;
 }
 
 export function setupHashGenerator() {

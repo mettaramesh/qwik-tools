@@ -22,13 +22,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   function closeModal() {
     modal.classList.add('hidden');
-    modal.style.display = 'none';
-    document.body.style.overflow = '';
+    modal.classList.remove('modal-open');
+    document.body.classList.remove('modal-open');
   }
   if (modal && !localStorage.getItem(consentKey)) {
     modal.classList.remove('hidden');
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
+    modal.classList.add('modal-open');
+    document.body.classList.add('modal-open');
     // Guard to prevent multiple attachments
     if (!modal._listenersAttached) {
       const acceptBtn = document.getElementById('clipboard-consent-accept');
@@ -56,9 +56,9 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.nav-category').forEach(cat => {
     const items = cat.querySelector('.category-items');
     if (cat.classList.contains('nav-favourites')) {
-      items.style.display = '';
+      items.classList.remove('hidden');
     } else {
-      items.style.display = 'none';
+      items.classList.add('hidden');
     }
   });
 
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const cat = header.parentElement;
       const items = cat.querySelector('.category-items');
       if (!items) return;
-      items.style.display = (items.style.display === 'none') ? '' : 'none';
+      items.classList.toggle('hidden');
     });
   });
 
@@ -88,9 +88,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Tool switching logic
   function showTool(toolId) {
-    document.querySelectorAll('.tool-container').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.tool-container').forEach(el => el.classList.add('hidden'));
     const el = document.getElementById(toolId);
-    if (el) el.style.display = '';
+    if (el) el.classList.remove('hidden');
   }
 
 });

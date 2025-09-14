@@ -1,46 +1,28 @@
 // QR Code Generator Tool for Qwik
 // Uses qrious (browser QR code lib, no dependencies)
 
-export function load(container) {
-  container.innerHTML = `
-    <div class="tool-header">
-      <h2>QR Code Generator</h2>
-      <p>Create a QR code for any text, URL, or data</p>
-    </div>
-    <div class="tool-interface">
-      <div class="tool-controls">
-        <button class="btn btn--secondary" id="qr-generate-btn">Generate</button>
-        <button class="btn btn--outline" id="qr-clear-btn">Clear</button>
-      </div>
-      <div class="io-container">
-        <div class="input-section">
-          <div class="section-header">
-            <label class="form-label">Input Text or URL</label>
-            <button class="btn btn--sm copy-btn" data-target="qr-input">Copy</button>
-          </div>
-          <textarea id="qr-input" class="form-control code-input" placeholder="Enter text, URL, or data for QR code..." rows="4"></textarea>
-        </div>
-        <div class="output-section">
-          <div class="section-header">
-            <label class="form-label">QR Code</label>
-            <button class="btn btn--sm" id="qr-download-btn">Download</button>
-          </div>
-          <div id="qr-code-output" class="qr-code-output qr-code-output-center"></div>
-        </div>
-        <div id="qr-error" class="error-message hidden"></div>
-      </div>
-    </div>
-  `;
+export async function load(container) {
+  // Load HTML template from external file
+  const html = await fetch('src/qrGenerator.html').then(r => r.text());
+  container.innerHTML = html;
   setup();
 }
 
 function setup() {
+
   const input = document.getElementById('qr-input');
   const generateBtn = document.getElementById('qr-generate-btn');
-  const clearBtn = document.getElementById('qr-clear-btn');
   const outputDiv = document.getElementById('qr-code-output');
-  const errorDiv = document.getElementById('qr-error');
+  const errorDiv = document.getElementById('qr-error') || (() => {
+    // If not present, create and append error div
+    const div = document.createElement('div');
+    div.id = 'qr-error';
+    div.className = 'error-message hidden';
+    outputDiv.parentNode.appendChild(div);
+    return div;
+  })();
   const downloadBtn = document.getElementById('qr-download-btn');
+  const clearBtn = document.getElementById('qr-clear-btn');
 
   function showError(msg) {
     errorDiv.textContent = msg;
@@ -48,7 +30,7 @@ function setup() {
   }
   function clearError() {
     errorDiv.textContent = '';
-    errorDiv.classList.add('hidden');
+    if (!errorDiv.classList.contains('hidden')) errorDiv.classList.add('hidden');
   }
 
   // Copy button logic
@@ -93,24 +75,25 @@ function setup() {
     const img = document.createElement('img');
     img.src = qr.toDataURL();
     img.alt = 'QR Code';
-    img.style.maxWidth = '220px';
-    img.style.background = '#fff';
-    img.style.borderRadius = '8px';
-    img.style.boxShadow = '0 2px 8px 0 rgba(0,0,0,0.07)';
+  // Move all styling to CSS, just set src/alt
     outputDiv.appendChild(img);
   }
 
   generateBtn.onclick = renderQR;
-  clearBtn.onclick = () => {
-    input.value = '';
-    outputDiv.innerHTML = '';
-    clearError();
-  };
-  downloadBtn.onclick = () => {
-    if (!qr) return;
-    const a = document.createElement('a');
-    a.href = qr.toDataURL();
-    a.download = 'qr-code.png';
-    a.click();
-  };
+  if (clearBtn) {
+    clearBtn.onclick = () => {
+      input.value = '';
+      outputDiv.innerHTML = '';
+      clearError();
+    };
+  }
+  if (downloadBtn) {
+    downloadBtn.onclick = () => {
+      if (!qr) return;
+      const a = document.createElement('a');
+      a.href = qr.toDataURL();
+      a.download = 'qr-code.png';
+      a.click();
+    };
+  }
 }

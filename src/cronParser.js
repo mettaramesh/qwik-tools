@@ -370,18 +370,10 @@ function cronBuilderLogic() {
   });
 }
 
-function loadCronParserTool(container) {
+async function loadCronParserTool(container) {
   if (!container) return;
-  container.innerHTML = `
-    <div class="tool-header">
-      <h2>Cron Parser + Builder</h2>
-      <p class="small">Build or parse UNIX cron expressions (5 or 6 fields, with optional seconds). Includes presets, validation, and human-readable explanations.</p>
-    </div>
-    <div class="grid-cron">
-      <div class="card cron-left" id="cronBuilderPanel"></div>
-      <div class="card cron-right" id="cronOutputPanel"></div>
-    </div>
-  `;
+  const html = await fetch('src/cronParser.html').then(r => r.text());
+  container.innerHTML = html;
   setTimeout(setupCronParserTool, 0);
 }
 
@@ -396,6 +388,5 @@ export async function load(container) {
     document.head.appendChild(link);
   }
   await ensureCronLibsLoaded();
-  loadCronParserTool(container);
-  // No double-setup: setupCronParserTool is already called by loadCronParserTool
+  await loadCronParserTool(container);
 }

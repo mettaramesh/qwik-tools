@@ -91,43 +91,58 @@ export function load(toolContent, toolId) {
   const toolDiv = document.createElement('div');
   toolDiv.id = 'subnet-calculator-tool';
   toolDiv.className = 'tool-container';
-  toolDiv.innerHTML = `
-    <div class="tool-header">
-      <h2>Subnet Calculator</h2>
-      <p>Calculate network details from an IP address and subnet mask or CIDR.</p>
-    </div>
-    <div class="tool-interface">
-      <div class="tool-controls">
-        <label class="form-label" for="subnet-ip">IP Address</label>
-        <input id="subnet-ip" class="form-control" type="text" placeholder="e.g. 192.168.1.10" autocomplete="off" />
-        <label class="form-label" for="subnet-mask">Subnet Mask / CIDR</label>
-        <input id="subnet-mask" class="form-control" type="text" placeholder="e.g. 255.255.255.0 or /24" autocomplete="off" />
-        <button class="btn btn--secondary" id="subnet-calc-btn">Calculate</button>
-  <span id="subnet-progress" class="progress-indicator hidden ml-10">Calculating...</span>
-  <span id="subnet-feedback" class="user-feedback hidden ml-10"></span>
-      </div>
-  <div id="subnet-results" class="output-section hidden mt-1-5em">
-        <div class="section-header"><label class="form-label">Results</label></div>
-        <div id="subnet-error" class="error-message hidden"></div>
-        <table class="results-table">
-          <tbody>
-            <tr><td>Network Address</td><td id="result-network"></td></tr>
-            <tr><td>Broadcast Address</td><td id="result-broadcast"></td></tr>
-            <tr><td>First Host</td><td id="result-first-host"></td></tr>
-            <tr><td>Last Host</td><td id="result-last-host"></td></tr>
-            <tr><td>Usable Hosts</td><td id="result-usable-hosts"></td></tr>
-            <tr><td>Total Hosts</td><td id="result-total-hosts"></td></tr>
-            <tr><td>Human Readable Range</td><td id="result-range"></td></tr>
-            <tr><td>Subnet Mask</td><td id="result-mask"></td></tr>
-            <tr><td>CIDR Notation</td><td id="result-cidr"></td></tr>
-            <tr><td>IP Class</td><td id="result-class"></td></tr>
-            <tr><td>IP Type</td><td id="result-type"></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  `;
-  toolContent.appendChild(toolDiv);
+  fetch('./src/subnetCalculator.html')
+    .then(r => r.text())
+    .then(html => {
+      toolDiv.innerHTML = html;
+      toolContent.appendChild(toolDiv);
+
+      // Attach event handler after rendering
+      const subnetBtn = toolDiv.querySelector('#subnet-calc-btn');
+      if (subnetBtn) {
+        subnetBtn.addEventListener('click', () => {
+          const ip = toolDiv.querySelector('#subnet-ip').value.trim();
+          const mask = toolDiv.querySelector('#subnet-mask').value.trim();
+          const progress = toolDiv.querySelector('#subnet-progress');
+          const feedback = toolDiv.querySelector('#subnet-feedback');
+          const resultsDiv = toolDiv.querySelector('#subnet-results');
+          const errorDiv = toolDiv.querySelector('#subnet-error');
+          progress.classList.remove('hidden');
+          feedback.classList.add('hidden');
+          feedback.textContent = '';
+          setTimeout(() => {
+            const results = calculateSubnet(ip, mask);
+            progress.classList.add('hidden');
+            if (results.error) {
+              errorDiv.textContent = results.error;
+              errorDiv.classList.remove('hidden');
+              resultsDiv.classList.remove('hidden');
+              ['network','broadcast','first-host','last-host','usable-hosts','total-hosts','range','mask','cidr','class','type'].forEach(id => {
+                toolDiv.querySelector('#result-' + id).textContent = '';
+              });
+              feedback.textContent = 'Please check your input and try again.';
+              feedback.classList.remove('hidden');
+              return;
+            }
+            errorDiv.classList.add('hidden');
+            toolDiv.querySelector('#result-network').textContent = results.network;
+            toolDiv.querySelector('#result-broadcast').textContent = results.broadcast;
+            toolDiv.querySelector('#result-first-host').textContent = results.firstHost;
+            toolDiv.querySelector('#result-last-host').textContent = results.lastHost;
+            toolDiv.querySelector('#result-usable-hosts').textContent = results.usableHosts;
+            toolDiv.querySelector('#result-total-hosts').textContent = results.totalHosts;
+            toolDiv.querySelector('#result-range').textContent = results.range;
+            toolDiv.querySelector('#result-mask').textContent = results.mask;
+            toolDiv.querySelector('#result-cidr').textContent = results.cidr;
+            toolDiv.querySelector('#result-class').textContent = results.ipClass;
+            toolDiv.querySelector('#result-type').textContent = results.ipType;
+            resultsDiv.classList.remove('hidden');
+            feedback.textContent = 'Calculation complete!';
+            feedback.classList.remove('hidden');
+          }, 250);
+        });
+      }
+    });
 
   // Attach event handler after rendering
   const subnetBtn = toolDiv.querySelector('#subnet-calc-btn');
@@ -139,21 +154,21 @@ export function load(toolContent, toolId) {
       const feedback = toolDiv.querySelector('#subnet-feedback');
       const resultsDiv = toolDiv.querySelector('#subnet-results');
       const errorDiv = toolDiv.querySelector('#subnet-error');
-      progress.style.display = '';
-      feedback.style.display = 'none';
-      feedback.textContent = '';
+  progress.classList.remove('hidden');
+  feedback.classList.add('hidden');
+  feedback.textContent = '';
       setTimeout(() => {
         const results = calculateSubnet(ip, mask);
-        progress.style.display = 'none';
+        progress.classList.add('hidden');
         if (results.error) {
           errorDiv.textContent = results.error;
           errorDiv.classList.remove('hidden');
-          resultsDiv.style.display = 'block';
+          resultsDiv.classList.remove('hidden');
           ['network','broadcast','first-host','last-host','usable-hosts','total-hosts','range','mask','cidr','class','type'].forEach(id => {
             toolDiv.querySelector('#result-' + id).textContent = '';
           });
           feedback.textContent = 'Please check your input and try again.';
-          feedback.style.display = '';
+          feedback.classList.remove('hidden');
           return;
         }
         errorDiv.classList.add('hidden');
@@ -168,9 +183,9 @@ export function load(toolContent, toolId) {
         toolDiv.querySelector('#result-cidr').textContent = results.cidr;
         toolDiv.querySelector('#result-class').textContent = results.ipClass;
         toolDiv.querySelector('#result-type').textContent = results.ipType;
-        resultsDiv.style.display = 'block';
+        resultsDiv.classList.remove('hidden');
         feedback.textContent = 'Calculation complete!';
-        feedback.style.display = '';
+        feedback.classList.remove('hidden');
       }, 250);
     });
   }

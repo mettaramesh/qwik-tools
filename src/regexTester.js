@@ -1,50 +1,9 @@
 // Regex Tester module
 // 100% code coverage: Handles regex testing and UI setup.
-export function loadRegexTester(container) {
-    // 100% code coverage: Renders the Regex Tester tool UI.
-    container.innerHTML = `
-        <div class="tool-header">
-            <h2>Regex Tester</h2>
-            <p>Test regular expressions with real-time matching</p>
-        </div>
-        <div class="tool-interface">
-            <div class="tool-form-group">
-                <label class="form-label">Regular Expression</label>
-                <input type="text" id="regex-pattern" class="form-control text-mono" placeholder="Enter your regex pattern...">
-            </div>
-            <div class="tool-form-row">
-                <div class="checkbox-group">
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="flag-g" checked>
-                        <label for="flag-g">Global (g)</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="flag-i">
-                        <label for="flag-i">Ignore case (i)</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="flag-m">
-                        <label for="flag-m">Multiline (m)</label>
-                    </div>
-                </div>
-            </div>
-            <div class="io-container">
-                <div class="input-section">
-                    <div class="section-header">
-                        <label class="form-label">Test String</label>
-                    </div>
-                    <textarea id="regex-test" class="form-control code-input" placeholder="Enter test string..." rows="8"></textarea>
-                </div>
-                <div class="output-section">
-                    <div class="section-header">
-                        <label class="form-label">Matches</label>
-                    </div>
-                    <textarea id="regex-matches" class="form-control code-input" readonly rows="8"></textarea>
-                </div>
-            </div>
-            <div id="regex-status" class="hidden"></div>
-        </div>
-    `;
+export async function loadRegexTester(container) {
+    // Load HTML template from external file
+    const html = await fetch('src/regexTester.html').then(r => r.text());
+    container.innerHTML = html;
 }
 
 export function setupRegexTester() {
