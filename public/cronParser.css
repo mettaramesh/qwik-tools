@@ -1,0 +1,9 @@
+.cron-info-visible {
+  display: flex !important;
+}
+#cronInfoBox {
+  display: none;
+}
+#cronInfoBox.cron-info-visible {
+  display: flex !important;
+}

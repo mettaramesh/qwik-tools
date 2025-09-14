@@ -60,13 +60,7 @@ export function setup() {
   function stylePreviewImages() {
     if (!output) return;
     output.querySelectorAll('img').forEach(img => {
-      img.style.maxWidth = '200px';
-      img.style.maxHeight = '200px';
-      img.style.width = 'auto';
-      img.style.height = 'auto';
-      img.style.objectFit = 'contain';
-      img.style.display = 'block';
-      img.style.margin = '1em auto';
+      img.classList.add('markdown-preview-img');
     });
   }
 

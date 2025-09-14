@@ -53,7 +53,7 @@ export function showReadmeModal() {
   // Show modal
   modal.classList.add('is-open');
   modal.setAttribute('aria-hidden', 'false');
-  document.body.style.overflow = 'hidden';
+  document.body.classList.add('modal-open');
   // Focus trap
   const content = modal.querySelector('#rdm-content');
   if (content) content.focus();
@@ -65,9 +65,9 @@ export function showReadmeModal() {
     });
   // Close logic
   function closeModal() {
-    modal.classList.remove('is-open');
-    modal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
+  modal.classList.remove('is-open');
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('modal-open');
   }
   modal.querySelectorAll('[data-close]').forEach(el => el.onclick = closeModal);
   modal.querySelector('.rdm-backdrop').onclick = closeModal;

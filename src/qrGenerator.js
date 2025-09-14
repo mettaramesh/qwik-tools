@@ -91,13 +91,10 @@ function setup() {
       level: 'H',
     });
     const img = document.createElement('img');
-    img.src = qr.toDataURL();
-    img.alt = 'QR Code';
-    img.style.maxWidth = '220px';
-    img.style.background = '#fff';
-    img.style.borderRadius = '8px';
-    img.style.boxShadow = '0 2px 8px 0 rgba(0,0,0,0.07)';
-    outputDiv.appendChild(img);
+  img.src = qr.toDataURL();
+  img.alt = 'QR Code';
+  img.className = 'qr-img';
+  outputDiv.appendChild(img);
   }
 
   generateBtn.onclick = renderQR;

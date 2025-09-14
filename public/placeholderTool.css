@@ -1,0 +1,15 @@
+/* placeholderTool.css - extracted from inline styles */
+
+.placeholder-center {
+  padding: 60px 20px;
+  text-align: center;
+}
+.placeholder-icon {
+  color: var(--color-text-secondary);
+  margin-bottom: 20px;
+}
+.placeholder-text {
+  color: var(--color-text-secondary);
+  max-width: 400px;
+  margin: 0 auto;
+}

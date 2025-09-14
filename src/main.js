@@ -20,14 +20,14 @@ document.addEventListener('DOMContentLoaded', () => {
     console.error('[Clipboard Modal] Modal element not found in DOM!');
   }
   function closeModal() {
-    modal.classList.add('hidden');
-    modal.style.display = 'none';
-    document.body.style.overflow = '';
+  modal.classList.add('hidden');
+  modal.classList.remove('modal-visible');
+  document.body.classList.remove('modal-open');
   }
   if (modal && !localStorage.getItem(consentKey)) {
-    modal.classList.remove('hidden');
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
+  modal.classList.remove('hidden');
+  modal.classList.add('modal-visible');
+  document.body.classList.add('modal-open');
     // Guard to prevent multiple attachments
     if (!modal._listenersAttached) {
       const acceptBtn = document.getElementById('clipboard-consent-accept');
@@ -61,18 +61,18 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.nav-category').forEach(cat => {
     const items = cat.querySelector('.category-items');
     if (cat.classList.contains('nav-favourites')) {
-      items.style.display = '';
+      items.classList.remove('nav-items-hidden');
     } else {
-      items.style.display = 'none';
+      items.classList.add('nav-items-hidden');
     }
   });
 
   document.querySelectorAll('.category-header').forEach(header => {
     header.addEventListener('click', () => {
-      const cat = header.parentElement;
-      const items = cat.querySelector('.category-items');
-      if (!items) return;
-      items.style.display = (items.style.display === 'none') ? '' : 'none';
+  const cat = header.parentElement;
+  const items = cat.querySelector('.category-items');
+  if (!items) return;
+  items.classList.toggle('nav-items-hidden');
     });
   });
 
@@ -97,9 +97,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Tool switching logic
   function showTool(toolId) {
-    document.querySelectorAll('.tool-container').forEach(el => el.style.display = 'none');
-    const el = document.getElementById(toolId);
-    if (el) el.style.display = '';
+  document.querySelectorAll('.tool-container').forEach(el => el.classList.add('tool-hidden'));
+  const el = document.getElementById(toolId);
+  if (el) el.classList.remove('tool-hidden');
   }
 
 });

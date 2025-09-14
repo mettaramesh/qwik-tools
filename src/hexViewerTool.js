@@ -96,12 +96,12 @@ function showHexTooltip(target, char) {
     }
     hexTooltipDiv.textContent = char;
     const rect = target.getBoundingClientRect();
-    hexTooltipDiv.style.display = 'block';
-    hexTooltipDiv.style.left = (rect.left + window.scrollX + rect.width/2 - 12) + 'px';
-    hexTooltipDiv.style.top = (rect.top + window.scrollY - 36) + 'px';
+    hexTooltipDiv.classList.add('hex-tooltip--visible');
+    hexTooltipDiv.style.setProperty('--hex-tooltip-left', (rect.left + window.scrollX + rect.width/2 - 12) + 'px');
+    hexTooltipDiv.style.setProperty('--hex-tooltip-top', (rect.top + window.scrollY - 36) + 'px');
 }
 function hideHexTooltip() {
-    if (hexTooltipDiv) hexTooltipDiv.style.display = 'none';
+    if (hexTooltipDiv) hexTooltipDiv.classList.remove('hex-tooltip--visible');
 }
 
 // Load CSS via <link> for CSP compliance

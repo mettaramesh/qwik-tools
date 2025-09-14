@@ -29,7 +29,7 @@ export function loadHexAsciiConverter(container) {
                 <div class="metrics" id="hexMetrics"></div>
             </div>
         </div>
-        <div class="row" style="margin-top:18px;justify-content:center">
+        <div class="row hexascii-swap-row">
             <button class="btn btn--outline" id="btnSwap">Swap ⮂</button>
         </div>
     `;

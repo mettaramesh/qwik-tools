@@ -7,6 +7,14 @@ window.rgbToHsl = rgbToHsl;
 
 export function loadColorPicker(container) {
     // 100% code coverage: Renders the Color Picker tool UI.
+    // Inject CSS if not already present
+    if (!document.getElementById('colorPicker-css')) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = '/colorPicker.css';
+        link.id = 'colorPicker-css';
+        document.head.appendChild(link);
+    }
     container.innerHTML = `
         <div class="tool-header">
             <h2>Color Picker & Contrast</h2>
@@ -23,7 +31,7 @@ export function loadColorPicker(container) {
                     <input type="text" id="hex-input" class="form-control text-mono" value="#3B82F6">
                 </div>
             </div>
-            <div class="color-preview" id="color-preview" style="background-color: #3B82F6;"></div>
+            <div class="color-preview" id="color-preview"></div>
             <div class="color-info">
                 <div class="color-value">
                     <label>HEX</label>
@@ -51,7 +59,7 @@ export function setupColorPicker() {
     const rgbValue = document.getElementById('rgb-value');
     const hslValue = document.getElementById('hsl-value');
     const updateColor = (color) => {
-        preview.style.backgroundColor = color;
+        preview.style.setProperty('--color-preview', color);
         hexValue.value = color.toUpperCase();
         // Convert hex to RGB
         let rgb = null;

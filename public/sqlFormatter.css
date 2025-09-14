@@ -1,0 +1,43 @@
+/* sqlFormatter.css - extracted from inline styles */
+
+.sql-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.sql-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  font-size: .9rem;
+}
+
+.sql-input, .sql-output {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', monospace;
+}
+
+.sql-flex {
+  flex: 1;
+  min-width: 260px;
+}
+
+.sql-flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.sql-error {
+  margin-top: 10px;
+}
+
+.status-ok {
+  color: var(--color-success, #21808d);
+}
+.status-error {
+  color: var(--color-error, #c0392b);
+}

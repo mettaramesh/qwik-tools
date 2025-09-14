@@ -117,14 +117,6 @@ export class Qwik {
             star.title = 'Remove from Favourites';
             star.setAttribute('aria-label', 'Remove from Favourites');
             star.textContent = '★';
-            star.style.color = '#ff8a65'; // shallow red
-            star.style.fontSize = '1.2em';
-            star.style.marginLeft = '8px';
-            star.style.verticalAlign = 'middle';
-            star.style.background = 'none';
-            star.style.border = 'none';
-            star.style.cursor = 'pointer';
-            star.style.padding = '0';
             star.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -241,7 +233,6 @@ export class Qwik {
             if (favHeader && !favHeader.querySelector('.collapse-arrow')) {
                 const arrow = document.createElement('span');
                 arrow.className = 'collapse-arrow';
-                arrow.style.marginRight = '6px';
                 arrow.textContent = favCategory.classList.contains('collapsed') ? '▶' : '▼';
                 favHeader.prepend(arrow);
             }
@@ -498,10 +489,10 @@ export class Qwik {
             items.querySelectorAll('.nav-item').forEach(link => {
                 const text = link.textContent.trim().toLowerCase();
                 if (!q || text.includes(q)) {
-                    link.style.display = '';
+                    link.classList.remove('nav-item-hidden');
                     hasVisible = true;
                 } else {
-                    link.style.display = 'none';
+                    link.classList.add('nav-item-hidden');
                 }
             });
             // Always collapse by default
@@ -509,19 +500,19 @@ export class Qwik {
             items.classList.remove('expanded');
             if (q) {
                 if (hasVisible) {
-                    navCategory.style.display = '';
+                    navCategory.classList.remove('nav-category-hidden');
                     navCategory.classList.remove('collapsed');
                     items.classList.add('expanded');
-                    items.style.display = '';
+                    items.classList.remove('nav-items-hidden');
                 } else {
-                    navCategory.style.display = 'none';
+                    navCategory.classList.add('nav-category-hidden');
                 }
             } else {
-                navCategory.style.display = '';
-                items.style.display = '';
+                navCategory.classList.remove('nav-category-hidden');
+                items.classList.remove('nav-items-hidden');
                 items.classList.remove('expanded');
                 navCategory.classList.add('collapsed');
-                items.querySelectorAll('.nav-item').forEach(link => link.style.display = '');
+                items.querySelectorAll('.nav-item').forEach(link => link.classList.remove('nav-item-hidden'));
             }
         });
     }
