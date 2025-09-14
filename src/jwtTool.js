@@ -11,7 +11,7 @@ export function loadJWTTool(container) {
       <p>Encode and decode JSON Web Tokens. Verify HS256, RS256, ES256 in-browser.</p>
     </div>
 
-    <div class="security-banner" style="border:1px solid var(--warn,#f5a623); background:#fff7e6; padding:10px; margin-bottom:12px; font-size:0.95rem;">
+  <div class="security-banner jwt-border jwt-bg jwt-padding jwt-margin-bottom jwt-font-size">
       <strong>Warning:</strong> Client-side verification is for testing only. Don’t paste secrets or production tokens you don’t control.
     </div>
 
@@ -29,7 +29,7 @@ export function loadJWTTool(container) {
             <button class="btn btn--sm copy-btn" data-target="jwt-input">Copy</button>
           </div>
           <textarea id="jwt-input" class="form-control code-input" placeholder="Paste JWT token here or generate below..." rows="3"></textarea>
-          <div id="jwt-hints" class="muted small" style="margin-top:6px;"></div>
+          <div id="jwt-hints" class="muted small jwt-margin-top"></div>
         </div>
       </div>
 
@@ -61,11 +61,11 @@ export function loadJWTTool(container) {
         </div>
       </div>
 
-      <div class="grid-keys" style="display:grid; gap:16px; grid-template-columns:1fr 1fr;">
+  <div class="grid-keys jwt-grid-keys">
         <div class="output-section">
           <label class="form-label">Secret (HS256)</label>
-          <div style="display:flex; gap:8px;">
-            <input id="jwt-secret" class="form-control" type="password" placeholder="Enter secret for HS256 signing/verifying" style="flex:1;">
+          <div class="jwt-flex jwt-gap"></div>
+            <input id="jwt-secret" class="form-control jwt-flex-1" type="password" placeholder="Enter secret for HS256 signing/verifying">
             <button class="btn btn--outline" id="jwt-forget-secret">Forget</button>
           </div>
           <div class="small muted">Secret is never stored; input is cleared on blur.</div>
@@ -90,7 +90,7 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A...
       </div>
 
       <!-- NEW: JWKS input -->
-      <div class="output-section" style="margin-top:8px;">
+  <div class="output-section jwt-margin-top-sm">
         <div class="section-header">
           <label class="form-label">JWKS (JSON Web Key Set)</label>
           <button class="btn btn--sm copy-btn" data-target="jwt-jwks">Copy</button>
@@ -102,24 +102,24 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A...
   ]
 }'></textarea>
         <div class="small muted">If Public Key is empty and token header has <code>kid</code>, the tool will auto-select the matching JWK. If there is exactly one JWKS key and no <code>kid</code>, it will try that key if the alg matches.</div>
-        <div class="small muted" id="jwks-note" style="margin-top:4px;"></div>
+  <div class="small muted jwt-margin-top-xs" id="jwks-note"></div>
       </div>
 
       <!-- Sample Token Generator (HS256) -->
-      <div class="output-section" style="margin-top:16px;">
+  <div class="output-section jwt-margin-top-lg">
         <div class="section-header">
           <label class="form-label">Generate Sample Token (HS256)</label>
         </div>
-        <div class="small muted" style="margin-bottom:8px;">
+  <div class="small muted jwt-margin-bottom-sm">
           Uses the Secret (HS256) above. If blank, defaults to <code>testsecret</code>. Outputs a fresh token into the main JWT field.
         </div>
 
-        <div class="gen-grid" style="display:grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap:8px; align-items:end;">
-          <div style="grid-column: span 2;">
+  <div class="gen-grid jwt-gen-grid">
+          <div class="jwt-grid-col-2">
             <label class="form-label">sub</label>
             <input id="gen-sub" class="form-control" type="text" placeholder="demo-user" value="demo-user">
           </div>
-          <div style="grid-column: span 2;">
+          <div class="jwt-grid-col-2">
             <label class="form-label">name</label>
             <input id="gen-name" class="form-control" type="text" placeholder="Alice Example" value="Alice Example">
           </div>
@@ -139,27 +139,27 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A...
               <option value="no">No</option>
             </select>
           </div>
-          <div style="grid-column: span 6;">
+          <div class="jwt-grid-col-6">
             <label class="form-label">Extra claims (JSON, optional)</label>
             <textarea id="gen-extra" class="form-control code-input" rows="3" placeholder='{"role":"tester"}'></textarea>
           </div>
           <div style="grid-column: span 2;">
             <button class="btn btn--primary" id="gen-button">Generate HS256</button>
           </div>
-          <div class="small muted" id="gen-note" style="grid-column: span 4;"></div>
+          <div class="small muted jwt-grid-col-4" id="gen-note"></div>
         </div>
       </div>
 
       <!-- Ephemeral Keypairs + Mint (RS256/ES256) -->
-      <div class="output-section" style="margin-top:16px;">
+  <div class="output-section jwt-margin-top-lg">
         <div class="section-header">
           <label class="form-label">Ephemeral Keypair & Mint (RS256 / ES256)</label>
         </div>
-        <div class="small muted" style="margin-bottom:8px;">
+  <div class="small muted jwt-margin-bottom-sm">
           Generates keys in-memory. Private keys are not persisted. Use the shown public key to verify minted tokens.
         </div>
 
-        <div class="gen-grid" style="display:grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap:8px; align-items:end;">
+  <div class="gen-grid jwt-gen-grid">
           <div>
             <label class="form-label">Algorithm</label>
             <select id="kp-alg" class="form-control">

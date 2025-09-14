@@ -1,6 +1,6 @@
 // src/tool-registry.js
 // Map tool names to dynamic imports with postLoad hook for theme
-import { Qwik } from './Qwik.js';
+
 
 export const toolRegistry = {
   'base64': async () => {

@@ -1,7 +1,6 @@
 import './router.js';
-import { Qwik } from './Qwik.js';
-import { showReadmeModal } from './readmeModal.js';
-import { calculateSubnet } from './subnetCalculator.js';
+
+
 
 if ('serviceWorker' in navigator) {
   // Dynamically determine service worker path for subdirectory support
@@ -37,21 +36,27 @@ document.addEventListener('DOMContentLoaded', () => {
         acceptBtn.onclick = () => {
           localStorage.setItem(consentKey, 'accepted');
           closeModal();
-          window.qwikApp = new Qwik();
+          import('./Qwik.js').then(({ Qwik }) => {
+            window.qwikApp = new Qwik();
+          });
         };
       }
       if (denyBtn) {
         denyBtn.onclick = () => {
           localStorage.setItem(consentKey, 'denied');
           closeModal();
-          window.qwikApp = new Qwik();
+          import('./Qwik.js').then(({ Qwik }) => {
+            window.qwikApp = new Qwik();
+          });
         };
       }
       modal._listenersAttached = true;
     }
     return;
   }
-  window.qwikApp = new Qwik();
+  import('./Qwik.js').then(({ Qwik }) => {
+    window.qwikApp = new Qwik();
+  });
 
   document.querySelectorAll('.nav-category').forEach(cat => {
     const items = cat.querySelector('.category-items');
@@ -77,7 +82,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Why Qwik-tools button shows README modal as HTML
   const whyQwikBtn = document.getElementById('why-qwik-header');
   if (whyQwikBtn) {
-    whyQwikBtn.addEventListener('click', showReadmeModal);
+    whyQwikBtn.addEventListener('click', () => {
+      import('./readmeModal.js').then(({ showReadmeModal }) => {
+        showReadmeModal();
+      });
+    });
   }
 
   // Wire up Readme button to showReadmeModal

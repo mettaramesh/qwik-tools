@@ -217,8 +217,13 @@ export function setupCharsetConverterTool(container) {
   inputMode.addEventListener('change', onModeChange);
   function onModeChange() {
     const mode = inputMode.value;
-    fileBox.style.display = (mode === 'file') ? '' : 'none';
-    inputArea.style.display = (mode === 'file') ? 'none' : '';
+    if (mode === 'file') {
+      fileBox.classList.remove('charset-hide');
+      inputArea.classList.add('charset-hide');
+    } else {
+      fileBox.classList.add('charset-hide');
+      inputArea.classList.remove('charset-hide');
+    }
   }
   onModeChange();
 
