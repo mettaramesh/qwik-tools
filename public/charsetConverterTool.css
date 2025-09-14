@@ -1,3 +1,5 @@
+.charset-flex-minwidth { flex: 1 1 0%; min-width: 180px; }
+.charset-width-100 { width: 100% !important; }
 .charset-error-color { color: var(--color-error, #c0392b) !important; }
 .charset-margin-top { margin-top: 8px !important; }
 .charset-margin-top-lg { margin-top: 16px !important; }

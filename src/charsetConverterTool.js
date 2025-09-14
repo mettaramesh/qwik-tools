@@ -73,9 +73,9 @@ export function loadCharsetConverterTool(container) {
   <div class="card card--quick-ebc charset-margin-top">
   <h3 class="charset-margin-bottom">Quick Convert: <span class="hl">EBCDIC (CP037)</span> file <span class="charset-font-weight-400">→</span> ASCII</h3>
   <div class="row charset-margin-bottom charset-align-items-flex-end">
-        <div style="flex:1;min-width:180px;">
+  <div class="charset-flex-minwidth">
           <label class="form-label" for="ebcFileInput">Select EBCDIC file</label>
-          <input type="file" id="ebcFileInput" class="form-control" style="width:100%;" />
+          <input type="file" id="ebcFileInput" class="form-control charset-width-100" />
         </div>
   <span id="ebcFileInfo" class="small charset-margin-left"></span>
       </div>
