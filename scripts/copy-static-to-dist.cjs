@@ -8,7 +8,8 @@ const filesToCopy = [
   'js-yaml.min.js',
   'xmllint.js',
   'sidebar.js',
-  'service-worker.js'
+  'service-worker.js',
+  'cron-js-parser.min.js'
 ];
 
 const srcDir = path.resolve(__dirname, '..');
