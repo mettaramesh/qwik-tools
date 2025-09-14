@@ -480,40 +480,14 @@ export function setupCharsetConverterTool(container) {
 
 // Qwik dynamic loader
 export function load(container, toolId) {
+  // Inject CSS via <link> if not already present
+  if (!document.getElementById('charsetconverter-css-link')) {
+    const link = document.createElement('link');
+    link.id = 'charsetconverter-css-link';
+    link.rel = 'stylesheet';
+    link.href = 'charsetConverterTool.css';
+    document.head.appendChild(link);
+  }
   loadCharsetConverterTool(container);
   setupCharsetConverterTool(container);
-}
-
-// Styles (unchanged core, just ensure cursor:pointer on buttons)
-if (!document.getElementById('qwik-charset-style')) {
-  const style=document.createElement('style'); style.id='qwik-charset-style';
-  style.textContent=
-    '.grid-charset{display:grid;gap:28px 36px;grid-template-columns:1fr 1fr;margin-bottom:24px;}' +
-    '@media (max-width:900px){.grid-charset{grid-template-columns:1fr}}' +
-    '.grid-charset label{font-weight:600;font-size:1.08em;color:var(--color-primary,#21808d);margin-bottom:6px;display:block;}' +
-    '.grid-charset textarea{width:100%;min-height:320px;background:var(--color-background,#f9f9f9);border:1.5px solid var(--color-border,#e0e0e0);color:var(--color-text,#13343b);padding:13px 14px;border-radius:10px;font-size:1.08em;margin-bottom:10px;resize:vertical;}' +
-    '.grid-charset .btn--primary{background:var(--color-primary,#21808d);color:#fff;border:none;padding:10px 18px;font-size:1em;border-radius:10px;margin-bottom:0;cursor:pointer;}' +
-    '.grid-charset .btn--outline{background:var(--color-surface,#fff);color:var(--color-primary,#21808d);border:1.5px solid var(--color-primary,#21808d);padding:10px 18px;font-size:1em;border-radius:10px;margin-bottom:0;cursor:pointer;}' +
-    '.grid-charset .base-select{font-size:1.18em;padding:10px 18px;border-radius:12px;border:1.5px solid var(--color-border,#e0e0e0);background:var(--color-background,#f9f9f9);color:var(--color-text,#13343b);min-width:210px;box-shadow:0 2px 8px #0001;transition:border-color .2s,box-shadow .2s;}' +
-    '.grid-charset .base-select:focus{border-color:var(--color-primary,#21808d);box-shadow:0 0 0 2px var(--color-primary,#21808d)22;outline:none;}' +
-    '.metrics{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;}' +
-    '.pill{display:inline-flex;align-items:center;gap:6px;border:1px dashed var(--color-border,#2a2f47);border-radius:999px;padding:4px 8px;color:var(--color-text-secondary,#626c71);font-size:.98em;}' +
-    '.pill.ok{border-color:var(--color-success,#2b5);color:var(--color-success-text,#9fd)}' +
-    '.pill.bad{border-color:var(--color-error,#c0392b);color:var(--color-error-text,#ffc4c4)}' +
-    '.footer{opacity:.7;margin-top:8px;font-size:12px}' +
-    '.small{font-size:12px;color:var(--color-text-secondary,#626c71)}' +
-    '.kbadge{padding:2px 6px;border-radius:6px;background:var(--color-surface-dark,#0d1020);border:1px solid var(--color-border,#2a2f47)}' +
-    '.hl{color:var(--color-accent,#a0c0ff)}' +
-    '.split{display:flex;gap:16px;flex-wrap:wrap}' +
-    '.file{border:1px dashed var(--color-border,#2a2f47);border-radius:12px;padding:10px}' +
-    '.card{background:var(--color-surface,#fff);border:1.5px solid var(--color-border,#e0e0e0);border-radius:14px;padding:18px 18px 14px 18px;box-shadow:0 2px 8px #0001;}' +
-    '.card--quick-ebc{background:var(--color-surface,#fff);border:1.5px solid var(--color-border,#e0e0e0);border-radius:14px;padding:18px 18px 14px 18px;box-shadow:0 2px 8px #0001;margin-bottom:0;}' +
-    '.card--quick-ebc h3{font-size:1.13em;margin:0 0 8px 0;color:var(--color-primary,#21808d);font-weight:600;}' +
-    '.card--quick-ebc .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}' +
-    '.card--quick-ebc .form-label{font-weight:600;font-size:1em;color:var(--color-primary,#21808d);margin-bottom:4px;display:block;}' +
-    '.card--quick-ebc input[type="file"]{font-size:1em;}' +
-    '.card--quick-ebc textarea{background:var(--color-background,#f9f9f9);border:1.5px solid var(--color-border,#e0e0e0);color:var(--color-text,#13343b);padding:10px 12px;border-radius:8px;font-size:1.05em;width:100%;resize:vertical;}' +
-    '.card--quick-ebc .btn--primary,.card--quick-ebc .btn--outline{margin-bottom:0;}' +
-    '.card--quick-ebc .footer{opacity:.7;margin-top:8px;font-size:12px;color:var(--color-text-secondary,#626c71)}';
-  document.head.appendChild(style);
 }

@@ -276,116 +276,13 @@ export function setupPasswordGeneratorTool() {
 
 // Qwik expects a default export named 'load' for dynamic tool loading
 export function load(container) {
+    // Inject CSS via <link> if not already present
+    if (!document.getElementById('passwordgen-css-link')) {
+        const link = document.createElement('link');
+        link.id = 'passwordgen-css-link';
+        link.rel = 'stylesheet';
+        link.href = 'passwordGenerator.css';
+        document.head.appendChild(link);
+    }
     loadPasswordGeneratorTool(container);
-}
-
-// Add Qwik-style grid and spacing for password generator tool
-if (!document.getElementById('qwik-passwordgen-style')) {
-    const style = document.createElement('style');
-    style.id = 'qwik-passwordgen-style';
-    style.textContent = `
-    .grid-charset {
-        display: grid;
-        gap: 32px 40px;
-        grid-template-columns: 1fr 1fr;
-        margin-bottom: 32px;
-    }
-    @media (max-width: 900px) {
-        .grid-charset { grid-template-columns: 1fr; }
-    }
-    .grid-charset label {
-        font-weight: 600;
-        font-size: 1.08em;
-        color: var(--color-primary, #21808d);
-        margin-bottom: 8px;
-        display: block;
-    }
-    .grid-charset textarea {
-        width: 100%;
-        min-height: 120px;
-        background: var(--color-background, #f9f9f9);
-        border: 1.5px solid var(--color-border, #e0e0e0);
-        color: var(--color-text, #13343b);
-        padding: 13px 14px;
-        border-radius: 10px;
-        font-size: 1.08em;
-        margin-bottom: 18px;
-        resize: vertical;
-    }
-    .grid-charset .btn--primary {
-        background: var(--color-primary, #21808d);
-        color: #fff;
-        border: none;
-        padding: 10px 18px;
-        font-size: 1em;
-        border-radius: 10px;
-        margin-bottom: 0;
-    }
-    .grid-charset .btn--outline {
-        background: #fff;
-        color: var(--color-primary, #21808d);
-        border: 1.5px solid var(--color-primary, #21808d);
-        padding: 10px 18px;
-        font-size: 1em;
-        border-radius: 10px;
-        margin-bottom: 0;
-    }
-    .grid-charset input[type="range"] {
-        width: 180px;
-        margin: 0 10px;
-    }
-    .grid-charset input[type="number"] {
-        font-size: 1.08em;
-        padding: 7px 10px;
-        border-radius: 8px;
-        border: 1.5px solid var(--color-border, #e0e0e0);
-        background: var(--color-background, #f9f9f9);
-        color: var(--color-text, #13343b);
-        min-width: 60px;
-    }
-    .grid-charset input[type="text"] {
-        font-size: 1.08em;
-        padding: 7px 10px;
-        border-radius: 8px;
-        border: 1.5px solid var(--color-border, #e0e0e0);
-        background: var(--color-background, #f9f9f9);
-        color: var(--color-text, #13343b);
-        min-width: 120px;
-    }
-    .metrics {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-        margin-top: 12px;
-        margin-bottom: 8px;
-    }
-    .pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        border: 1px dashed #2a2f47;
-        border-radius: 999px;
-        padding: 4px 8px;
-        color: #626c71;
-        font-size: 0.98em;
-    }
-    .pill.good{border-color:#2b5; color:#9fd}
-    .pill.bad{border-color:#c0392b; color:#ffc4c4}
-    .footer{opacity:.7;margin-top:12px;font-size:12px}
-    .small{font-size:12px;color:#626c71}
-    .kbadge{padding:2px 6px;border-radius:6px;background:#0d1020;border:1px solid #2a2f47}
-    .hl{color:#a0c0ff}
-    .split{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:18px;}
-    .file{border:1px dashed #2a2f47;border-radius:12px;padding:10px}
-    .card{background:var(--color-surface, #fff);border:1.5px solid var(--color-border, #e0e0e0);border-radius:14px;padding:22px 22px 18px 22px;box-shadow:0 2px 8px #0001;margin-bottom:24px;}
-    .row{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-bottom:18px;}
-    h3{font-size:1.18em;margin:0 0 14px 0}
-    .list {display:flex;flex-direction:column;gap:14px;margin-top:14px;}
-    .pwd{display:flex;gap:14px;align-items:center;border:1px dashed #2a2f47;border-radius:12px;padding:10px 12px;background:var(--color-background, #f9f9f9);}
-    .pwd code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14px;word-break:break-all;}
-    .meter{height:8px;border-radius:999px;background:#11152a;border:1px solid #2a2f47;overflow:hidden;min-width:160px;}
-    .bar{height:100%;width:0%}
-    .hr{height:1px;background:#20253e;border:0;margin:16px 0}
-    `;
-    document.head.appendChild(style);
 }

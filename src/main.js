@@ -4,7 +4,13 @@ import { showReadmeModal } from './readmeModal.js';
 import { calculateSubnet } from './subnetCalculator.js';
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/service-worker.js'); // fixed path for Netlify root
+  // Dynamically determine service worker path for subdirectory support
+  let swPath = '/service-worker.js';
+  if (window.location.pathname && window.location.pathname !== '/' && !window.location.pathname.endsWith('.html')) {
+    // If served from a subdirectory, use relative path
+    swPath = './service-worker.js';
+  }
+  navigator.serviceWorker.register(swPath);
 }
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -126,81 +126,13 @@ function setupHexAsciiConverter() {
 
 // Qwik expects a default export named 'load' for dynamic tool loading
 export function load(container) {
+    // Inject CSS via <link> if not already present
+    if (!document.getElementById('hexascii-css-link')) {
+        const link = document.createElement('link');
+        link.id = 'hexascii-css-link';
+        link.rel = 'stylesheet';
+        link.href = 'hexAsciiConverter.css';
+        document.head.appendChild(link);
+    }
     loadHexAsciiConverter(container);
-}
-
-// Add Qwik-style grid and spacing for hex-ascii tool
-if (!document.getElementById('qwik-hexascii-style')) {
-    const style = document.createElement('style');
-    style.id = 'qwik-hexascii-style';
-    style.textContent = `
-    .grid-hexascii {
-        display: grid;
-        gap: 28px 36px;
-        grid-template-columns: 1fr 1fr;
-        margin-bottom: 24px;
-    }
-    @media (max-width: 900px) {
-        .grid-hexascii { grid-template-columns: 1fr; }
-    }
-    .grid-hexascii label {
-        font-weight: 600;
-        font-size: 1.08em;
-        color: var(--color-primary, #21808d);
-        margin-bottom: 6px;
-        display: block;
-    }
-    .grid-hexascii textarea {
-        width: 100%;
-        min-height: 120px;
-        background: var(--color-background, #f9f9f9);
-        border: 1.5px solid var(--color-border, #e0e0e0);
-        color: var(--color-text, #13343b);
-        padding: 13px 14px;
-        border-radius: 10px;
-        font-size: 1.08em;
-        margin-bottom: 10px;
-        resize: vertical;
-    }
-    .grid-hexascii .btn--primary {
-        background: var(--color-primary, #21808d);
-        color: #fff;
-        border: none;
-        padding: 10px 18px;
-        font-size: 1em;
-        border-radius: 10px;
-        margin-bottom: 0;
-    }
-    .grid-hexascii .btn--outline {
-        background: #fff;
-        color: var(--color-primary, #21808d);
-        border: 1.5px solid var(--color-primary, #21808d);
-        padding: 10px 18px;
-        font-size: 1em;
-        border-radius: 10px;
-        margin-bottom: 0;
-    }
-    .metrics {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-        margin-top: 8px;
-    }
-    .pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        border: 1px dashed #2a2f47;
-        border-radius: 999px;
-        padding: 4px 8px;
-        color: #626c71;
-        font-size: 0.98em;
-    }
-    .pill.ok{border-color:#2b5; color:#9fd}
-    .pill.bad{border-color:#c0392b; color:#ffc4c4}
-    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
-    .card{background:var(--color-surface, #fff);border:1.5px solid var(--color-border, #e0e0e0);border-radius:14px;padding:18px 18px 14px 18px;box-shadow:0 2px 8px #0001;}
-    h3{font-size:1.18em;margin:0 0 8px 0}
-    `;
-    document.head.appendChild(style);
 }

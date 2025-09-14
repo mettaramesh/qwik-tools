@@ -1,4 +1,4 @@
-// Qwik-style Cron Tool styles (single source of truth)
+// Qwik-style Cron Tool
 (function ensureQwikCronStyle(){
   let style = document.getElementById('qwik-cron-style');
   if (!style) {
@@ -478,6 +478,14 @@ function loadCronParserTool(container) {
 
 // Public entry
 export async function load(container) {
+  // Inject CSS via <link> if not already present
+  if (!document.getElementById('cronparser-css-link')) {
+    const link = document.createElement('link');
+    link.id = 'cronparser-css-link';
+    link.rel = 'stylesheet';
+    link.href = 'cronParser.css';
+    document.head.appendChild(link);
+  }
   await ensureCronLibsLoaded();
   loadCronParserTool(container);
   // No double-setup: setupCronParserTool is already called by loadCronParserTool

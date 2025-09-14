@@ -1,0 +1,49 @@
+/* Modal styles for README modal (rdm-modal) */
+.rdm-modal { position: fixed; inset: 0; display: none; z-index: 9999; }
+.rdm-modal.is-open { display: block; }
+.rdm-backdrop {
+  position: absolute; inset: 0;
+  background: color-mix(in oklab, #000 55%, transparent);
+  backdrop-filter: blur(6px) saturate(120%);
+}
+.rdm-dialog {
+  position: relative; margin: 4vh auto 0; max-width: min(960px, 92vw);
+  max-height: 88vh; display: flex; flex-direction: column;
+  border-radius: 16px;
+  background: #fff !important;
+  border: 1px solid color-mix(in oklab, var(--color-border, #2a2f47) 70%, transparent);
+  box-shadow: 0 20px 60px #0007, inset 0 1px 0 #fff2;
+  backdrop-filter: blur(18px) saturate(130%);
+  -webkit-backdrop-filter: blur(18px) saturate(130%);
+  overflow: hidden;
+}
+.rdm-header, .rdm-footer {
+  padding: 12px 16px;
+  background: linear-gradient(180deg, #ffffff08, #00000010);
+  border-bottom: 1px solid color-mix(in oklab, var(--color-border, #2a2f47) 70%, transparent);
+}
+.rdm-footer { border-top: 1px solid color-mix(in oklab, var(--color-border, #2a2f47) 70%, transparent); border-bottom: 0; }
+.rdm-header h3 { margin: 0; color: var(--color-text, #222); font-size: 1.05rem; }
+.rdm-close {
+  margin-left: auto; font-size: 1.4rem; line-height: 1;
+  background: transparent; border: 0; color: var(--color-text-secondary, #9aa7b2);
+  cursor: pointer; padding: 6px 8px; border-radius: 8px;
+}
+.rdm-close:hover { background: #ffffff12; color: var(--color-text, #21808d); }
+.rdm-body {
+  padding: 16px 18px; overflow: auto; color: var(--color-text, #222);
+  background: #fff !important;
+  --prose-muted: #444;
+}
+.rdm-body :is(p, li){ color: var(--prose-muted); line-height: 1.55; }
+.rdm-body h1, .rdm-body h2, .rdm-body h3 { color: var(--color-text, #222); margin: .6em 0 .3em; }
+.rdm-body code { background: #f5f5f5; padding: 0 .35em; border-radius: 6px; }
+.rdm-body pre { background: #f5f5f5; padding: 12px; border-radius: 10px; overflow:auto; }
+.rdm-body a { color: var(--color-accent, #21808d); text-decoration: none; }
+.rdm-body a:hover { text-decoration: underline; }
+.btn.btn--primary{ background: var(--color-primary, #21808d); color: #fff; border: none; padding: 10px 16px; border-radius: 10px; cursor: pointer; }
+.btn.btn--outline{ background: #fff; color: var(--color-primary, #21808d); border: 1.5px solid var(--color-primary, #21808d); padding: 10px 16px; border-radius: 10px; cursor: pointer; }
+@media (prefers-reduced-motion:no-preference){
+  .rdm-dialog { transform: translateY(8px); opacity: 0; transition: transform .2s ease, opacity .2s ease; }
+  .rdm-modal.is-open .rdm-dialog { transform: translateY(0); opacity: 1; }
+}
