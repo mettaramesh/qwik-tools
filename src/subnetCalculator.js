@@ -81,7 +81,7 @@ export function load(toolContent, toolId) {
   // Inject CSS if not already present
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = './src/subnetCalculator.css';
+  link.href = '/subnetCalculator.css';
     link.id = 'subnet-calc-css';
     document.head.appendChild(link);
   }

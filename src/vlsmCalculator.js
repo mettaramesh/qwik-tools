@@ -8,7 +8,7 @@ export function load(toolContent, toolId) {
 
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = './src/vlsmCalculator.css';
+  link.href = '/vlsmCalculator.css';
     link.id = 'vlsm-calc-css';
     document.head.appendChild(link);
   }

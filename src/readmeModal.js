@@ -45,7 +45,7 @@ export function showReadmeModal() {
     if (!document.getElementById('rdm-modal-style')) {
       const link = document.createElement('link');
       link.rel = 'stylesheet';
-      link.href = './src/readmeModal.css';
+  link.href = '/readmeModal.css';
       link.id = 'rdm-modal-style';
       document.head.appendChild(link);
     }
