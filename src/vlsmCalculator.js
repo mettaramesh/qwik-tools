@@ -6,16 +6,10 @@ export function load(toolContent, toolId) {
   if (!toolContent) return;
   toolContent.innerHTML = '';
 
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-  link.href = '/vlsmCalculator.css';
-    link.id = 'vlsm-calc-css';
-    document.head.appendChild(link);
-  }
   if (!document.getElementById('vlsm-calc-css')) {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = '/vlsmCalculator.css'; // root-relative for deployment
+    link.href = './src/vlsmCalculator.css';
     link.id = 'vlsm-calc-css';
     document.head.appendChild(link);
   }
@@ -37,10 +31,10 @@ export function load(toolContent, toolId) {
         <label class="form-label" for="vlsm-hosts">Hosts per Subnet (comma separated)</label>
         <input id="vlsm-hosts" class="form-control" type="text" placeholder="e.g. 100,50,25" autocomplete="off" />
         <button class="btn btn--secondary" id="vlsm-calc-btn">Calculate</button>
-        <span id="vlsm-progress" class="progress-indicator vlsm-hide vlsm-margin-left">Calculating...</span>
-        <span id="vlsm-feedback" class="user-feedback vlsm-hide vlsm-margin-left"></span>
+        <span id="vlsm-progress" class="progress-indicator" style="display:none;margin-left:10px;">Calculating...</span>
+        <span id="vlsm-feedback" class="user-feedback" style="display:none;margin-left:10px;"></span>
       </div>
-      <div id="vlsm-results" class="output-section vlsm-results-hide vlsm-margin-top">
+      <div id="vlsm-results" class="output-section" style="margin-top:1.5em;display:none;">
         <div class="section-header"><label class="form-label">Results</label></div>
         <div id="vlsm-error" class="error-message hidden"></div>
         <table class="results-table" id="vlsm-results-table">
@@ -76,20 +70,14 @@ export function load(toolContent, toolId) {
       const errorDiv = toolDiv.querySelector('#vlsm-error');
       const resultsTable = toolDiv.querySelector('#vlsm-results-table tbody');
 
-  feedback.classList.add('vlsm-hide');
+      progress.style.display = '';
+      feedback.style.display = 'none';
       feedback.textContent = '';
-  resultsDiv.classList.add('vlsm-results-hide');
+      resultsDiv.style.display = 'none';
       errorDiv.classList.add('hidden');
       errorDiv.textContent = '';
       resultsTable.innerHTML = '';
 
-  progress.classList.remove('vlsm-hide');
-  feedback.classList.add('vlsm-hide');
-  feedback.textContent = '';
-  resultsDiv.classList.add('vlsm-results-hide');
-  errorDiv.classList.add('hidden');
-  errorDiv.textContent = '';
-  resultsTable.innerHTML = '';
       setTimeout(() => {
         if (!/^[\d]{1,3}(\.[\d]{1,3}){3}$/.test(baseIp)) return showError('Invalid base network address.');
 
@@ -164,33 +152,26 @@ export function load(toolContent, toolId) {
             <td>${s.broadcast}</td>
             <td>${s.usableHosts}</td>
             <td>
-              <div class="vlsm-bar" title="Subnet ${s.subnet}: ${s.network} ${s.cidr}, ${s.usableHosts} usable hosts"></div>
+              <div style="background:${s.barColor};height:16px;width:${s.visualWidth}%;border-radius:4px;position:relative;" title="Subnet ${s.subnet}: ${s.network} ${s.cidr}, ${s.usableHosts} usable hosts"></div>
             </td>
           </tr>
         `).join('');
 
-        resultsDiv.classList.remove('vlsm-results-hide');
-        // Set style for all .vlsm-bar elements
-        resultsTable.querySelectorAll('.vlsm-bar').forEach((bar, idx) => {
-          const s = subnets[idx];
-          bar.style.background = s.barColor;
-          bar.style.width = s.visualWidth + '%';
-        });
+        resultsDiv.style.display='block';
         feedback.textContent='VLSM calculation complete!';
-  feedback.classList.remove('vlsm-hide');
-  progress.classList.add('vlsm-hide');
+        feedback.style.display='';
+        progress.style.display='none';
       },100);
 
       function showError(msg){
-  progress.classList.add('vlsm-hide');
+        progress.style.display='none';
         errorDiv.textContent=msg;
         errorDiv.classList.remove('hidden');
         feedback.textContent='Please check your input and try again.';
-  feedback.classList.remove('vlsm-hide');
+        feedback.style.display='';
       }
     });
   }
-// ...existing code...
-
+}
 
 export function setupVlsmCalculator() {}

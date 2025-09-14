@@ -79,16 +79,10 @@ export function load(toolContent, toolId) {
   toolContent.innerHTML = '';
 
   // Inject CSS if not already present
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-  link.href = '/subnetCalculator.css';
-    link.id = 'subnet-calc-css';
-    document.head.appendChild(link);
-  }
   if (!document.getElementById('subnet-calc-css')) {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = '/subnetCalculator.css'; // root-relative for deployment
+    link.href = './src/subnetCalculator.css';
     link.id = 'subnet-calc-css';
     document.head.appendChild(link);
   }
@@ -109,10 +103,10 @@ export function load(toolContent, toolId) {
         <label class="form-label" for="subnet-mask">Subnet Mask / CIDR</label>
         <input id="subnet-mask" class="form-control" type="text" placeholder="e.g. 255.255.255.0 or /24" autocomplete="off" />
         <button class="btn btn--secondary" id="subnet-calc-btn">Calculate</button>
-        <span id="subnet-progress" class="progress-indicator subnet-hide subnet-margin-left">Calculating...</span>
-        <span id="subnet-feedback" class="user-feedback subnet-hide subnet-margin-left"></span>
+        <span id="subnet-progress" class="progress-indicator" style="display:none;margin-left:10px;">Calculating...</span>
+        <span id="subnet-feedback" class="user-feedback" style="display:none;margin-left:10px;"></span>
       </div>
-      <div id="subnet-results" class="output-section subnet-results-hide subnet-margin-top">
+      <div id="subnet-results" class="output-section" style="margin-top:1.5em;display:none;">
         <div class="section-header"><label class="form-label">Results</label></div>
         <div id="subnet-error" class="error-message hidden"></div>
         <table class="results-table">
@@ -145,6 +139,7 @@ export function load(toolContent, toolId) {
       const feedback = toolDiv.querySelector('#subnet-feedback');
       const resultsDiv = toolDiv.querySelector('#subnet-results');
       const errorDiv = toolDiv.querySelector('#subnet-error');
+      progress.style.display = '';
       feedback.style.display = 'none';
       feedback.textContent = '';
       setTimeout(() => {
@@ -179,6 +174,7 @@ export function load(toolContent, toolId) {
       }, 250);
     });
   }
+}
 
 export function setupSubnetCalculator() {
   // No-op for now; could add event listeners or state here if needed

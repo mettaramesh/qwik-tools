@@ -581,36 +581,35 @@ function minifySQL(sql) {
 // UI Module (load + setup) — container-based
 export function load(container) {
   container.innerHTML = `
-    <link rel="stylesheet" href="/sqlFormatter.css">
     <div class="tool-header"><h2>SQL Formatter</h2><p class="small">Format, beautify, or minify SQL queries — robust tokenizer & formatter.</p></div>
     <div class="card">
-      <div class="sql-row">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
         <button class="btn btn--secondary" id="sql-format-btn">Format</button>
         <button class="btn btn--outline" id="sql-minify-btn">Minify</button>
         <button class="btn btn--outline" id="sql-clear-btn">Clear</button>
-        <label class="sql-label">
+        <label style="display:flex;align-items:center;gap:8px;margin-left:auto;font-size:.9rem;">
           <input type="checkbox" id="preserve-case" /> Preserve case (don't uppercase keywords)
         </label>
       </div>
 
-      <div class="sql-row" style="gap:12px;">
-        <div class="sql-flex">
-          <div class="sql-flex-between">
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:260px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
             <label class="form-label">Input SQL</label>
             <button class="btn btn--sm copy-btn" data-target="sql-input">Copy</button>
           </div>
-          <textarea id="sql-input" class="form-control code-input sql-input" placeholder="Paste or type your SQL here..." rows="12"></textarea>
+          <textarea id="sql-input" class="form-control code-input" placeholder="Paste or type your SQL here..." rows="12" style="font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', monospace;"></textarea>
         </div>
-        <div class="sql-flex">
-          <div class="sql-flex-between">
+        <div style="flex:1;min-width:260px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
             <label class="form-label">Formatted Output</label>
             <button class="btn btn--sm copy-btn" data-target="sql-output">Copy</button>
           </div>
-          <textarea id="sql-output" class="form-control code-input sql-output" readonly rows="12"></textarea>
+          <textarea id="sql-output" class="form-control code-input" readonly rows="12" style="font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', monospace;"></textarea>
         </div>
       </div>
 
-      <div id="sql-error" class="error-message hidden sql-error"></div>
+      <div id="sql-error" class="error-message hidden" style="margin-top:10px;"></div>
     </div>
   `;
 }
@@ -633,13 +632,12 @@ export function setup(container) {
   // status small helper
   const statusSpan = document.createElement('span');
   statusSpan.className = 'small muted';
-  statusSpan.classList.add('ml-12');
+  statusSpan.style.marginLeft = '12px';
   output.parentElement.appendChild(statusSpan);
 
   function setStatus(msg, ok = true, autoClearMs = 2200) {
     statusSpan.textContent = msg || '';
-  statusSpan.classList.remove('status-ok', 'status-error');
-  statusSpan.classList.add(ok ? 'status-ok' : 'status-error');
+    statusSpan.style.color = ok ? 'var(--color-success,#21808d)' : 'var(--color-error,#c0392b)';
     if (autoClearMs && msg) {
       setTimeout(() => {
         if (statusSpan.textContent === msg) statusSpan.textContent = '';

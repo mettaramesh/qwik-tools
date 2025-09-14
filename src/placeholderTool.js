@@ -21,28 +21,20 @@ const toolNames = {
 
 export function load(container, toolId) {
     const toolName = toolNames[toolId] || (toolId ? toolId.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : 'Tool');
-    // Inject CSS if not already present
-    if (!document.getElementById('placeholderTool-css')) {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = '/placeholderTool.css';
-        link.id = 'placeholderTool-css';
-        document.head.appendChild(link);
-    }
     container.innerHTML = `
         <div class="tool-header">
             <h2>${toolName}</h2>
             <p>This tool is coming soon!</p>
         </div>
         <div class="tool-interface">
-            <div class="placeholder-center">
-                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="placeholder-icon">
+            <div class="text-center" style="padding: 60px 20px;">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-text-secondary); margin-bottom: 20px;">
                     <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
                     <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
                     <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
                 </svg>
                 <h3>Tool Under Development</h3>
-                <p class="placeholder-text">
+                <p style="color: var(--color-text-secondary); max-width: 400px; margin: 0 auto;">
                     The ${toolName} is currently being developed. Please check back soon or try one of our other available tools.
                 </p>
             </div>

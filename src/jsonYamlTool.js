@@ -59,8 +59,8 @@ export function loadJSONYamlTool(container) {
             <button class="btn btn--secondary" id="to-yaml">JSON → YAML</button>
             <button class="btn btn--outline" id="to-json">YAML → JSON</button>
             <button class="btn btn--outline" id="json-yaml-clear-btn">Clear</button>
-            <label class="jsonyaml-margin-left jsonyaml-font-size jsonyaml-vertical-align">
-                <input type="checkbox" id="force-quotes-checkbox" class="jsonyaml-vertical-align jsonyaml-margin-right">Quote all keys in YAML
+            <label style="margin-left:16px;font-size:0.98em;vertical-align:middle;">
+                <input type="checkbox" id="force-quotes-checkbox" style="vertical-align:middle;margin-right:4px;">Quote all keys in YAML
             </label>
             <div class="io-container">
                 <div class="input-section">

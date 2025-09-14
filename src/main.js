@@ -1,6 +1,7 @@
 import './router.js';
-
-
+import { Qwik } from './Qwik.js';
+import { showReadmeModal } from './readmeModal.js';
+import { calculateSubnet } from './subnetCalculator.js';
 
 if ('serviceWorker' in navigator) {
   // Dynamically determine service worker path for subdirectory support
@@ -20,14 +21,14 @@ document.addEventListener('DOMContentLoaded', () => {
     console.error('[Clipboard Modal] Modal element not found in DOM!');
   }
   function closeModal() {
-  modal.classList.add('hidden');
-  modal.classList.remove('modal-visible');
-  document.body.classList.remove('modal-open');
+    modal.classList.add('hidden');
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
   }
   if (modal && !localStorage.getItem(consentKey)) {
-  modal.classList.remove('hidden');
-  modal.classList.add('modal-visible');
-  document.body.classList.add('modal-open');
+    modal.classList.remove('hidden');
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
     // Guard to prevent multiple attachments
     if (!modal._listenersAttached) {
       const acceptBtn = document.getElementById('clipboard-consent-accept');
@@ -36,43 +37,37 @@ document.addEventListener('DOMContentLoaded', () => {
         acceptBtn.onclick = () => {
           localStorage.setItem(consentKey, 'accepted');
           closeModal();
-          import('./Qwik.js').then(({ Qwik }) => {
-            window.qwikApp = new Qwik();
-          });
+          window.qwikApp = new Qwik();
         };
       }
       if (denyBtn) {
         denyBtn.onclick = () => {
           localStorage.setItem(consentKey, 'denied');
           closeModal();
-          import('./Qwik.js').then(({ Qwik }) => {
-            window.qwikApp = new Qwik();
-          });
+          window.qwikApp = new Qwik();
         };
       }
       modal._listenersAttached = true;
     }
     return;
   }
-  import('./Qwik.js').then(({ Qwik }) => {
-    window.qwikApp = new Qwik();
-  });
+  window.qwikApp = new Qwik();
 
   document.querySelectorAll('.nav-category').forEach(cat => {
     const items = cat.querySelector('.category-items');
     if (cat.classList.contains('nav-favourites')) {
-      items.classList.remove('nav-items-hidden');
+      items.style.display = '';
     } else {
-      items.classList.add('nav-items-hidden');
+      items.style.display = 'none';
     }
   });
 
   document.querySelectorAll('.category-header').forEach(header => {
     header.addEventListener('click', () => {
-  const cat = header.parentElement;
-  const items = cat.querySelector('.category-items');
-  if (!items) return;
-  items.classList.toggle('nav-items-hidden');
+      const cat = header.parentElement;
+      const items = cat.querySelector('.category-items');
+      if (!items) return;
+      items.style.display = (items.style.display === 'none') ? '' : 'none';
     });
   });
 
@@ -82,11 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Why Qwik-tools button shows README modal as HTML
   const whyQwikBtn = document.getElementById('why-qwik-header');
   if (whyQwikBtn) {
-    whyQwikBtn.addEventListener('click', () => {
-      import('./readmeModal.js').then(({ showReadmeModal }) => {
-        showReadmeModal();
-      });
-    });
+    whyQwikBtn.addEventListener('click', showReadmeModal);
   }
 
   // Wire up Readme button to showReadmeModal
@@ -97,9 +88,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Tool switching logic
   function showTool(toolId) {
-  document.querySelectorAll('.tool-container').forEach(el => el.classList.add('tool-hidden'));
-  const el = document.getElementById(toolId);
-  if (el) el.classList.remove('tool-hidden');
+    document.querySelectorAll('.tool-container').forEach(el => el.style.display = 'none');
+    const el = document.getElementById(toolId);
+    if (el) el.style.display = '';
   }
 
 });

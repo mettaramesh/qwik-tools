@@ -45,7 +45,7 @@ export function showReadmeModal() {
     if (!document.getElementById('rdm-modal-style')) {
       const link = document.createElement('link');
       link.rel = 'stylesheet';
-  link.href = '/readmeModal.css';
+      link.href = './src/readmeModal.css';
       link.id = 'rdm-modal-style';
       document.head.appendChild(link);
     }
@@ -53,7 +53,7 @@ export function showReadmeModal() {
   // Show modal
   modal.classList.add('is-open');
   modal.setAttribute('aria-hidden', 'false');
-  document.body.classList.add('modal-open');
+  document.body.style.overflow = 'hidden';
   // Focus trap
   const content = modal.querySelector('#rdm-content');
   if (content) content.focus();
@@ -65,9 +65,9 @@ export function showReadmeModal() {
     });
   // Close logic
   function closeModal() {
-  modal.classList.remove('is-open');
-  modal.setAttribute('aria-hidden', 'true');
-  document.body.classList.remove('modal-open');
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
   }
   modal.querySelectorAll('[data-close]').forEach(el => el.onclick = closeModal);
   modal.querySelector('.rdm-backdrop').onclick = closeModal;

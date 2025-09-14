@@ -23,11 +23,11 @@ export function loadCharsetConverterTool(container) {
             <span class="small">Used when the input mode provides bytes (Base64/Hex/File).</span>
           </div>
         </div>
-  <div class="row small charset-margin-top">
+        <div class="row small" style="margin-top:8px">
           <label><input type="checkbox" id="normalizeNEL" checked> Normalize NEL (U+0085) → LF</label>
         </div>
 
-  <div id="fileBox" class="file row charset-hide">
+        <div id="fileBox" class="file row" style="display:none">
           <input type="file" id="fileInput" />
           <span id="fileInfo" class="small"></span>
         </div>
@@ -54,7 +54,7 @@ export function loadCharsetConverterTool(container) {
           <div class="row">
             <label for="encodeWith">Encode string as</label>
             <select id="encodeWith" class="base-select"></select>
-            <label class="charset-margin-left"><input type="checkbox" id="addBOM"> Add BOM</label>
+            <label style="margin-left:10px;"><input type="checkbox" id="addBOM"> Add BOM</label>
           </div>
         </div>
         <textarea id="outputArea" rows="10" readonly placeholder="Converted output will appear here..."></textarea>
@@ -70,28 +70,28 @@ export function loadCharsetConverterTool(container) {
     </div>
 
     <!-- QUICK PANEL: EBCDIC (CP037) file → ASCII -->
-  <div class="card card--quick-ebc charset-margin-top">
-  <h3 class="charset-margin-bottom">Quick Convert: <span class="hl">EBCDIC (CP037)</span> file <span class="charset-font-weight-400">→</span> ASCII</h3>
-  <div class="row charset-margin-bottom charset-align-items-flex-end">
-  <div class="charset-flex-minwidth">
+    <div class="card card--quick-ebc" style="margin-top:24px;">
+      <h3 style="margin-bottom:10px;">Quick Convert: <span class="hl">EBCDIC (CP037)</span> file <span style="font-weight:400">→</span> ASCII</h3>
+      <div class="row" style="margin-bottom:10px;align-items:flex-end;">
+        <div style="flex:1;min-width:180px;">
           <label class="form-label" for="ebcFileInput">Select EBCDIC file</label>
-          <input type="file" id="ebcFileInput" class="form-control charset-width-100" />
+          <input type="file" id="ebcFileInput" class="form-control" style="width:100%;" />
         </div>
-  <span id="ebcFileInfo" class="small charset-margin-left"></span>
+        <span id="ebcFileInfo" class="small" style="margin-left:12px;"></span>
       </div>
-  <div class="row small charset-margin-bottom">
+      <div class="row small" style="margin-bottom:10px;">
         <label><input type="checkbox" id="ebcNormalizeNEL" checked> Normalize NEL (U+0085) → LF</label>
-  <label class="charset-margin-left-lg"><input type="checkbox" id="ebcCRLF"> Use CRLF line endings in download</label>
+        <label style="margin-left:18px;"><input type="checkbox" id="ebcCRLF"> Use CRLF line endings in download</label>
       </div>
-  <div class="row charset-margin-bottom">
+      <div class="row" style="margin-bottom:10px;">
         <button class="btn btn--primary" id="btnEbcPreview">Preview</button>
         <button class="btn btn--outline" id="btnEbcDownload">Download ASCII .txt</button>
       </div>
-  <textarea id="ebcPreview" rows="8" readonly placeholder="Preview (first 2,000 chars)…" class="charset-preview"></textarea>
-  <div class="footer small charset-margin-top">This panel ignores other encoders/decoders and always treats input as CP037 bytes → ASCII/Unicode text.</div>
+      <textarea id="ebcPreview" rows="8" readonly placeholder="Preview (first 2,000 chars)…" style="margin-top:8px;min-height:120px;background:var(--color-background,#f9f9f9);border:1.5px solid var(--color-border,#e0e0e0);color:var(--color-text,#13343b);padding:10px 12px;border-radius:8px;font-size:1.05em;width:100%;resize:vertical;"></textarea>
+      <div class="footer small" style="margin-top:8px;">This panel ignores other encoders/decoders and always treats input as CP037 bytes → ASCII/Unicode text.</div>
     </div>
 
-  <div class="card charset-margin-top-lg">
+    <div class="card" style="margin-top:16px">
       <h3>Notes</h3>
       <ul class="small">
         <li><strong>CP037</strong> is U.S./Canada EBCDIC; other locales use different pages (e.g., 1140 adds the euro symbol).</li>
@@ -217,13 +217,8 @@ export function setupCharsetConverterTool(container) {
   inputMode.addEventListener('change', onModeChange);
   function onModeChange() {
     const mode = inputMode.value;
-    if (mode === 'file') {
-      fileBox.classList.remove('charset-hide');
-      inputArea.classList.add('charset-hide');
-    } else {
-      fileBox.classList.add('charset-hide');
-      inputArea.classList.remove('charset-hide');
-    }
+    fileBox.style.display = (mode === 'file') ? '' : 'none';
+    inputArea.style.display = (mode === 'file') ? 'none' : '';
   }
   onModeChange();
 
@@ -466,7 +461,7 @@ export function setupCharsetConverterTool(container) {
   // Capability note
   if (!hasTextDecoder) {
     const warn=document.createElement('div');
-  warn.className='small charset-error-color';
+    warn.className='small'; warn.style.color='var(--color-error, #c0392b)';
     warn.textContent='Limited mode: This browser lacks TextDecoder; built-in CP037 still works; other decoders unavailable.';
     compatBox.appendChild(warn);
   }
