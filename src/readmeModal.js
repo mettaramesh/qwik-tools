@@ -30,9 +30,9 @@ export function showReadmeModal() {
     modal.innerHTML = `
       <div class="rdm-backdrop" data-close></div>
       <div class="rdm-dialog" role="dialog" aria-modal="true" aria-labelledby="rdm-title">
-        <header class="rdm-header" style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
-          <h3 id="rdm-title" style="margin:0;">Qwik-Tools</h3>
-          <button class="rdm-close" aria-label="Close" data-close style="margin-left:auto;font-size:1.4rem;background:transparent;border:0;color:var(--color-text-secondary,#9aa7b2);cursor:pointer;padding:6px 8px;border-radius:8px;">&times;</button>
+        <header class="rdm-header rdm-header-flex">
+          <h3 id="rdm-title" class="rdm-header-title">Qwik-Tools</h3>
+          <button class="rdm-close" aria-label="Close" data-close>&times;</button>
         </header>
         <div class="rdm-body" id="rdm-content" tabindex="0">Loading...</div>
         <footer class="rdm-footer">

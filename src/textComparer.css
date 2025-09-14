@@ -1,0 +1,28 @@
+/* Text Comparer Tool CSS */
+.tc-panel-header-note {
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--muted);
+}
+.tc-flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.tc-bold {
+  font-weight: 700;
+}
+.tc-result-meta {
+  font-size: 13px;
+  color: var(--muted);
+}
+.tc-no-diff {
+  color: var(--muted);
+}
+.tc-outline {
+  outline: 2px solid #2563eb;
+}
+.tc-bg-search {
+  background: #fff4ce;
+}

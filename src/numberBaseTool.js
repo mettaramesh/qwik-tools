@@ -68,7 +68,7 @@ export function loadNumberBaseTool(container) {
                     </div>
                     <div id="hexMsg" class="hint">Digits: 0–9 a–z</div>
                 </div>
-                <div style="grid-column:1 / -1">
+                <div class="nb-grid-span">
                     <div class="row">
                         <label>Custom</label>
                         <select id="customBase" class="base-select" title="Choose a base from 2 to 36"></select>

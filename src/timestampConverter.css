@@ -1,0 +1,10 @@
+/* Timestamp Converter Tool CSS */
+.timestamp-section-header-mt { margin-top: 20px; }
+.timestamp-output-box {
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-base);
+  padding: 12px;
+  min-height: 200px;
+}
+.timestamp-mb-16 { margin-bottom: 16px; }

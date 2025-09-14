@@ -1,3 +1,21 @@
+.hidden { display: none !important; }
+.ml-10 { margin-left: 10px; }
+.mt-1-5em { margin-top: 1.5em; }
+
+#vlsm-calculator-tool .vlsm-bar {
+  height: 16px;
+  border-radius: 4px;
+  position: relative;
+}
+.hidden { display: none !important; }
+.ml-10 { margin-left: 10px; }
+.mt-1-5em { margin-top: 1.5em; }
+
+#vlsm-calculator-tool .vlsm-bar {
+  height: 16px;
+  border-radius: 4px;
+  position: relative;
+}
 /* NOTE: All selectors in this file must be scoped to the #vlsm-calculator-tool container to avoid global style leaks. */
 /* VLSM Calculator Tool CSS */
 #vlsm-calculator-tool .tool-header h2 {

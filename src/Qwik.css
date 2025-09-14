@@ -1,0 +1,15 @@
+/* Qwik main UI utility classes */
+.qwik-star {
+  color: #ff8a65;
+  font-size: 1.2em;
+  margin-left: 8px;
+  vertical-align: middle;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+.qwik-star-small { font-size: 1em; }
+.qwik-arrow { margin-right: 6px; }
+.qwik-hide { display: none !important; }
+.qwik-show { display: block !important; }

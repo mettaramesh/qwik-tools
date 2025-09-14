@@ -8,33 +8,33 @@ export function loadPasswordGeneratorTool(container) {
             <h2>Password Generator</h2>
             <p class="small">Generate strong, random passwords using cryptographically secure randomness. Customize length, character sets, and more.</p>
         </div>
-        <div class="grid-charset" style="color:#111;">
+    <div class="grid-charset pwgen-grid-charset">
             <!-- Settings -->
             <div class="card">
                 <h3>Settings</h3>
-                <div class="row" style="margin-bottom:10px;">
+                <div class="row pwgen-row-mb">
                     <label for="pwgen-len">Length</label>
-                    <input id="pwgen-len" type="range" min="8" max="128" value="16" style="flex:1;max-width:220px;">
-                    <input id="pwgen-lenNum" type="number" min="8" max="128" value="16" style="width:80px;">
+                    <input id="pwgen-len" type="range" min="8" max="128" value="16" class="pwgen-input-range">
+                    <input id="pwgen-lenNum" type="number" min="8" max="128" value="16" class="pwgen-input-num">
                 </div>
-                <div class="row" style="margin-bottom:10px;flex-wrap:wrap;gap:18px 18px;">
+                <div class="row pwgen-row-mb pwgen-row-fw">
                     <label><input type="checkbox" id="pwgen-lower" checked> a–z</label>
                     <label><input type="checkbox" id="pwgen-upper" checked> A–Z</label>
                     <label><input type="checkbox" id="pwgen-digits" checked> 0–9</label>
                     <label><input type="checkbox" id="pwgen-symbols" checked> Symbols</label>
                 </div>
-                <div class="row" style="margin-bottom:10px;">
+                <div class="row pwgen-row-mb">
                     <label for="pwgen-symset">Symbol set</label>
-                    <input id="pwgen-symset" type="text" value="!@#$%^&*()_-+=[]{};:,.?/~" style="min-width:180px;">
+                    <input id="pwgen-symset" type="text" value="!@#$%^&*()_-+=[]{};:,.?/~" class="pwgen-input-symset">
                 </div>
-                <div class="row" style="margin-bottom:10px;flex-wrap:wrap;gap:18px 18px;">
+                <div class="row pwgen-row-mb pwgen-row-fw">
                     <label><input type="checkbox" id="pwgen-noSimilar"> Exclude similar (O0 l1 I| S5 B8)</label>
                     <label><input type="checkbox" id="pwgen-noRepeat"> No immediate repeats</label>
                     <label><input type="checkbox" id="pwgen-noAmbig"> Exclude ambiguous (&#123; &#125; [ ] ( ) / \\ ' &quot; &#96; ~ , ; : .)</label>
                 </div>
-                <div class="row" style="margin-bottom:10px;">
+                <div class="row pwgen-row-mb">
                     <label for="pwgen-count">How many</label>
-                    <input id="pwgen-count" type="number" min="1" max="200" value="5" style="width:70px;">
+                    <input id="pwgen-count" type="number" min="1" max="200" value="5" class="pwgen-input-count">
                     <button id="pwgen-btnGen" class="btn btn--primary">Generate</button>
                     <button id="pwgen-btnCopyAll" class="btn btn--outline">Copy all</button>
                     <button id="pwgen-btnDownload" class="btn btn--outline">Download .txt</button>
@@ -44,7 +44,7 @@ export function loadPasswordGeneratorTool(container) {
             <!-- Output -->
             <div class="card">
                 <h3>Passwords</h3>
-                <div class="row" style="margin-bottom:10px;gap:18px 18px;">
+                <div class="row pwgen-row-mb pwgen-row-fw">
                     <span class="pill" id="pwgen-metaLen">Chars: 16</span>
                     <span class="pill" id="pwgen-metaPool">Pool: 0</span>
                     <span class="pill" id="pwgen-metaEntropy">Entropy: 0 bits</span>
@@ -52,10 +52,10 @@ export function loadPasswordGeneratorTool(container) {
                 <div id="pwgen-list" class="list"></div>
                 <div class="hr"></div>
                 <label>All results</label>
-                <textarea id="pwgen-allOut" readonly style="min-height:120px;"></textarea>
+                <textarea id="pwgen-allOut" readonly class="pwgen-textarea"></textarea>
             </div>
         </div>
-        <div class="card" style="margin-top:16px">
+    <div class="card pwgen-card-mt">
             <h3>Notes</h3>
             <ul class="small">
                 <li>Use a unique password per site. Consider a manager (Bitwarden/1Password/Keepass) so you don’t reuse secrets.</li>

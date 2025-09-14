@@ -19,7 +19,7 @@ export function loadTimestampConverter(container) {
                         <label class="form-label">Unix Timestamp (seconds)</label>
                     </div>
                     <input type="number" id="timestamp-input" class="form-control text-mono" placeholder="1609459200">
-                    <div class="section-header" style="margin-top: 20px;">
+                    <div class="section-header timestamp-section-header-mt">
                         <label class="form-label">Date & Time</label>
                     </div>
                     <input type="datetime-local" id="datetime-input" class="form-control">
@@ -28,20 +28,20 @@ export function loadTimestampConverter(container) {
                     <div class="section-header">
                         <label class="form-label">Converted Values</label>
                     </div>
-                    <div id="timestamp-output" class="code-input" style="background: var(--color-background); border: 1px solid var(--color-border); border-radius: var(--radius-base); padding: 12px; min-height: 200px;">
-                        <div style="margin-bottom: 16px;">
+                    <div id="timestamp-output" class="code-input timestamp-output-box">
+                        <div class="timestamp-mb-16">
                             <strong>Unix Timestamp (seconds):</strong><br>
                             <span id="unix-seconds" class="text-mono">-</span>
                         </div>
-                        <div style="margin-bottom: 16px;">
+                        <div class="timestamp-mb-16">
                             <strong>Unix Timestamp (milliseconds):</strong><br>
                             <span id="unix-milliseconds" class="text-mono">-</span>
                         </div>
-                        <div style="margin-bottom: 16px;">
+                        <div class="timestamp-mb-16">
                             <strong>ISO 8601:</strong><br>
                             <span id="iso-date" class="text-mono">-</span>
                         </div>
-                        <div style="margin-bottom: 16px;">
+                        <div class="timestamp-mb-16">
                             <strong>UTC:</strong><br>
                             <span id="utc-date" class="text-mono">-</span>
                         </div>

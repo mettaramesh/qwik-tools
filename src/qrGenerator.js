@@ -25,7 +25,7 @@ export function load(container) {
             <label class="form-label">QR Code</label>
             <button class="btn btn--sm" id="qr-download-btn">Download</button>
           </div>
-          <div id="qr-code-output" class="qr-code-output" style="text-align:center;padding:16px 0;"></div>
+          <div id="qr-code-output" class="qr-code-output qr-code-output-center"></div>
         </div>
         <div id="qr-error" class="error-message hidden"></div>
       </div>

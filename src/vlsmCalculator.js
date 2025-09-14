@@ -31,10 +31,10 @@ export function load(toolContent, toolId) {
         <label class="form-label" for="vlsm-hosts">Hosts per Subnet (comma separated)</label>
         <input id="vlsm-hosts" class="form-control" type="text" placeholder="e.g. 100,50,25" autocomplete="off" />
         <button class="btn btn--secondary" id="vlsm-calc-btn">Calculate</button>
-        <span id="vlsm-progress" class="progress-indicator" style="display:none;margin-left:10px;">Calculating...</span>
-        <span id="vlsm-feedback" class="user-feedback" style="display:none;margin-left:10px;"></span>
+  <span id="vlsm-progress" class="progress-indicator hidden ml-10">Calculating...</span>
+  <span id="vlsm-feedback" class="user-feedback hidden ml-10"></span>
       </div>
-      <div id="vlsm-results" class="output-section" style="margin-top:1.5em;display:none;">
+  <div id="vlsm-results" class="output-section hidden mt-1-5em">
         <div class="section-header"><label class="form-label">Results</label></div>
         <div id="vlsm-error" class="error-message hidden"></div>
         <table class="results-table" id="vlsm-results-table">
@@ -121,8 +121,8 @@ export function load(toolContent, toolId) {
           const lastHost = subnetCidr===32 ? network : broadcast-1;
           currentIp = broadcast+1;
 
-          const visualWidth = ((usableHosts / maxHostsInBase) * 100).toFixed(2);
-          const barColor = colorPalette[idx % colorPalette.length];
+    const visualWidth = ((usableHosts / maxHostsInBase) * 100).toFixed(2);
+    const barColor = colorPalette[idx % colorPalette.length];
 
           return {
             subnet: idx+1,
@@ -152,7 +152,7 @@ export function load(toolContent, toolId) {
             <td>${s.broadcast}</td>
             <td>${s.usableHosts}</td>
             <td>
-              <div style="background:${s.barColor};height:16px;width:${s.visualWidth}%;border-radius:4px;position:relative;" title="Subnet ${s.subnet}: ${s.network} ${s.cidr}, ${s.usableHosts} usable hosts"></div>
+              <div class="vlsm-bar" style="background:${s.barColor};width:${s.visualWidth}%" title="Subnet ${s.subnet}: ${s.network} ${s.cidr}, ${s.usableHosts} usable hosts"></div>
             </td>
           </tr>
         `).join('');

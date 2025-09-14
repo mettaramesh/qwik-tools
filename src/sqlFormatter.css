@@ -1,0 +1,8 @@
+/* SQL Formatter Tool CSS */
+.sql-flex-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.sql-label-flex { display: flex; align-items: center; gap: 8px; margin-left: auto; font-size: .9rem; }
+.sql-flex-wrap { display: flex; gap: 12px; flex-wrap: wrap; }
+.sql-flex-1 { flex: 1; min-width: 260px; }
+.sql-flex-between { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.sql-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', monospace; }
+.sql-error-mt { margin-top: 10px; }

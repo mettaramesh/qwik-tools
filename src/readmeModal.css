@@ -1,3 +1,6 @@
+/* Flex and title utility for header */
+.rdm-header-flex { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.rdm-header-title { margin: 0; }
 /* Modal styles for README modal (rdm-modal) */
 .rdm-modal { position: fixed; inset: 0; display: none; z-index: 9999; }
 .rdm-modal.is-open { display: block; }

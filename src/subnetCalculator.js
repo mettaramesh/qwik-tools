@@ -103,10 +103,10 @@ export function load(toolContent, toolId) {
         <label class="form-label" for="subnet-mask">Subnet Mask / CIDR</label>
         <input id="subnet-mask" class="form-control" type="text" placeholder="e.g. 255.255.255.0 or /24" autocomplete="off" />
         <button class="btn btn--secondary" id="subnet-calc-btn">Calculate</button>
-        <span id="subnet-progress" class="progress-indicator" style="display:none;margin-left:10px;">Calculating...</span>
-        <span id="subnet-feedback" class="user-feedback" style="display:none;margin-left:10px;"></span>
+  <span id="subnet-progress" class="progress-indicator hidden ml-10">Calculating...</span>
+  <span id="subnet-feedback" class="user-feedback hidden ml-10"></span>
       </div>
-      <div id="subnet-results" class="output-section" style="margin-top:1.5em;display:none;">
+  <div id="subnet-results" class="output-section hidden mt-1-5em">
         <div class="section-header"><label class="form-label">Results</label></div>
         <div id="subnet-error" class="error-message hidden"></div>
         <table class="results-table">

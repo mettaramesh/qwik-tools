@@ -66,7 +66,7 @@ export function load(container) {
 
       <div class="tc-main" id="tc-main">
         <div class="tc-editor-wrap" id="left-wrap">
-          <div class="panel-header">Original <div style="font-weight:400;font-size:12px;color:var(--muted)">Paste / Type</div></div>
+          <div class="panel-header">Original <div class="tc-panel-header-note">Paste / Type</div></div>
           <div class="panel-body">
             <div class="gutter" id="gutter-left" aria-hidden="true"></div>
             <div class="editor-area">
@@ -78,7 +78,7 @@ export function load(container) {
         <div class="splitter" id="splitter" role="separator" aria-orientation="vertical"><div class="bar"></div></div>
 
         <div class="tc-editor-wrap" id="right-wrap">
-          <div class="panel-header">Modified <div style="font-weight:400;font-size:12px;color:var(--muted)">Paste / Type</div></div>
+          <div class="panel-header">Modified <div class="tc-panel-header-note">Paste / Type</div></div>
           <div class="panel-body">
             <div class="gutter" id="gutter-right" aria-hidden="true"></div>
             <div class="editor-area">
@@ -89,9 +89,9 @@ export function load(container) {
       </div>
 
       <div class="tc-result-wrap" aria-live="polite">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-          <div style="font-weight:700">Comparison Result</div>
-          <div id="tc-result-meta" style="font-size:13px;color:var(--muted)"></div>
+  <div class="tc-flex-between">
+          <div class="tc-bold">Comparison Result</div>
+          <div id="tc-result-meta" class="tc-result-meta"></div>
         </div>
         <div id="tc-result" class="tc-result" role="region"></div>
       </div>
@@ -458,7 +458,7 @@ export function load(container) {
     useWorkerForDiff(leftText, rightText, opts,
       (html, similarity, meta) => {
         // Worker success
-        resultEl.innerHTML = html || '<div style="color:var(--muted)">No differences</div>';
+  resultEl.innerHTML = html || '<div class="tc-no-diff">No differences</div>';
         simEl.textContent = similarity ? `Similarity: ${similarity}%` : '';
         notice(meta || '');
         setStatus('Ready (worker)');
@@ -467,7 +467,7 @@ export function load(container) {
       (err) => {
         // Fallback to main-thread diff
         const { html, leftFormatted, rightFormatted } = buildDiffHtml(leftText, rightText, opts);
-        resultEl.innerHTML = html || '<div style="color:var(--muted)">No differences</div>';
+  resultEl.innerHTML = html || '<div class="tc-no-diff">No differences</div>';
         simEl.textContent = `Similarity: ${computeSimilarity(leftText, rightText)}%`;
         notice('');
         setStatus('Ready (main thread)', false);

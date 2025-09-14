@@ -113,18 +113,10 @@ export class Qwik {
             navItem.appendChild(toolLink);
             // Add clickable shallow red star after tool name
             const star = document.createElement('button');
-            star.className = 'star-btn favourite-star';
+            star.className = 'star-btn favourite-star qwik-star';
             star.title = 'Remove from Favourites';
             star.setAttribute('aria-label', 'Remove from Favourites');
             star.textContent = '★';
-            star.style.color = '#ff8a65'; // shallow red
-            star.style.fontSize = '1.2em';
-            star.style.marginLeft = '8px';
-            star.style.verticalAlign = 'middle';
-            star.style.background = 'none';
-            star.style.border = 'none';
-            star.style.cursor = 'pointer';
-            star.style.padding = '0';
             star.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -240,8 +232,7 @@ export class Qwik {
             const favHeader = favCategory.querySelector('.category-header');
             if (favHeader && !favHeader.querySelector('.collapse-arrow')) {
                 const arrow = document.createElement('span');
-                arrow.className = 'collapse-arrow';
-                arrow.style.marginRight = '6px';
+                arrow.className = 'collapse-arrow qwik-arrow';
                 arrow.textContent = favCategory.classList.contains('collapsed') ? '▶' : '▼';
                 favHeader.prepend(arrow);
             }
@@ -509,19 +500,19 @@ export class Qwik {
             items.classList.remove('expanded');
             if (q) {
                 if (hasVisible) {
-                    navCategory.style.display = '';
+                    navCategory.classList.remove('qwik-hide');
                     navCategory.classList.remove('collapsed');
                     items.classList.add('expanded');
-                    items.style.display = '';
+                    items.classList.remove('qwik-hide');
                 } else {
-                    navCategory.style.display = 'none';
+                    navCategory.classList.add('qwik-hide');
                 }
             } else {
-                navCategory.style.display = '';
-                items.style.display = '';
+                navCategory.classList.remove('qwik-hide');
+                items.classList.remove('qwik-hide');
                 items.classList.remove('expanded');
                 navCategory.classList.add('collapsed');
-                items.querySelectorAll('.nav-item').forEach(link => link.style.display = '');
+                items.querySelectorAll('.nav-item').forEach(link => link.classList.remove('qwik-hide'));
             }
         });
     }
