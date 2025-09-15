@@ -194,40 +194,51 @@ export function setupNumberBaseTool() {
         }
         return str;
     }
-    Object.keys(inputs).forEach(id=>{
-        inputs[id].addEventListener('input', ()=> updateFrom(id));
-        inputs[id].addEventListener('focus', ()=> msgs[id].className='hint');
-    });
-    document.querySelectorAll('[data-copy]').forEach(btn=>{
-        btn.addEventListener('click', ()=> copyText(btn.dataset.copy));
-    });
-    groupSizeSel.addEventListener('change', ()=>{
-        const order=['dec','hex','bin','oct','custom'];
-        const src = order.find(id=> inputs[id].value.trim()!=='' ) || 'dec';
-        updateFrom(src);
-    });
-    prefixesSel.addEventListener('change', () => {
-        // Reformat all fields to show/hide prefix as needed
-        const src = ['custom', 'dec', 'hex', 'bin', 'oct'].find(id => inputs[id].value.trim() !== '') || 'dec';
-        updateFrom(src);
-    });
-    customBaseSel.addEventListener('change', ()=>{
-        const src = ['custom','dec','hex','bin','oct'].find(id=> inputs[id].value.trim()!=='') || 'dec';
-        updateFrom(src);
-        setMsg('custom', `Digits: 0–${Number(customBaseSel.value)-1} (a–${DIGITS[Number(customBaseSel.value)-1]||''} for ≥ 10)`);
-    });
-    el('clearAll').addEventListener('click', ()=>{
-        Object.values(inputs).forEach(i=> i.value='');
-        Object.keys(msgs).forEach(k=> setMsg(k, defaultHints[k]));
-    });
-    document.addEventListener('keydown', (e)=>{
-        if(e.key==='Enter' && (e.ctrlKey||e.metaKey)){
-            const focused = document.activeElement;
-            const id = Object.entries(inputs).find(([,node])=> node===focused)?.[0];
-            if(id) copyText(id);
+    Object.keys(inputs).forEach(id => {
+        if (inputs[id]) {
+            inputs[id].addEventListener('input', () => updateFrom(id));
+            inputs[id].addEventListener('focus', () => msgs[id].className = 'hint');
         }
     });
-    inputs.dec.value = '2025';
+    document.querySelectorAll('[data-copy]').forEach(btn => {
+        btn.addEventListener('click', () => copyText(btn.dataset.copy));
+    });
+    if (groupSizeSel) {
+        groupSizeSel.addEventListener('change', () => {
+            const order = ['dec', 'hex', 'bin', 'oct', 'custom'];
+            const src = order.find(id => inputs[id] && inputs[id].value.trim() !== '') || 'dec';
+            updateFrom(src);
+        });
+    }
+    if (prefixesSel) {
+        prefixesSel.addEventListener('change', () => {
+            // Reformat all fields to show/hide prefix as needed
+            const src = ['custom', 'dec', 'hex', 'bin', 'oct'].find(id => inputs[id] && inputs[id].value.trim() !== '') || 'dec';
+            updateFrom(src);
+        });
+    }
+    if (customBaseSel) {
+        customBaseSel.addEventListener('change', () => {
+            const src = ['custom', 'dec', 'hex', 'bin', 'oct'].find(id => inputs[id] && inputs[id].value.trim() !== '') || 'dec';
+            updateFrom(src);
+            setMsg('custom', `Digits: 0–${Number(customBaseSel.value) - 1} (a–${DIGITS[Number(customBaseSel.value) - 1] || ''} for ≥ 10)`);
+        });
+    }
+    const clearAllBtn = el('clearAll');
+    if (clearAllBtn) {
+        clearAllBtn.addEventListener('click', () => {
+            Object.values(inputs).forEach(i => { if (i) i.value = ''; });
+            Object.keys(msgs).forEach(k => setMsg(k, defaultHints[k]));
+        });
+    }
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+            const focused = document.activeElement;
+            const id = Object.entries(inputs).find(([, node]) => node === focused)?.[0];
+            if (id) copyText(id);
+        }
+    });
+    if (inputs.dec) inputs.dec.value = '2025';
     updateFrom('dec');
 }
 

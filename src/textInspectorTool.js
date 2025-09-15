@@ -75,26 +75,36 @@ export async function loadTextInspectorTool(container) {
         const output = document.getElementById('text-inspector-output');
         const stats = document.getElementById('text-inspector-stats');
         function updateStats() {
+            if (!input || !stats) return;
             const s = getTextStats(input.value);
             stats.innerHTML = `Lines: <b>${s.lines}</b> | Words: <b>${s.words}</b> | Chars: <b>${s.chars}</b> | Bytes: <b>${s.bytes}</b> | Multibyte: <b>${s.multibyte}</b> | Sentences: <b>${s.sentences}</b> | Paragraphs: <b>${s.paragraphs}</b>`;
         }
-        input.addEventListener('input', updateStats);
+        if (input) input.addEventListener('input', updateStats);
         updateStats();
-        document.getElementById('to-upper').onclick = () => { output.value = toUpperCase(input.value); };
-        document.getElementById('to-lower').onclick = () => { output.value = toLowerCase(input.value); };
-        document.getElementById('to-title').onclick = () => { output.value = toTitleCase(input.value); };
-        document.getElementById('to-camel').onclick = () => { output.value = toCamelCase(input.value); };
-        document.getElementById('to-pascal').onclick = () => { output.value = toPascalCase(input.value); };
-        document.getElementById('to-snake').onclick = () => { output.value = toSnakeCase(input.value); };
-        document.getElementById('to-kebab').onclick = () => { output.value = toKebabCase(input.value); };
-        document.getElementById('reverse-words').onclick = () => { output.value = reverseWords(input.value); };
-        document.getElementById('sort-asc').onclick = () => { output.value = sortLinesAsc(input.value); };
-        document.getElementById('sort-desc').onclick = () => { output.value = sortLinesDesc(input.value); };
-        document.getElementById('to-sentence').onclick = () => { output.value = toSentenceCase(input.value); };
-        document.getElementById('trim-whitespace').onclick = () => { output.value = trimWhitespace(input.value); };
-        document.getElementById('collapse-blank').onclick = () => { output.value = collapseBlankLines(input.value); };
-        document.getElementById('remove-diacritics').onclick = () => { output.value = removeDiacritics(input.value); };
-        document.getElementById('clear-btn').onclick = () => { input.value = ''; output.value = ''; updateStats(); };
+        const actions = [
+            ['to-upper', () => { if (output && input) output.value = toUpperCase(input.value); }],
+            ['to-lower', () => { if (output && input) output.value = toLowerCase(input.value); }],
+            ['to-title', () => { if (output && input) output.value = toTitleCase(input.value); }],
+            ['to-camel', () => { if (output && input) output.value = toCamelCase(input.value); }],
+            ['to-pascal', () => { if (output && input) output.value = toPascalCase(input.value); }],
+            ['to-snake', () => { if (output && input) output.value = toSnakeCase(input.value); }],
+            ['to-kebab', () => { if (output && input) output.value = toKebabCase(input.value); }],
+            ['reverse-words', () => { if (output && input) output.value = reverseWords(input.value); }],
+            ['sort-asc', () => { if (output && input) output.value = sortLinesAsc(input.value); }],
+            ['sort-desc', () => { if (output && input) output.value = sortLinesDesc(input.value); }],
+            ['to-sentence', () => { if (output && input) output.value = toSentenceCase(input.value); }],
+            ['trim-whitespace', () => { if (output && input) output.value = trimWhitespace(input.value); }],
+            ['collapse-blank', () => { if (output && input) output.value = collapseBlankLines(input.value); }],
+            ['remove-diacritics', () => { if (output && input) output.value = removeDiacritics(input.value); }],
+        ];
+        actions.forEach(([id, fn]) => {
+            const btn = document.getElementById(id);
+            if (btn) btn.onclick = fn;
+        });
+        const clearBtn = document.getElementById('clear-btn');
+        if (clearBtn && input && output) {
+            clearBtn.onclick = () => { input.value = ''; output.value = ''; updateStats(); };
+        }
         document.querySelectorAll('.copy-btn').forEach(btn => {
             btn.onclick = function() {
                 const targetId = btn.getAttribute('data-target');

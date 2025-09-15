@@ -54,66 +54,75 @@ export async function loadJSONYamlTool(container) {
   const html = await resp.text();
   container.innerHTML = html;
   setTimeout(() => {
-        const input = document.getElementById('json-yaml-input');
-        const output = document.getElementById('json-yaml-output');
-        const status = document.getElementById('json-yaml-status');
-        const forceQuotesCheckbox = document.getElementById('force-quotes-checkbox');
-        function getForceQuotes() {
-            return forceQuotesCheckbox && forceQuotesCheckbox.checked;
+    const input = document.getElementById('json-yaml-input');
+    const output = document.getElementById('json-yaml-output');
+    const status = document.getElementById('json-yaml-status');
+    const forceQuotesCheckbox = document.getElementById('force-quotes-checkbox');
+    const toYamlBtn = document.getElementById('to-yaml');
+    const toJsonBtn = document.getElementById('to-json');
+    const clearBtn = document.getElementById('json-yaml-clear-btn');
+    function getForceQuotes() {
+      return forceQuotesCheckbox && forceQuotesCheckbox.checked;
+    }
+    if (toYamlBtn && input && output && status) {
+      toYamlBtn.onclick = () => {
+        try {
+          if (!input.value.trim()) throw new Error('Input is empty');
+          if (!isValidJSON(input.value)) throw new Error('Invalid JSON');
+          const yaml = jsonToYaml(input.value, getForceQuotes());
+          if (!yaml) throw new Error('Could not convert JSON to YAML');
+          output.value = yaml;
+          status.className = 'success-message';
+          status.textContent = 'Converted to YAML';
+          status.classList.remove('hidden');
+        } catch (e) {
+          output.value = '';
+          status.className = 'error-message';
+          status.textContent = e.message || 'Error converting to YAML';
+          status.classList.remove('hidden');
         }
-        document.getElementById('to-yaml').onclick = () => {
-            try {
-                if (!input.value.trim()) throw new Error('Input is empty');
-                if (!isValidJSON(input.value)) throw new Error('Invalid JSON');
-                const yaml = jsonToYaml(input.value, getForceQuotes());
-                if (!yaml) throw new Error('Could not convert JSON to YAML');
-                output.value = yaml;
-                status.className = 'success-message';
-                status.textContent = 'Converted to YAML';
-                status.classList.remove('hidden');
-            } catch (e) {
-                output.value = '';
-                status.className = 'error-message';
-                status.textContent = e.message || 'Error converting to YAML';
-                status.classList.remove('hidden');
-            }
-        };
-        document.getElementById('to-json').onclick = () => {
-            try {
-                if (!input.value.trim()) throw new Error('Input is empty');
-                if (!isValidYAML(input.value)) throw new Error('Invalid YAML');
-                const obj = yamlToJson(input.value);
-                output.value = JSON.stringify(obj, null, 2);
-                status.className = 'success-message';
-                status.textContent = 'Converted to JSON';
-                status.classList.remove('hidden');
-            } catch (e) {
-                output.value = '';
-                status.className = 'error-message';
-                status.textContent = e.message || 'Error converting to JSON';
-                status.classList.remove('hidden');
-            }
-        };
-        document.getElementById('json-yaml-clear-btn').onclick = () => {
-            input.value = '';
-            output.value = '';
-            status.classList.add('hidden');
-        };
-        // Copy button logic
-        document.querySelectorAll('.copy-btn').forEach(btn => {
-            btn.onclick = function() {
-                const targetId = btn.getAttribute('data-target');
-                const target = document.getElementById(targetId);
-                if (target) {
-                    navigator.clipboard.writeText(target.value).then(() => {
-                        const oldText = btn.textContent;
-                        btn.textContent = 'Copied!';
-                        setTimeout(() => { btn.textContent = oldText; }, 1000);
-                    });
-                }
-            };
-        });
-    }, 0);
+      };
+    }
+    if (toJsonBtn && input && output && status) {
+      toJsonBtn.onclick = () => {
+        try {
+          if (!input.value.trim()) throw new Error('Input is empty');
+          if (!isValidYAML(input.value)) throw new Error('Invalid YAML');
+          const obj = yamlToJson(input.value);
+          output.value = JSON.stringify(obj, null, 2);
+          status.className = 'success-message';
+          status.textContent = 'Converted to JSON';
+          status.classList.remove('hidden');
+        } catch (e) {
+          output.value = '';
+          status.className = 'error-message';
+          status.textContent = e.message || 'Error converting to JSON';
+          status.classList.remove('hidden');
+        }
+      };
+    }
+    if (clearBtn && input && output && status) {
+      clearBtn.onclick = () => {
+        input.value = '';
+        output.value = '';
+        status.classList.add('hidden');
+      };
+    }
+    // Copy button logic
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.onclick = function() {
+        const targetId = btn.getAttribute('data-target');
+        const target = document.getElementById(targetId);
+        if (target) {
+          navigator.clipboard.writeText(target.value).then(() => {
+            const oldText = btn.textContent;
+            btn.textContent = 'Copied!';
+            setTimeout(() => { btn.textContent = oldText; }, 1000);
+          });
+        }
+      };
+    });
+  }, 0);
 }
 
 export async function load(container, toolId) {

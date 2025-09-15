@@ -44,28 +44,38 @@ export function setupHexViewerTool() {
     function getMode() {
         return Array.from(modeRadios).find(r=>r.checked)?.value || 'hex';
     }
-    showBtn.addEventListener('click', () => render(input.value, getMode()));
-    modeRadios.forEach(r => r.addEventListener('change', () => render(input.value, getMode())));
+    if (showBtn) showBtn.addEventListener('click', () => render(input.value, getMode()));
+    if (modeRadios && modeRadios.length) {
+        modeRadios.forEach(r => {
+            if (r) r.addEventListener('change', () => render(input.value, getMode()));
+        });
+    }
     // Tooltip on hover (hexcode and codepoint)
-    output.addEventListener('mouseover', e => {
-        if (e.target.classList.contains('hexcode') || e.target.classList.contains('codepoint')) {
-            const char = e.target.getAttribute('data-char');
-            showHexTooltip(e.target, char);
-        }
-    });
-    output.addEventListener('mouseout', e => {
-        if (e.target.classList.contains('hexcode') || e.target.classList.contains('codepoint')) {
-            hideHexTooltip();
-        }
-    });
-    copyBtn.addEventListener('click', () => {
-        const text = output.textContent || '';
-        if (text) navigator.clipboard.writeText(text);
-    });
-    clearBtn.addEventListener('click', () => {
-        output.innerHTML = '';
-        input.value = '';
-    });
+    if (output) {
+        output.addEventListener('mouseover', e => {
+            if (e.target.classList.contains('hexcode') || e.target.classList.contains('codepoint')) {
+                const char = e.target.getAttribute('data-char');
+                showHexTooltip(e.target, char);
+            }
+        });
+        output.addEventListener('mouseout', e => {
+            if (e.target.classList.contains('hexcode') || e.target.classList.contains('codepoint')) {
+                hideHexTooltip();
+            }
+        });
+    }
+    if (copyBtn && output) {
+        copyBtn.addEventListener('click', () => {
+            const text = output.textContent || '';
+            if (text) navigator.clipboard.writeText(text);
+        });
+    }
+    if (clearBtn && output && input) {
+        clearBtn.addEventListener('click', () => {
+            output.innerHTML = '';
+            input.value = '';
+        });
+    }
     render(input.value, getMode());
 }
 
