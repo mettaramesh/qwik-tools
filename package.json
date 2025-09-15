@@ -11,7 +11,6 @@
   "scripts": {
     "dev": "vite",
   "build": "vite build",
-  "postbuild": "node scripts/copy-static-to-dist.cjs",
     "preview": "vite preview",
     "audit": "npm audit --audit-level=high",
     "osv": "npx osv-scanner --lockfile=package-lock.json"
