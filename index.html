@@ -216,43 +216,8 @@
 
         <!-- Main Content -->
         <main class="main-content">
-           <div id="tool-content" class="tool-container">
-                    <!-- JSON Formatter Tool (Default) -->
-                    <div class="tool-header">
-                        <h2>JSON Formatter</h2>
-                        <p>Format, beautify, and minify JSON data</p>
-                    </div>
-                    
-                    <div class="tool-interface">
-                        <div class="tool-controls">
-                            <button class="btn btn--secondary" id="format-btn" aria-label="Format JSON">Format</button>
-                            <button class="btn btn--outline" id="minify-btn" aria-label="Minify JSON">Minify</button>
-                            <button class="btn btn--outline" id="validate-btn" aria-label="Validate JSON">Validate</button>
-                            <button class="btn btn--outline" id="clear-btn" aria-label="Clear JSON">Clear</button>
-                        </div>
-                        
-                        <div class="io-container">
-                            <div class="input-section">
-                                <div class="section-header">
-                                    <label class="form-label">Input JSON</label>
-                                    <button class="btn btn--sm copy-btn" data-target="json-input">Copy</button>
-                                </div>
-                                <textarea id="json-input" class="form-control code-input" placeholder="Paste or type your JSON here..." rows="12" aria-label="Input JSON"></textarea>
-                            </div>
-                            
-                            <div class="output-section">
-                                <div class="section-header">
-                                    <label class="form-label">Formatted Output</label>
-                                    <button class="btn btn--sm copy-btn" data-target="json-output">Copy</button>
-                                </div>
-                                <textarea id="json-output" class="form-control code-input" readonly rows="12" aria-label="Formatted Output"></textarea>
-                            </div>
-                        </div>
-                        
-                        <div id="json-error" class="error-message hidden"></div>
-                    </div>
-                </div>
-           <!-- Subnet Calculator tool will be rendered dynamically by its module -->
+           <div id="tool-content" class="tool-container"></div>
+           <!-- Tool content will be rendered dynamically by the router and tool modules -->
         </main>
     </div>
 </div>

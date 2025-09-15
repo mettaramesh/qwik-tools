@@ -5,8 +5,8 @@ function ensureCharsetConverterStyle(){
     link.id = 'charset-converter-style-link';
     link.rel = 'stylesheet';
     link.type = 'text/css';
-    link.href = './charsetConverterTool.css';
-    document.head.appendChild(link);
+    link.href = '/charsetConverterTool.css'; // Load from public root for correct MIME type
+    if (document.head) document.head.appendChild(link);
   }
 }
 ensureCharsetConverterStyle();
