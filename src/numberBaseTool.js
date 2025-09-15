@@ -14,8 +14,8 @@ export async function load(container) {
         const link = document.createElement('link');
         link.id = 'numberbase-css-link';
         link.rel = 'stylesheet';
-        link.href = 'numberBaseTool.css';
-        document.head.appendChild(link);
+        link.href = '/numberBaseTool.css'; // Load from public root
+        if (document.head) document.head.appendChild(link);
     }
     await loadNumberBaseTool(container);
 }
