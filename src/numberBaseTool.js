@@ -4,8 +4,10 @@
 export async function loadNumberBaseTool(container) {
     // Load HTML template from external file
     const html = await fetch('src/numberBaseTool.html').then(r => r.text());
-    container.innerHTML = html;
-    setupNumberBaseTool();
+    if (container) {
+        container.innerHTML = html;
+        setupNumberBaseTool();
+    }
 }
 
 export async function load(container) {
@@ -30,17 +32,19 @@ export function setupNumberBaseTool() {
     const customBaseSel = el('customBase');
 
     // Populate custom base 2..36
-    for(let b=2;b<=36;b++){
-        const opt=document.createElement('option');
-        opt.value=String(b); opt.textContent=`Base ${b}`;
-        if(b===5) opt.textContent += ' · quinary';
-        if(b===8) opt.textContent += ' · octal';
-        if(b===10) opt.textContent += ' · decimal';
-        if(b===12) opt.textContent += ' · dozenal';
-        if(b===16) opt.textContent += ' · hex';
-        customBaseSel.appendChild(opt);
+    if (customBaseSel) {
+        for(let b=2;b<=36;b++){
+            const opt=document.createElement('option');
+            opt.value=String(b); opt.textContent=`Base ${b}`;
+            if(b===5) opt.textContent += ' · quinary';
+            if(b===8) opt.textContent += ' · octal';
+            if(b===10) opt.textContent += ' · decimal';
+            if(b===12) opt.textContent += ' · dozenal';
+            if(b===16) opt.textContent += ' · hex';
+            customBaseSel.appendChild(opt);
+        }
+        customBaseSel.value='7';
     }
-    customBaseSel.value='7';
 
     const DIGITS = '0123456789abcdefghijklmnopqrstuvwxyz';
     function sanitize(str){
