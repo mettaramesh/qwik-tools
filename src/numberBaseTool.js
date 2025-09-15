@@ -115,9 +115,10 @@ export function setupNumberBaseTool() {
         msgs[id].className = ok? 'ok' : /Invalid|error/i.test(text) ? 'err' : 'hint';
     }
     function copyText(id) {
-        const baseMap = { bin: 2, oct: 8, dec: 10, hex: 16, custom: Number(customBaseSel.value) };
-        let txt = inputs[id].value.trim();
-        if (prefixesSel.value === 'std' && txt) {
+    if (!inputs[id]) return;
+    const baseMap = { bin: 2, oct: 8, dec: 10, hex: 16, custom: customBaseSel && customBaseSel.value ? Number(customBaseSel.value) : 2 };
+    let txt = (inputs[id].value || '').trim();
+    if (prefixesSel && prefixesSel.value === 'std' && txt) {
             // Remove spaces for prefixing
             let sign = '';
             let rest = txt;
@@ -146,22 +147,23 @@ export function setupNumberBaseTool() {
     let updating = false;
     function updateFrom(source){
         if(updating) return; updating = true;
-        const baseOf = {bin:2, oct:8, dec:10, hex:16, custom:Number(customBaseSel.value)};
-        const groupSize = Number(groupSizeSel.value);
+        const baseOf = {bin:2, oct:8, dec:10, hex:16, custom: customBaseSel && customBaseSel.value ? Number(customBaseSel.value) : 2};
+        const groupSize = groupSizeSel && groupSizeSel.value ? Number(groupSizeSel.value) : 0;
         let value = null;
         try {
-            let raw = inputs[source].value;
+            if (!inputs[source]) { updating = false; return; }
+            let raw = inputs[source].value || '';
             // Remove prefix before parsing
             raw = stripPrefix(raw, baseOf[source]);
-            value = parseToBigInt(raw, baseOf[source], signedToggle.checked);
+            value = parseToBigInt(raw, baseOf[source], signedToggle && signedToggle.checked);
             setMsg(source, defaultHints[source]);
         } catch (err) {
-            setMsg(source, String(err.message || err), false);
+            setMsg(source, String(err && err.message ? err.message : err), false);
             updating = false; return;
         }
         const ids = ['bin', 'oct', 'dec', 'hex', 'custom'];
         ids.forEach(id => {
-            if (id === source) return;
+            if (id === source || !inputs[id]) return;
             const b = baseOf[id];
             let formatted = formatFromBigInt(value, b, groupSize);
             formatted = formatWithPrefix(formatted, b);
@@ -172,7 +174,7 @@ export function setupNumberBaseTool() {
         const bSrc = baseOf[source];
         let srcFormatted = formatFromBigInt(value, bSrc, groupSize);
         srcFormatted = formatWithPrefix(srcFormatted, bSrc);
-        inputs[source].value = srcFormatted;
+        if (inputs[source]) inputs[source].value = srcFormatted;
         updating = false;
     }
     function stripPrefix(str, base) {
@@ -201,38 +203,38 @@ export function setupNumberBaseTool() {
     Object.keys(inputs).forEach(id => {
         if (inputs[id]) {
             inputs[id].addEventListener('input', () => updateFrom(id));
-            inputs[id].addEventListener('focus', () => msgs[id].className = 'hint');
+            inputs[id].addEventListener('focus', () => { if (msgs[id]) msgs[id].className = 'hint'; });
         }
     });
     document.querySelectorAll('[data-copy]').forEach(btn => {
-        btn.addEventListener('click', () => copyText(btn.dataset.copy));
+    btn.addEventListener('click', () => copyText(btn.dataset.copy));
     });
     if (groupSizeSel) {
         groupSizeSel.addEventListener('change', () => {
             const order = ['dec', 'hex', 'bin', 'oct', 'custom'];
-            const src = order.find(id => inputs[id] && inputs[id].value.trim() !== '') || 'dec';
+            const src = order.find(id => inputs[id] && inputs[id].value && inputs[id].value.trim() !== '') || 'dec';
             updateFrom(src);
         });
     }
     if (prefixesSel) {
         prefixesSel.addEventListener('change', () => {
             // Reformat all fields to show/hide prefix as needed
-            const src = ['custom', 'dec', 'hex', 'bin', 'oct'].find(id => inputs[id] && inputs[id].value.trim() !== '') || 'dec';
+            const src = ['custom', 'dec', 'hex', 'bin', 'oct'].find(id => inputs[id] && inputs[id].value && inputs[id].value.trim() !== '') || 'dec';
             updateFrom(src);
         });
     }
     if (customBaseSel) {
         customBaseSel.addEventListener('change', () => {
-            const src = ['custom', 'dec', 'hex', 'bin', 'oct'].find(id => inputs[id] && inputs[id].value.trim() !== '') || 'dec';
+            const src = ['custom', 'dec', 'hex', 'bin', 'oct'].find(id => inputs[id] && inputs[id].value && inputs[id].value.trim() !== '') || 'dec';
             updateFrom(src);
-            setMsg('custom', `Digits: 0–${Number(customBaseSel.value) - 1} (a–${DIGITS[Number(customBaseSel.value) - 1] || ''} for ≥ 10)`);
+            setMsg('custom', `Digits: 0–${customBaseSel && customBaseSel.value ? Number(customBaseSel.value) - 1 : 1} (a–${DIGITS[customBaseSel && customBaseSel.value ? Number(customBaseSel.value) - 1 : 1] || ''} for ≥ 10)`);
         });
     }
     const clearAllBtn = el('clearAll');
     if (clearAllBtn) {
         clearAllBtn.addEventListener('click', () => {
             Object.values(inputs).forEach(i => { if (i) i.value = ''; });
-            Object.keys(msgs).forEach(k => setMsg(k, defaultHints[k]));
+            Object.keys(msgs).forEach(k => { if (msgs[k]) setMsg(k, defaultHints[k]); });
         });
     }
     document.addEventListener('keydown', (e) => {
@@ -243,7 +245,7 @@ export function setupNumberBaseTool() {
         }
     });
     if (inputs.dec) inputs.dec.value = '2025';
-    updateFrom('dec');
+    if (inputs.dec) updateFrom('dec');
 }
 
 export default {
