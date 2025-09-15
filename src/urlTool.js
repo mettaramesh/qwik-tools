@@ -8,38 +8,11 @@ if (!window.setupCopyButtons) {
     window.setupCopyButtons = setupCopyButtons;
 }
 
-export function loadURLTool(container) {
-    // 100% code coverage: Renders the URL Encoder/Decoder tool UI.
-    container.innerHTML = `
-        <div class="tool-header">
-            <h2>URL Encoder/Decoder</h2>
-            <p>Encode and decode URLs and URI components</p>
-        </div>
-        <div class="tool-interface">
-            <div class="tool-controls">
-                <button class="btn btn--secondary" id="url-encode-btn">Encode</button>
-                <button class="btn btn--outline" id="url-decode-btn">Decode</button>
-                <button class="btn btn--outline" id="url-clear-btn">Clear</button>
-            </div>
-            <div class="io-container">
-                <div class="input-section">
-                    <div class="section-header">
-                        <label class="form-label">Input URL</label>
-                        <button class="btn btn--sm copy-btn" data-target="url-input">Copy</button>
-                    </div>
-                    <textarea id="url-input" class="form-control code-input" placeholder="Enter URL to encode/decode..." rows="12"></textarea>
-                </div>
-                <div class="output-section">
-                    <div class="section-header">
-                        <label class="form-label">Output</label>
-                        <button class="btn btn--sm copy-btn" data-target="url-output">Copy</button>
-                    </div>
-                    <textarea id="url-output" class="form-control code-input" readonly rows="12"></textarea>
-                </div>
-            </div>
-            <div id="url-status" class="hidden"></div>
-        </div>
-    `;
+export async function loadURLTool(container) {
+    // Fetch and inject the external HTML template for the URL Encoder/Decoder tool UI.
+    const response = await fetch('src/urlTool.html');
+    const html = await response.text();
+    container.innerHTML = html;
     // Ensure fields are empty on load
     setTimeout(() => {
         const input = container.querySelector('#url-input');
@@ -99,6 +72,6 @@ export function setupURLTool() {
     if (typeof window.setupCopyButtons === 'function') window.setupCopyButtons();
 }
 
-export function load(container, toolId) {
-    loadURLTool(container);
+export async function load(container, toolId) {
+    await loadURLTool(container);
 }

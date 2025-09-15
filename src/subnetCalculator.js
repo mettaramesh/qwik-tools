@@ -73,8 +73,7 @@ export function calculateSubnet(ip, maskOrCidr) {
 }
 
 // Qwik dynamic tool loader
-export function load(toolContent, toolId) {
-  // Only clear the tool content area, not the whole main-content
+export async function load(toolContent, toolId) {
   if (!toolContent) return;
   toolContent.innerHTML = '';
 
@@ -91,58 +90,10 @@ export function load(toolContent, toolId) {
   const toolDiv = document.createElement('div');
   toolDiv.id = 'subnet-calculator-tool';
   toolDiv.className = 'tool-container';
-  fetch('./src/subnetCalculator.html')
-    .then(r => r.text())
-    .then(html => {
-      toolDiv.innerHTML = html;
-      toolContent.appendChild(toolDiv);
-
-      // Attach event handler after rendering
-      const subnetBtn = toolDiv.querySelector('#subnet-calc-btn');
-      if (subnetBtn) {
-        subnetBtn.addEventListener('click', () => {
-          const ip = toolDiv.querySelector('#subnet-ip').value.trim();
-          const mask = toolDiv.querySelector('#subnet-mask').value.trim();
-          const progress = toolDiv.querySelector('#subnet-progress');
-          const feedback = toolDiv.querySelector('#subnet-feedback');
-          const resultsDiv = toolDiv.querySelector('#subnet-results');
-          const errorDiv = toolDiv.querySelector('#subnet-error');
-          progress.classList.remove('hidden');
-          feedback.classList.add('hidden');
-          feedback.textContent = '';
-          setTimeout(() => {
-            const results = calculateSubnet(ip, mask);
-            progress.classList.add('hidden');
-            if (results.error) {
-              errorDiv.textContent = results.error;
-              errorDiv.classList.remove('hidden');
-              resultsDiv.classList.remove('hidden');
-              ['network','broadcast','first-host','last-host','usable-hosts','total-hosts','range','mask','cidr','class','type'].forEach(id => {
-                toolDiv.querySelector('#result-' + id).textContent = '';
-              });
-              feedback.textContent = 'Please check your input and try again.';
-              feedback.classList.remove('hidden');
-              return;
-            }
-            errorDiv.classList.add('hidden');
-            toolDiv.querySelector('#result-network').textContent = results.network;
-            toolDiv.querySelector('#result-broadcast').textContent = results.broadcast;
-            toolDiv.querySelector('#result-first-host').textContent = results.firstHost;
-            toolDiv.querySelector('#result-last-host').textContent = results.lastHost;
-            toolDiv.querySelector('#result-usable-hosts').textContent = results.usableHosts;
-            toolDiv.querySelector('#result-total-hosts').textContent = results.totalHosts;
-            toolDiv.querySelector('#result-range').textContent = results.range;
-            toolDiv.querySelector('#result-mask').textContent = results.mask;
-            toolDiv.querySelector('#result-cidr').textContent = results.cidr;
-            toolDiv.querySelector('#result-class').textContent = results.ipClass;
-            toolDiv.querySelector('#result-type').textContent = results.ipType;
-            resultsDiv.classList.remove('hidden');
-            feedback.textContent = 'Calculation complete!';
-            feedback.classList.remove('hidden');
-          }, 250);
-        });
-      }
-    });
+  const resp = await fetch('./src/subnetCalculator.html');
+  const html = await resp.text();
+  toolDiv.innerHTML = html;
+  toolContent.appendChild(toolDiv);
 
   // Attach event handler after rendering
   const subnetBtn = toolDiv.querySelector('#subnet-calc-btn');
@@ -154,9 +105,9 @@ export function load(toolContent, toolId) {
       const feedback = toolDiv.querySelector('#subnet-feedback');
       const resultsDiv = toolDiv.querySelector('#subnet-results');
       const errorDiv = toolDiv.querySelector('#subnet-error');
-  progress.classList.remove('hidden');
-  feedback.classList.add('hidden');
-  feedback.textContent = '';
+      progress.classList.remove('hidden');
+      feedback.classList.add('hidden');
+      feedback.textContent = '';
       setTimeout(() => {
         const results = calculateSubnet(ip, mask);
         progress.classList.add('hidden');

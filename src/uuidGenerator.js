@@ -3,35 +3,11 @@
 
 import { escapeHtml } from './utils.js';
 
-export function loadUUIDGenerator(container) {
-    // 100% code coverage: Renders the UUID Generator tool UI.
-    container.innerHTML = `
-        <div class="tool-header">
-            <h2>UUID Generator</h2>
-            <p>Generate UUID version 1 and version 4</p>
-        </div>
-        <div class="tool-interface">
-            <div class="tool-controls">
-                <button class="btn btn--secondary" id="uuid-generate-v4-btn">Generate UUID v4</button>
-                <button class="btn btn--outline" id="uuid-generate-v1-btn">Generate UUID v1</button>
-                <button class="btn btn--outline" id="uuid-generate-multiple-btn">Generate Multiple</button>
-                <button class="btn btn--outline" id="uuid-clear-btn">Clear</button>
-            </div>
-            <div class="tool-form-group">
-                <label class="form-label">Number of UUIDs</label>
-                <input type="number" id="uuid-count" class="form-control" value="1" min="1" max="100">
-            </div>
-            <div class="single-input-tool">
-                <div class="output-section">
-                    <div class="section-header">
-                        <label class="form-label">Generated UUIDs</label>
-                        <button class="btn btn--sm copy-btn" data-target="uuid-output">Copy</button>
-                    </div>
-                    <textarea id="uuid-output" class="form-control code-input" readonly rows="10"></textarea>
-                </div>
-            </div>
-        </div>
-    `;
+export async function loadUUIDGenerator(container) {
+    // Fetch and inject the external HTML template for the UUID Generator tool UI.
+    const response = await fetch('src/uuidGenerator.html');
+    const html = await response.text();
+    container.innerHTML = html;
 }
 
 export function setupUUIDGenerator() {
@@ -100,6 +76,6 @@ export function setupUUIDGenerator() {
     if (typeof window.setupCopyButtons === 'function') window.setupCopyButtons();
 }
 
-export function load(container, toolId) {
-    loadUUIDGenerator(container);
+export async function load(container, toolId) {
+    await loadUUIDGenerator(container);
 }
