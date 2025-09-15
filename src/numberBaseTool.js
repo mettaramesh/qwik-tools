@@ -24,8 +24,20 @@ export async function load(container) {
 
 export function setupNumberBaseTool() {
     const el = id => document.getElementById(id);
-    const inputs = { bin: el('bin'), oct: el('oct'), dec: el('dec'), hex: el('hex'), custom: el('custom') };
-    const msgs   = { bin: el('binMsg'), oct: el('octMsg'), dec: el('decMsg'), hex: el('hexMsg'), custom: el('customMsg') };
+    const inputs = {
+        bin: el('nb-bin'),
+        oct: el('nb-oct'),
+        dec: el('nb-dec'),
+        hex: el('nb-hex'),
+        custom: el('nb-custom')
+    };
+    const msgs   = {
+        bin: el('nb-binMsg'),
+        oct: el('nb-octMsg'),
+        dec: el('nb-decMsg'),
+        hex: el('nb-hexMsg'),
+        custom: el('nb-customMsg')
+    };
     const signedToggle = el('signedToggle');
     const groupSizeSel = el('groupSize');
     const prefixesSel  = el('prefixes');
