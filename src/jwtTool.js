@@ -11,7 +11,7 @@ export function loadJWTTool(container) {
       <p>Encode and decode JSON Web Tokens. Verify HS256, RS256, ES256 in-browser.</p>
     </div>
 
-    <div class="security-banner" style="border:1px solid var(--warn,#f5a623); background:#fff7e6; padding:10px; margin-bottom:12px; font-size:0.95rem;">
+  <div class="security-banner">
       <strong>Warning:</strong> Client-side verification is for testing only. Don’t paste secrets or production tokens you don’t control.
     </div>
 
@@ -28,24 +28,24 @@ export function loadJWTTool(container) {
   ]
 }'></textarea>
         <div class="small muted">If Public Key is empty and token header has <code>kid</code>, the tool will auto-select the matching JWK. If there is exactly one JWKS key and no <code>kid</code>, it will try that key if the alg matches.</div>
-        <div class="small muted" id="jwks-note" style="margin-top:4px;"></div>
+  <div class="small muted jwks-note" id="jwks-note"></div>
       </div>
 
       <!-- Sample Token Generator (HS256) -->
-      <div class="output-section" style="margin-top:16px;">
+  <div class="output-section jwt-mt-16">
         <div class="section-header">
           <label class="form-label">Generate Sample Token (HS256)</label>
         </div>
-        <div class="small muted" style="margin-bottom:8px;">
+  <div class="small muted jwt-mb-8">
           Uses the Secret (HS256) above. If blank, defaults to <code>testsecret</code>. Outputs a fresh token into the main JWT field.
         </div>
 
-        <div class="gen-grid" style="display:grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap:8px; align-items:end;">
-          <div style="grid-column: span 2;">
+  <div class="gen-grid jwt-gen-grid">
+          <div class="jwt-col-span-2">
             <label class="form-label">sub</label>
             <input id="gen-sub" class="form-control" type="text" placeholder="demo-user" value="demo-user">
           </div>
-          <div style="grid-column: span 2;">
+          <div class="jwt-col-span-2">
             <label class="form-label">name</label>
             <input id="gen-name" class="form-control" type="text" placeholder="Alice Example" value="Alice Example">
           </div>
@@ -65,27 +65,27 @@ export function loadJWTTool(container) {
               <option value="no">No</option>
             </select>
           </div>
-          <div style="grid-column: span 6;">
+          <div class="jwt-col-span-6">
             <label class="form-label">Extra claims (JSON, optional)</label>
             <textarea id="gen-extra" class="form-control code-input" rows="3" placeholder='{"role":"tester"}'></textarea>
           </div>
-          <div style="grid-column: span 2;">
+          <div class="jwt-col-span-2">
             <button class="btn btn--primary" id="gen-button">Generate HS256</button>
           </div>
-          <div class="small muted" id="gen-note" style="grid-column: span 4;"></div>
+          <div class="small muted jwt-col-span-4" id="gen-note"></div>
         </div>
       </div>
 
       <!-- Ephemeral Keypairs + Mint (RS256/ES256) -->
-      <div class="output-section" style="margin-top:16px;">
+  <div class="output-section jwt-mt-16">
         <div class="section-header">
           <label class="form-label">Ephemeral Keypair & Mint (RS256 / ES256)</label>
         </div>
-        <div class="small muted" style="margin-bottom:8px;">
+  <div class="small muted jwt-mb-8">
           Generates keys in-memory. Private keys are not persisted. Use the shown public key to verify minted tokens.
         </div>
 
-        <div class="gen-grid" style="display:grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap:8px; align-items:end;">
+  <div class="gen-grid jwt-gen-grid">
           <div>
             <label class="form-label">Algorithm</label>
             <select id="kp-alg" class="form-control">
@@ -102,28 +102,28 @@ export function loadJWTTool(container) {
               <option value="86400">1 day</option>
             </select>
           </div>
-          <div style="grid-column: span 2;">
+          <div class="jwt-col-span-2">
             <label class="form-label">sub</label>
             <input id="kp-sub" class="form-control" type="text" placeholder="demo-user" value="demo-user">
           </div>
-          <div style="grid-column: span 2;">
+          <div class="jwt-col-span-2">
             <label class="form-label">name</label>
             <input id="kp-name" class="form-control" type="text" placeholder="Alice Example" value="Alice Example">
           </div>
 
-          <div style="grid-column: span 2;">
+          <div class="jwt-col-span-2">
             <button class="btn btn--secondary" id="kp-generate">Generate Keypair</button>
           </div>
-          <div style="grid-column: span 2;">
+          <div class="jwt-col-span-2">
             <button class="btn btn--primary" id="kp-mint" disabled>Mint Token</button>
           </div>
-          <div class="small muted" id="kp-note" style="grid-column: span 2;"></div>
+          <div class="small muted jwt-col-span-2" id="kp-note"></div>
 
-          <div style="grid-column: span 3;">
+          <div class="jwt-col-span-3">
             <label class="form-label">Public Key (PEM, SPKI)</label>
             <textarea id="kp-pub" class="form-control code-input" rows="6" readonly></textarea>
           </div>
-          <div style="grid-column: span 3;">
+          <div class="jwt-col-span-3">
             <label class="form-label">Private Key (PEM, PKCS#8) — for demo only</label>
             <textarea id="kp-priv" class="form-control code-input" rows="6" readonly></textarea>
           </div>
@@ -131,25 +131,25 @@ export function loadJWTTool(container) {
       </div>
 
       <!-- Human-readable claims panel -->
-      <div class="output-section" style="margin-top:16px;">
+  <div class="output-section jwt-mt-16">
         <div class="section-header">
           <label class="form-label">Claims (Human-readable)</label>
         </div>
-        <div class="small muted" style="margin-bottom:8px;">
+  <div class="small muted jwt-mb-8">
           Shows local & UTC times and relative durations for <code>iat</code>, <code>nbf</code>, and <code>exp</code>.
         </div>
-        <div id="claims-human" class="small" style="display:grid; grid-template-columns: 1fr 2fr 2fr 1fr; gap:8px;">
-          <div style="font-weight:600;">Claim</div>
-          <div style="font-weight:600;">Local</div>
-          <div style="font-weight:600;">UTC</div>
-          <div style="font-weight:600;">Δ</div>
+  <div id="claims-human" class="small jwt-claims-human">
+          <div class="jwt-fw-600">Claim</div>
+          <div class="jwt-fw-600">Local</div>
+          <div class="jwt-fw-600">UTC</div>
+          <div class="jwt-fw-600">Δ</div>
           <div>IAT</div><div id="hr-iat-local"></div><div id="hr-iat-utc"></div><div id="hr-iat-rel"></div>
           <div>NBF</div><div id="hr-nbf-local"></div><div id="hr-nbf-utc"></div><div id="hr-nbf-rel"></div>
           <div>EXP</div><div id="hr-exp-local"></div><div id="hr-exp-utc"></div><div id="hr-exp-rel"></div>
         </div>
       </div>
 
-      <div class="grid-claims" style="display:grid; gap:16px; grid-template-columns:1fr 1fr 1fr; margin-top:16px;">
+  <div class="grid-claims jwt-grid-claims">
         <div>
           <label class="form-label">Clock Skew (±seconds)</label>
           <input id="jwt-skew" type="number" class="form-control" min="0" value="60">
@@ -173,7 +173,7 @@ export function loadJWTTool(container) {
         </div>
       </div>
 
-      <div id="jwt-status" class="hidden" style="margin-top:10px;"></div>
+  <div id="jwt-status" class="hidden jwt-mt-10"></div>
     </div>
   `;
 }
