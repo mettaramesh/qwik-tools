@@ -87,7 +87,7 @@ function getBuilderPanelHTML() {
     <div id="tab-advanced" class="hidden card card--section stack">
       <div class="field">
         <label>Advanced Expression</label>
-        <input id="advanced-cron" type="text" class="code" placeholder="e.g. 0 0/5 1,15 * 1-5" style="font-size:1.1em;width:100%;" />
+  <input id="advanced-cron" type="text" class="code cron-wide-input" placeholder="e.g. 0 0/5 1,15 * 1-5" />
       </div>
       <div class="field">
         <label>Quick Info</label>
@@ -101,7 +101,7 @@ function getBuilderPanelHTML() {
     <div id="tab-special" class="hidden card card--section stack">
       <div class="field">
         <label>Special Expression (W/L/?/#)</label>
-        <input id="special-cron" type="text" class="code" placeholder="e.g. 0 0 1W * ?" style="font-size:1.1em;width:100%;" />
+  <input id="special-cron" type="text" class="code cron-wide-input" placeholder="e.g. 0 0 1W * ?" />
       </div>
       <div class="field">
         <label>Quick Info</label>
@@ -114,7 +114,7 @@ function getBuilderPanelHTML() {
     <div id="tab-parse" class="hidden card card--section stack">
       <div class="field">
         <label>Paste or Enter Any Cron Expression</label>
-        <input id="parse-cron" type="text" class="code" placeholder="e.g. 0 12 * * MON-FRI" style="font-size:1.1em;width:100%;" />
+  <input id="parse-cron" type="text" class="code cron-wide-input" placeholder="e.g. 0 12 * * MON-FRI" />
       </div>
       <div class="btns"><button id="btnParse" class="btn btn--primary">Parse</button></div>
       <div class="field"><label>Explanation</label><div class="status" id="parseExplainBox"><div id="parseExplainText" class="small">—</div></div></div>
@@ -145,7 +145,7 @@ function getOutputPanelHTML() {
         <div class="status ok" id="validBox"><div class="stack"><div id="validTitle"><strong>Looks good.</strong></div><div class="small" id="validDetail">Expression structure is valid.</div></div></div>
       </div>
       <div class="field"><label>Notes</label><div class="help">• 5-field order is <span class="kbd">min hour dom mon dow</span>.<br/>• For specific <span class="kbd">dom</span>, set <span class="kbd">dow</span> to <span class="kbd">?</span>.<br/>• Impossible dates trigger warnings.</div></div>
-      <div class="field"><label>Info</label><div class="status" id="cronInfoBox" style="display:none"></div></div>
+  <div class="field"><label>Info</label><div class="status cron-info-box" id="cronInfoBox"></div></div>
       <div class="cron-actions-row-fixed">
         <button class="btn btn--outline" id="btnCopy">Copy</button>
         <button class="btn btn--primary" id="btnExplain">Explain</button>

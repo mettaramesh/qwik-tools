@@ -325,7 +325,7 @@ export function setupHTMLEntityTool(container) {
     try {
       previewFrame.style.display = '';
       previewEscaped.style.display = 'none';
-      const bodyContent = (content || '').trim() || '<div style="color:#666;font-family:system-ui;padding:12px;">(Nothing to preview)</div>';
+  const bodyContent = (content || '').trim() || '<div class="html-entity-preview-empty">(Nothing to preview)</div>';
       const injected = `
         <!doctype html>
         <html lang="en">

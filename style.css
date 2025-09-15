@@ -1,3 +1,72 @@
+/* HTML Entity Tool Preview Empty State */
+.html-entity-preview-empty {
+  color: #666;
+  font-family: system-ui;
+  padding: 12px;
+}
+/* Cron Parser Styles */
+.cron-wide-input {
+  font-size: 1.1em;
+  width: 100%;
+}
+.cron-info-box {
+  display: none;
+}
+/* Number Base Tool Styles */
+.number-base-fullwidth {
+  grid-column: 1 / -1;
+}
+/* JSON-YAML Tool Styles */
+.json-yaml-label {
+  margin-left: 16px;
+  font-size: 0.98em;
+  vertical-align: middle;
+}
+.json-yaml-checkbox {
+  vertical-align: middle;
+  margin-right: 4px;
+}
+/* JWT Tool Styles */
+.security-banner {
+  border: 1px solid var(--warn, #f5a623);
+  background: #fff7e6;
+  padding: 10px;
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+}
+.jwt-hints {
+  margin-top: 6px;
+}
+.grid-keys {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr 1fr;
+}
+.jwt-secret-row {
+  display: flex;
+  gap: 8px;
+}
+.jwt-secret-input {
+  flex: 1;
+}
+/* Markdown Preview Output */
+#md-output {
+  background: #fff;
+  color: #111;
+  min-height: 10em;
+  overflow: auto;
+}
+/* Not Found Page Styles */
+.notfound-container {
+  padding: 2rem;
+  text-align: center;
+  color: var(--color-error, #c00);
+  font-size: 1.5rem;
+}
+.notfound-home-link {
+  color: var(--color-primary, #21808d);
+  text-decoration: underline;
+}
 :root {
   /* Primitive Color Tokens */
   --color-white: rgba(255, 255, 255, 1);

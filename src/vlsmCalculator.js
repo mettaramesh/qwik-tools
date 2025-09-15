@@ -118,7 +118,7 @@ export function load(toolContent, toolId) {
                 <td>${s.broadcast}</td>
                 <td>${s.usableHosts}</td>
                 <td>
-                  <div class="vlsm-bar" style="background:${s.barColor};width:${s.visualWidth}%" title="Subnet ${s.subnet}: ${s.network} ${s.cidr}, ${s.usableHosts} usable hosts"></div>
+                  <div class="vlsm-bar" data-bar-color="${s.barColor}" data-bar-width="${s.visualWidth}" title="Subnet ${s.subnet}: ${s.network} ${s.cidr}, ${s.usableHosts} usable hosts"></div>
                 </td>
               </tr>
             `).join('');
@@ -234,7 +234,16 @@ export function load(toolContent, toolId) {
             <td>${s.broadcast}</td>
             <td>${s.usableHosts}</td>
             <td>
-              <div class="vlsm-bar" style="background:${s.barColor};width:${s.visualWidth}%" title="Subnet ${s.subnet}: ${s.network} ${s.cidr}, ${s.usableHosts} usable hosts"></div>
+              <div class="vlsm-bar" data-bar-color="${s.barColor}" data-bar-width="${s.visualWidth}" title="Subnet ${s.subnet}: ${s.network} ${s.cidr}, ${s.usableHosts} usable hosts"></div>
+// After rendering, set bar color and width via JS for all .vlsm-bar
+setTimeout(() => {
+  document.querySelectorAll('.vlsm-bar').forEach(bar => {
+    const color = bar.getAttribute('data-bar-color');
+    const width = bar.getAttribute('data-bar-width');
+    if (color) bar.style.background = color;
+    if (width) bar.style.width = width + '%';
+  });
+}, 0);
             </td>
           </tr>
         `).join('');
