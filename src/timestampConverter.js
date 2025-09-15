@@ -18,22 +18,24 @@ export function setupTimestampConverter() {
     const utcDate = document.getElementById('utc-date');
     const localDate = document.getElementById('local-date');
     const updateFromTimestamp = () => {
+        if (!timestampInput) return;
         const timestamp = parseInt(timestampInput.value);
         if (!timestamp) return;
         const date = new Date(timestamp * 1000);
-        unixSeconds.textContent = timestamp;
-        unixMilliseconds.textContent = timestamp * 1000;
-        isoDate.textContent = date.toISOString();
-        utcDate.textContent = date.toUTCString();
-        localDate.textContent = date.toString();
-        datetimeInput.value = date.toISOString().slice(0, 16);
+        if (unixSeconds) unixSeconds.textContent = timestamp;
+        if (unixMilliseconds) unixMilliseconds.textContent = timestamp * 1000;
+        if (isoDate) isoDate.textContent = date.toISOString();
+        if (utcDate) utcDate.textContent = date.toUTCString();
+        if (localDate) localDate.textContent = date.toString();
+        if (datetimeInput) datetimeInput.value = date.toISOString().slice(0, 16);
     };
     const updateFromDatetime = () => {
+        if (!datetimeInput) return;
         const datetime = datetimeInput.value;
         if (!datetime) return;
         const date = new Date(datetime);
         const timestamp = Math.floor(date.getTime() / 1000);
-        timestampInput.value = timestamp;
+        if (timestampInput) timestampInput.value = timestamp;
         updateFromTimestamp();
     };
     const setNow = (e) => {
@@ -42,7 +44,7 @@ export function setupTimestampConverter() {
             e.stopPropagation();
         }
         const now = Math.floor(Date.now() / 1000);
-        timestampInput.value = now;
+        if (timestampInput) timestampInput.value = now;
         updateFromTimestamp();
     };
     const clear = (e) => {
@@ -50,13 +52,13 @@ export function setupTimestampConverter() {
             e.preventDefault();
             e.stopPropagation();
         }
-        timestampInput.value = '';
-        datetimeInput.value = '';
-        unixSeconds.textContent = '-';
-        unixMilliseconds.textContent = '-';
-        isoDate.textContent = '-';
-        utcDate.textContent = '-';
-        localDate.textContent = '-';
+        if (timestampInput) timestampInput.value = '';
+        if (datetimeInput) datetimeInput.value = '';
+        if (unixSeconds) unixSeconds.textContent = '-';
+        if (unixMilliseconds) unixMilliseconds.textContent = '-';
+        if (isoDate) isoDate.textContent = '-';
+        if (utcDate) utcDate.textContent = '-';
+        if (localDate) localDate.textContent = '-';
     };
     if (timestampInput) timestampInput.addEventListener('input', updateFromTimestamp);
     if (datetimeInput) datetimeInput.addEventListener('input', updateFromDatetime);
