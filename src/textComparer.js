@@ -32,7 +32,11 @@ export async function load(container) {
   const rightWrap = container.querySelector('#right-wrap');
 
   // === utilities ===
-  function setStatus(msg, ok=true){ statusEl.textContent = msg; statusEl.style.color = ok ? 'var(--muted)' : 'var(--danger)'; }
+  function setStatus(msg, ok=true){
+    statusEl.textContent = msg;
+    statusEl.classList.remove('status-ok', 'status-error');
+    statusEl.classList.add(ok ? 'status-ok' : 'status-error');
+  }
   function notice(msg){ metaEl.textContent = msg || ''; }
   function escapeHtml(s){ return String(s).replace(/[&<>]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
   function escapeRegExp(s){ return String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }

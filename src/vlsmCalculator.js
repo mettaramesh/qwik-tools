@@ -240,8 +240,17 @@ setTimeout(() => {
   document.querySelectorAll('.vlsm-bar').forEach(bar => {
     const color = bar.getAttribute('data-bar-color');
     const width = bar.getAttribute('data-bar-width');
-    if (color) bar.style.background = color;
-    if (width) bar.style.width = width + '%';
+    // Remove any previous color/width classes
+    bar.classList.remove(...Array.from(bar.classList).filter(c => c.startsWith('bar-color-') || c.startsWith('bar-width-')));
+    if (color) {
+      // Sanitize color for class (e.g. #1976d2 -> 1976d2, rgb(25,118,210) -> rgb-25-118-210)
+      let colorClass = 'bar-color-' + color.replace(/[^a-zA-Z0-9]/g, '-');
+      bar.classList.add(colorClass);
+    }
+    if (width) {
+      let widthClass = 'bar-width-' + String(Math.round(Number(width)));
+      bar.classList.add(widthClass);
+    }
   });
 }, 0);
             </td>

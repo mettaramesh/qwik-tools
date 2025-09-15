@@ -1,3 +1,10 @@
+/* Status color classes for CSP compliance */
+.status-ok {
+  color: var(--muted) !important;
+}
+.status-error {
+  color: var(--danger) !important;
+}
 /* Text Comparer Tool CSS */
 .tc-panel-header-note {
   font-weight: 400;
