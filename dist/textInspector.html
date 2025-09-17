@@ -1,0 +1,40 @@
+<div class="tool-header">
+    <h2>Text Inspector & Case Converter</h2>
+    <p>Analyze and transform your text with various tools</p>
+</div>
+<div class="tool-interface">
+    <div class="button-row">
+        <button class="btn btn--secondary" id="to-upper">UPPER CASE</button>
+        <button class="btn btn--outline" id="to-lower">lower case</button>
+        <button class="btn btn--outline" id="to-title">Title Case</button>
+        <button class="btn btn--outline" id="to-camel">camelCase</button>
+        <button class="btn btn--outline" id="to-pascal">PascalCase</button>
+        <button class="btn btn--outline" id="to-snake">snake_case</button>
+        <button class="btn btn--outline" id="to-kebab">kebab-case</button>
+        <button class="btn btn--outline" id="reverse-words">Reverse Words</button>
+        <button class="btn btn--outline" id="sort-asc">Sort Lines ↑</button>
+        <button class="btn btn--outline" id="sort-desc">Sort Lines ↓</button>
+        <button class="btn btn--outline" id="to-sentence">Sentence case</button>
+        <button class="btn btn--outline" id="trim-whitespace">Trim Whitespace</button>
+        <button class="btn btn--outline" id="collapse-blank">Collapse Blank Lines</button>
+        <button class="btn btn--outline" id="remove-diacritics">Remove Diacritics</button>
+        <button class="btn btn--outline" id="clear-btn">Clear</button>
+    </div>
+    <div class="io-container">
+        <div class="input-section">
+            <div class="section-header">
+                <label class="form-label">Input</label>
+                <button class="btn btn--sm copy-btn" data-target="text-inspector-input">Copy</button>
+            </div>
+            <textarea id="text-inspector-input" class="form-control code-input" placeholder="Paste or type text here..." rows="10"></textarea>
+        </div>
+        <div class="output-section">
+            <div class="section-header">
+                <label class="form-label">Output</label>
+                <button class="btn btn--sm copy-btn" data-target="text-inspector-output">Copy</button>
+            </div>
+            <textarea id="text-inspector-output" class="form-control code-input" readonly rows="10"></textarea>
+        </div>
+    </div>
+    <div id="text-inspector-stats" class="stats-box"></div>
+</div>
