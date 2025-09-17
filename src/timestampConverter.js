@@ -3,9 +3,22 @@
 
 export async function loadTimestampConverter(container) {
     // Fetch and inject the external HTML template for the Timestamp Converter tool UI.
-    const response = await fetch('src/timestampConverter.html');
-    const html = await response.text();
-    container.innerHTML = html;
+    try {
+        const response = await fetch('timestampConverter.html');
+        if (!response.ok) {
+            throw new Error(`Failed to load Timestamp Converter HTML: ${response.status}`);
+        }
+        const html = await response.text();
+        // Security check: ensure we're not loading the full page
+        if (html.includes('<!DOCTYPE html') || html.includes('<html')) {
+            throw new Error('Invalid HTML content - contains full page structure');
+        }
+        container.innerHTML = html;
+    } catch (error) {
+        console.error('Error loading Timestamp Converter:', error);
+        container.innerHTML = '<div class="error">Failed to load Timestamp Converter tool</div>';
+        return;
+    }
 }
 
 export function setupTimestampConverter() {
