@@ -529,6 +529,5 @@ window.addEventListener('unhandledrejection', (event) => {
     // Optionally, display a user-friendly message in the UI
 });
 
-// Initialize app
-window.QwikApp = new Qwik();
-window.QwikApp.init();
+// Note: Qwik class is exported for initialization in main.js
+// Do not auto-initialize here to prevent duplicate instances

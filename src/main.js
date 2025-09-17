@@ -37,21 +37,21 @@ document.addEventListener('DOMContentLoaded', () => {
         acceptBtn.onclick = () => {
           localStorage.setItem(consentKey, 'accepted');
           closeModal();
-          window.qwikApp = new Qwik();
+          // Qwik is initialized in main.js - don't create duplicate instance
         };
       }
       if (denyBtn) {
         denyBtn.onclick = () => {
           localStorage.setItem(consentKey, 'denied');
           closeModal();
-          window.qwikApp = new Qwik();
+          // Qwik is initialized in main.js - don't create duplicate instance
         };
       }
       modal._listenersAttached = true;
     }
     return;
   }
-  window.qwikApp = new Qwik();
+  // Qwik is initialized in main.js - don't create duplicate instance here
 
   document.querySelectorAll('.nav-category').forEach(cat => {
     const items = cat.querySelector('.category-items');

@@ -13,6 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
         (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     document.documentElement.setAttribute('data-color-scheme', savedTheme);
 
-    // Initialize Qwik
-    new Qwik();
+    // Initialize Qwik - single instance stored globally
+    window.qwikApp = new Qwik();
 });
