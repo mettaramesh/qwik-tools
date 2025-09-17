@@ -1379,12 +1379,7 @@ select.form-control {
 }
 
 /* Loading States */
-.loading {
-  position: relative;
-  overflow: hidden;
-}
-
-.loading::after {
+/* Stronger selector to force logo SVG size */
   content: '';
   position: absolute;
   top: 0;
