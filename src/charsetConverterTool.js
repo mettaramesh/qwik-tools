@@ -1,11 +1,11 @@
 // Load external stylesheet for charset converter tool
 function ensureCharsetConverterStyle(){
-  if (!document.getElementById('charset-converter-style-link')) {
+  if (!document.getElementById('charsetconverter-css-link')) {
     const link = document.createElement('link');
-    link.id = 'charset-converter-style-link';
+    link.id = 'charsetconverter-css-link';
     link.rel = 'stylesheet';
     link.type = 'text/css';
-    link.href = '/charsetConverterTool.css'; // Load from public root for correct MIME type
+    link.href = '/charsetConverterTool.css'; // Always use absolute path
     if (document.head) document.head.appendChild(link);
   }
 }
@@ -492,14 +492,7 @@ export function setupCharsetConverterTool(container) {
 
 // Qwik dynamic loader
 export function load(container, toolId) {
-  // Inject CSS via <link> if not already present
-  if (!document.getElementById('charsetconverter-css-link')) {
-    const link = document.createElement('link');
-    link.id = 'charsetconverter-css-link';
-    link.rel = 'stylesheet';
-    link.href = 'charsetConverterTool.css';
-    document.head.appendChild(link);
-  }
+  ensureCharsetConverterStyle();
   loadCharsetConverterTool(container);
   setupCharsetConverterTool(container);
 }
