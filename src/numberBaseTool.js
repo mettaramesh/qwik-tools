@@ -3,10 +3,26 @@
 
 export async function loadNumberBaseTool(container) {
     // Load HTML template from external file
-    const html = await fetch('src/numberBaseTool.html').then(r => r.text());
-    if (container) {
-        container.innerHTML = html;
-        setupNumberBaseTool();
+    try {
+        const resp = await fetch('src/numberBaseTool.html');
+        if (!resp.ok) {
+            throw new Error(`Failed to load Number Base Tool HTML: ${resp.status}`);
+        }
+        const html = await resp.text();
+        // Security check: ensure we're not loading the full page
+        if (html.includes('<!DOCTYPE html') || html.includes('<html')) {
+            throw new Error('Invalid HTML content - contains full page structure');
+        }
+        if (container) {
+            container.innerHTML = html;
+            setupNumberBaseTool();
+        }
+    } catch (error) {
+        console.error('Error loading Number Base Tool:', error);
+        if (container) {
+            container.innerHTML = '<div class="error">Failed to load Number Base Tool</div>';
+        }
+        return;
     }
 }
 

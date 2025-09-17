@@ -34,7 +34,7 @@ async function ensureCronLibsLoaded() {
         const maybe = window.CronParser || window.cronParser || window.CRON_PARSER;
         if (maybe) window["cron-js-parser"] = { CronParser: maybe };
       }
-      await loadScript('/cronstrue.min.js');
+      await loadScript('cronstrue.min.js');
     })();
   }
   return __cronLibsReady;

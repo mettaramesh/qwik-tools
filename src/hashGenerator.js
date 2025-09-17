@@ -7,8 +7,22 @@ window.simpleMD5 = simpleMD5;
 
 export async function loadHashGenerator(container) {
     // Load HTML template from external file
-    const html = await fetch('src/hashGenerator.html').then(r => r.text());
-    container.innerHTML = html;
+    try {
+        const resp = await fetch('src/hashGenerator.html');
+        if (!resp.ok) {
+            throw new Error(`Failed to load Hash Generator HTML: ${resp.status}`);
+        }
+        const html = await resp.text();
+        // Security check: ensure we're not loading the full page
+        if (html.includes('<!DOCTYPE html') || html.includes('<html')) {
+            throw new Error('Invalid HTML content - contains full page structure');
+        }
+        container.innerHTML = html;
+    } catch (error) {
+        console.error('Error loading Hash Generator:', error);
+        container.innerHTML = '<div class="error">Failed to load Hash Generator tool</div>';
+        return;
+    }
 }
 
 export function setupHashGenerator() {

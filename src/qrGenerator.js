@@ -3,9 +3,23 @@
 
 export async function load(container) {
   // Load HTML template from external file
-  const html = await fetch('src/qrGenerator.html').then(r => r.text());
-  container.innerHTML = html;
-  setup();
+  try {
+    const resp = await fetch('src/qrGenerator.html');
+    if (!resp.ok) {
+      throw new Error(`Failed to load QR Generator HTML: ${resp.status}`);
+    }
+    const html = await resp.text();
+    // Security check: ensure we're not loading the full page
+    if (html.includes('<!DOCTYPE html') || html.includes('<html')) {
+      throw new Error('Invalid HTML content - contains full page structure');
+    }
+    container.innerHTML = html;
+    setup();
+  } catch (error) {
+    console.error('Error loading QR Generator:', error);
+    container.innerHTML = '<div class="error">Failed to load QR Generator tool</div>';
+    return;
+  }
 }
 
 function setup() {

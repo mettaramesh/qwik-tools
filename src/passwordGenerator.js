@@ -4,9 +4,23 @@
 
 export async function loadPasswordGeneratorTool(container) {
     // Load HTML template from external file
-    const html = await fetch('src/passwordGenerator.html').then(r => r.text());
-    container.innerHTML = html;
-    setupPasswordGeneratorTool();
+    try {
+        const resp = await fetch('src/passwordGenerator.html');
+        if (!resp.ok) {
+            throw new Error(`Failed to load Password Generator HTML: ${resp.status}`);
+        }
+        const html = await resp.text();
+        // Security check: ensure we're not loading the full page
+        if (html.includes('<!DOCTYPE html') || html.includes('<html')) {
+            throw new Error('Invalid HTML content - contains full page structure');
+        }
+        container.innerHTML = html;
+        setupPasswordGeneratorTool();
+    } catch (error) {
+        console.error('Error loading Password Generator:', error);
+        container.innerHTML = '<div class="error">Failed to load Password Generator tool</div>';
+        return;
+    }
 }
 
 export function setupPasswordGeneratorTool() {
