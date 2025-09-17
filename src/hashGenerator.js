@@ -8,7 +8,7 @@ window.simpleMD5 = simpleMD5;
 export async function loadHashGenerator(container) {
     // Load HTML template from external file
     try {
-        const resp = await fetch('src/hashGenerator.html');
+        const resp = await fetch('hashGenerator.html');
         if (!resp.ok) {
             throw new Error(`Failed to load Hash Generator HTML: ${resp.status}`);
         }

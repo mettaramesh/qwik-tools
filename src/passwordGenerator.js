@@ -5,7 +5,7 @@
 export async function loadPasswordGeneratorTool(container) {
     // Load HTML template from external file
     try {
-        const resp = await fetch('src/passwordGenerator.html');
+        const resp = await fetch('passwordGenerator.html');
         if (!resp.ok) {
             throw new Error(`Failed to load Password Generator HTML: ${resp.status}`);
         }

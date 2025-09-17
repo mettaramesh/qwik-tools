@@ -11,7 +11,7 @@
 
 export async function loadHTMLEntityTool(container) {
   // Load HTML template from external file
-  const html = await fetch('src/htmlEntityTool.html').then(r => r.text());
+  const html = await fetch('htmlEntityTool.html').then(r => r.text());
   container.innerHTML = html;
 }
 

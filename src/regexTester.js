@@ -2,7 +2,7 @@
 // 100% code coverage: Handles regex testing and UI setup.
 export async function loadRegexTester(container) {
     // Load HTML template from external file
-    const html = await fetch('src/regexTester.html').then(r => r.text());
+    const html = await fetch('regexTester.html').then(r => r.text());
     container.innerHTML = html;
 }
 

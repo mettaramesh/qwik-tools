@@ -4,7 +4,7 @@
 export async function loadNumberBaseTool(container) {
     // Load HTML template from external file
     try {
-        const resp = await fetch('src/numberBaseTool.html');
+        const resp = await fetch('numberBaseTool.html');
         if (!resp.ok) {
             throw new Error(`Failed to load Number Base Tool HTML: ${resp.status}`);
         }

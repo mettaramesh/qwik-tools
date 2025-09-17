@@ -6,7 +6,7 @@
 
 export async function loadJWTTool(container) {
   try {
-    const html = await fetch('src/jwtTool.html').then(r => r.text());
+    const html = await fetch('jwtTool.html').then(r => r.text());
     container.innerHTML = html;
   } catch (error) {
     console.error('Failed to load JWT tool HTML:', error);

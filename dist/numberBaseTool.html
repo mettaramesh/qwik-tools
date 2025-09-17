@@ -1,0 +1,56 @@
+<div class="nb-grid-span number-base-tool">
+  <h2>Number Base Converter</h2>
+  <div class="nb-controls">
+    <label for="signedToggle"><input type="checkbox" id="signedToggle"> Signed</label>
+    <label for="groupSize">Group: 
+      <select id="groupSize">
+        <option value="0">None</option>
+        <option value="4">4</option>
+        <option value="3">3</option>
+        <option value="2">2</option>
+      </select>
+    </label>
+    <label for="prefixes">Prefix:
+      <select id="prefixes">
+        <option value="none">None</option>
+        <option value="std">Standard (0x, 0b, 0o)</option>
+      </select>
+    </label>
+    <label for="customBase">Custom Base:
+      <select id="customBase"></select>
+    </label>
+    <button id="clearAll" type="button">Clear All</button>
+  </div>
+  <div class="nb-fields">
+    <div class="nb-row">
+      <label for="nb-bin">Binary</label>
+      <input id="nb-bin" type="text" autocomplete="off" spellcheck="false">
+      <button type="button" data-copy="bin" title="Copy">📋</button>
+      <span id="nb-binMsg" class="hint">Digits: 0–1</span>
+    </div>
+    <div class="nb-row">
+      <label for="nb-oct">Octal</label>
+      <input id="nb-oct" type="text" autocomplete="off" spellcheck="false">
+      <button type="button" data-copy="oct" title="Copy">📋</button>
+      <span id="nb-octMsg" class="hint">Digits: 0–7</span>
+    </div>
+    <div class="nb-row">
+      <label for="nb-dec">Decimal</label>
+      <input id="nb-dec" type="text" autocomplete="off" spellcheck="false">
+      <button type="button" data-copy="dec" title="Copy">📋</button>
+      <span id="nb-decMsg" class="hint">Digits: 0–9</span>
+    </div>
+    <div class="nb-row">
+      <label for="nb-hex">Hexadecimal</label>
+      <input id="nb-hex" type="text" autocomplete="off" spellcheck="false">
+      <button type="button" data-copy="hex" title="Copy">📋</button>
+      <span id="nb-hexMsg" class="hint">Digits: 0–9 a–z</span>
+    </div>
+    <div class="nb-row">
+      <label for="nb-custom">Custom</label>
+      <input id="nb-custom" type="text" autocomplete="off" spellcheck="false">
+      <button type="button" data-copy="custom" title="Copy">📋</button>
+      <span id="nb-customMsg" class="hint">Base 2–36</span>
+    </div>
+  </div>
+</div>

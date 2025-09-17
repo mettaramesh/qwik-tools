@@ -5,7 +5,7 @@ import { escapeHtml } from './utils.js';
 
 export async function loadUUIDGenerator(container) {
     // Fetch and inject the external HTML template for the UUID Generator tool UI.
-    const response = await fetch('src/uuidGenerator.html');
+    const response = await fetch('uuidGenerator.html');
     const html = await response.text();
     container.innerHTML = html;
 }

@@ -19,7 +19,7 @@ window.rgbToHsl = rgbToHsl;
 
 export async function loadColorPicker(container) {
     // Load HTML template from external file
-    const html = await fetch('src/colorPicker.html').then(r => r.text());
+    const html = await fetch('colorPicker.html').then(r => r.text());
     container.innerHTML = html;
 }
 

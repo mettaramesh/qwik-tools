@@ -10,7 +10,7 @@ if (!window.setupCopyButtons) {
 
 export async function loadURLTool(container) {
     // Fetch and inject the external HTML template for the URL Encoder/Decoder tool UI.
-    const response = await fetch('src/urlTool.html');
+    const response = await fetch('urlTool.html');
     const html = await response.text();
     container.innerHTML = html;
     // Ensure fields are empty on load

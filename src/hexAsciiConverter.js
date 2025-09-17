@@ -3,7 +3,7 @@
 
 export async function loadHexAsciiConverter(container) {
     // Load HTML template from external file (do not overwrite user manual edits)
-    const html = await fetch('src/hexAsciiConverter.html').then(r => r.text());
+    const html = await fetch('hexAsciiConverter.html').then(r => r.text());
     container.innerHTML = html;
     setupHexAsciiConverter();
 }

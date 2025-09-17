@@ -4,7 +4,7 @@ import { escapeHtml } from './utils.js';
 
 export async function loadLoremIpsum(container) {
     // Load HTML template from external file
-    const html = await fetch('src/loremIpsum.html').then(r => r.text());
+    const html = await fetch('loremIpsum.html').then(r => r.text());
     container.innerHTML = html;
 }
 

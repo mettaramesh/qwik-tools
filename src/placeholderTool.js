@@ -21,7 +21,7 @@ const toolNames = {
 
 export async function load(container, toolId) {
     // Load HTML template from external file (do not overwrite user manual edits)
-    const html = await fetch('src/placeholderTool.html').then(r => r.text());
+    const html = await fetch('placeholderTool.html').then(r => r.text());
     // Optionally inject toolName if needed, else just use as-is
     container.innerHTML = html;
 }

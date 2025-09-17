@@ -4,7 +4,7 @@
 export async function loadHexViewerTool(container) {
     ensureHexViewerToolStyle();
     // Load HTML template from external file
-    const html = await fetch('src/hexViewerTool.html').then(r => r.text());
+    const html = await fetch('hexViewerTool.html').then(r => r.text());
     container.innerHTML = html;
     setupHexViewerTool();
 }

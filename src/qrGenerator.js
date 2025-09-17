@@ -4,7 +4,7 @@
 export async function load(container) {
   // Load HTML template from external file
   try {
-    const resp = await fetch('src/qrGenerator.html');
+    const resp = await fetch('qrGenerator.html');
     if (!resp.ok) {
       throw new Error(`Failed to load QR Generator HTML: ${resp.status}`);
     }

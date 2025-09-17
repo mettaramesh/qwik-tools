@@ -1,0 +1,66 @@
+<div class="tool-header">
+  <h2>JWT Encoder/Decoder</h2>
+  <p>Encode and decode JSON Web Tokens. Verify HS256, RS256, ES256 in-browser.</p>
+</div>
+<div class="security-banner">
+  <strong>Warning:</strong> Client-side verification is for testing only. Don’t paste secrets or production tokens you don’t control.
+</div>
+<div class="tool-interface">
+  <div class="tool-controls">
+    <button class="btn btn--secondary" id="jwt-decode-btn">Decode</button>
+    <button class="btn btn--primary" id="jwt-encode-btn">Encode</button>
+    <button class="btn btn--outline" id="jwt-clear-btn">Clear</button>
+  </div>
+  <div class="io-container">
+    <div class="input-section">
+      <div class="section-header">
+        <label class="form-label">JWT Token</label>
+        <button class="btn btn--sm copy-btn" data-target="jwt-input">Copy</button>
+      </div>
+      <textarea id="jwt-input" class="form-control code-input" placeholder="Paste JWT token here or generate below..." rows="3"></textarea>
+  <div id="jwt-hints" class="muted small jwt-hints"></div>
+    </div>
+  </div>
+  <div class="multi-output-container">
+    <div class="output-section">
+      <div class="section-header">
+        <label class="form-label">Header</label>
+        <button class="btn btn--sm copy-btn" data-target="jwt-header">Copy</button>
+      </div>
+      <textarea id="jwt-header" class="form-control code-input" rows="6" placeholder='{"alg":"HS256","typ":"JWT"}'></textarea>
+      <div class="small muted" id="hdr-size"></div>
+    </div>
+    <div class="output-section">
+      <div class="section-header">
+        <label class="form-label">Payload</label>
+        <button class="btn btn--sm copy-btn" data-target="jwt-payload">Copy</button>
+      </div>
+      <textarea id="jwt-payload" class="form-control code-input" rows="8" placeholder='{"sub":"1234567890","name":"John Doe","iat":1516239022}'></textarea>
+      <div class="small muted" id="pld-size"></div>
+    </div>
+    <div class="output-section">
+      <div class="section-header">
+        <label class="form-label">Signature</label>
+        <button class="btn btn--sm copy-btn" data-target="jwt-signature">Copy</button>
+      </div>
+      <textarea id="jwt-signature" class="form-control code-input" readonly rows="2"></textarea>
+    </div>
+  </div>
+  <div class="grid-keys">
+    <div class="output-section">
+      <label class="form-label">Secret (HS256)</label>
+      <div class="jwt-secret-row">
+        <input id="jwt-secret" class="form-control jwt-secret-input" type="password" placeholder="Enter secret for HS256 signing/verifying">
+        <button class="btn btn--outline" id="jwt-forget-secret">Forget</button>
+      </div>
+      <div class="small muted">Secret is never stored; input is cleared on blur.</div>
+    </div>
+    <div class="output-section">
+      <div class="section-header">
+        <label class="form-label">Public Key (RS256/ES256) — JWK or PEM (SPKI)</label>
+        <button class="btn btn--sm copy-btn" data-target="jwt-pubkey">Copy</button>
+      </div>
+      <textarea id="jwt-pubkey" class="form-control code-input" rows="6" placeholder='JWK or PEM here'></textarea>
+    </div>
+  </div>
+</div>

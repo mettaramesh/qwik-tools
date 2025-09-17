@@ -372,7 +372,7 @@ function cronBuilderLogic() {
 
 async function loadCronParserTool(container) {
   if (!container) return;
-  const html = await fetch('src/cronParser.html').then(r => r.text());
+  const html = await fetch('cronParser.html').then(r => r.text());
   container.innerHTML = html;
   setTimeout(setupCronParserTool, 0);
 }

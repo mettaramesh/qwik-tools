@@ -3,7 +3,7 @@
 // To use: add <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> in your HTML, or load dynamically below
 
 export async function load(container) {
-  const html = await fetch('src/markdownPreview.html').then(r => r.text());
+  const html = await fetch('markdownPreview.html').then(r => r.text());
   container.innerHTML = html;
   if (typeof setup === 'function') setup();
 }
