@@ -67,9 +67,22 @@ function removeDiacritics(text) {
 }
 
 export async function loadTextInspectorTool(container) {
-    const resp = await fetch('textInspector.html');
-    const html = await resp.text();
-    container.innerHTML = html;
+    try {
+        const resp = await fetch('./textInspector.html');
+        if (!resp.ok) {
+            throw new Error(`Failed to load Text Inspector HTML: ${resp.status}`);
+        }
+        const html = await resp.text();
+        // Security check: ensure we're not loading the full page
+        if (html.includes('<!DOCTYPE html') || html.includes('<html')) {
+            throw new Error('Invalid HTML content - contains full page structure');
+        }
+        container.innerHTML = html;
+    } catch (error) {
+        console.error('Error loading Text Inspector:', error);
+        container.innerHTML = '<div class="error">Failed to load Text Inspector tool</div>';
+        return;
+    }
     setTimeout(() => {
         const input = document.getElementById('text-inspector-input');
         const output = document.getElementById('text-inspector-output');

@@ -2,9 +2,21 @@
 // 100% code coverage: Handles JSON formatting, minifying, validating, and UI setup.
 export async function loadJSONFormatter(container) {
     // Loads the JSON Formatter tool UI from external HTML template.
-    const resp = await fetch('jsonFormatter.html');
-    const html = await resp.text();
-    container.innerHTML = html;
+    try {
+        const resp = await fetch('./jsonFormatter.html');
+        if (!resp.ok) {
+            throw new Error(`Failed to load JSON Formatter HTML: ${resp.status}`);
+        }
+        const html = await resp.text();
+        // Security check: ensure we're not loading the full page
+        if (html.includes('<!DOCTYPE html') || html.includes('<html')) {
+            throw new Error('Invalid HTML content - contains full page structure');
+        }
+        container.innerHTML = html;
+    } catch (error) {
+        console.error('Error loading JSON Formatter:', error);
+        container.innerHTML = '<div class="error">Failed to load JSON Formatter tool</div>';
+    }
 }
 
 export function setupJSONFormatter() {

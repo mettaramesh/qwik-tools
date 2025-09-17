@@ -40,10 +40,22 @@ function validateJSONSchema(json, schema) {
 }
 
 export async function load(container) {
-  const resp = await fetch('jsonValidator.html');
-  const html = await resp.text();
-  container.innerHTML = html;
-  setup();
+  try {
+    const resp = await fetch('./jsonValidator.html');
+    if (!resp.ok) {
+      throw new Error(`Failed to load JSON Validator HTML: ${resp.status}`);
+    }
+    const html = await resp.text();
+    // Security check: ensure we're not loading the full page
+    if (html.includes('<!DOCTYPE html') || html.includes('<html')) {
+      throw new Error('Invalid HTML content - contains full page structure');
+    }
+    container.innerHTML = html;
+    setup();
+  } catch (error) {
+    console.error('Error loading JSON Validator:', error);
+    container.innerHTML = '<div class="error">Failed to load JSON Validator tool</div>';
+  }
 }
 
 function setup() {

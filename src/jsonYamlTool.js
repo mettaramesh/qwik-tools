@@ -1,4 +1,23 @@
-// Robust YAML ↔ JSON Tool (browser-compatible, pure JS)
+// Robust YAML ↔ JSON Tool (browser-compatible)
+
+export async function loadJSONYAMLTool(container) {
+  try {
+    const resp = await fetch('./jsonYamlTool.html');
+    if (!resp.ok) {
+      throw new Error(`Failed to load JSON-YAML tool HTML: ${resp.status}`);
+    }
+    const html = await resp.text();
+    // Security check: ensure we're not loading the full page
+    if (html.includes('<!DOCTYPE html') || html.includes('<html')) {
+      throw new Error('Invalid HTML content - contains full page structure');
+    }
+    container.innerHTML = html;
+  } catch (error) {
+    console.error('Error loading JSON-YAML tool:', error);
+    container.innerHTML = '<div class="error">Failed to load JSON-YAML tool</div>';
+    return;
+  }
+}
 
 function yamlToJson(yamlStr) {
   try {

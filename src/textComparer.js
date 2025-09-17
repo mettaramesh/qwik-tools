@@ -2,10 +2,23 @@
 // Fixed: checkboxes wired into diff algorithm + inline word-level diffs
 // Usage: import { load } from './text-comparer.js'; load(document.getElementById('myContainer'));
 
-export async function load(container) {
-  const resp = await fetch('textComparer.html');
-  const html = await resp.text();
-  container.innerHTML = html;
+export async function load(container, toolId) {
+  try {
+    const resp = await fetch('./textComparer.html');
+    if (!resp.ok) {
+      throw new Error(`Failed to load Text Comparer HTML: ${resp.status}`);
+    }
+    const html = await resp.text();
+    // Security check: ensure we're not loading the full page
+    if (html.includes('<!DOCTYPE html') || html.includes('<html')) {
+      throw new Error('Invalid HTML content - contains full page structure');
+    }
+    container.innerHTML = html;
+  } catch (error) {
+    console.error('Error loading Text Comparer:', error);
+    container.innerHTML = '<div class="error">Failed to load Text Comparer tool</div>';
+    return;
+  }
 
   // === refs ===
   const t1 = container.querySelector('#tc-text1');

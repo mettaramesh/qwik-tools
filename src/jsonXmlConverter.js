@@ -542,11 +542,27 @@ function cleanJsonFromXml(obj) {
   return obj;
 }
 
-export async function load(toolContent) {
-  const resp = await fetch('jsonXmlConverter.html');
-  const html = await resp.text();
-  toolContent.innerHTML = html;
-  setupCopyButtons();
+export async function loadJSONXMLTool(container) {
+  try {
+    const resp = await fetch('./jsonXmlConverter.html');
+    if (!resp.ok) {
+      throw new Error(`Failed to load JSON-XML converter HTML: ${resp.status}`);
+    }
+    const html = await resp.text();
+    // Security check: ensure we're not loading the full page
+    if (html.includes('<!DOCTYPE html') || html.includes('<html')) {
+      throw new Error('Invalid HTML content - contains full page structure');
+    }
+    container.innerHTML = html;
+  } catch (error) {
+    console.error('Error loading JSON-XML converter:', error);
+    container.innerHTML = '<div class="error">Failed to load JSON-XML converter tool</div>';
+    return;
+  }
+}
+
+export async function load(container, toolId) {
+  await loadJSONXMLTool(container);
   setupJSONXmlTool();
 }
 
