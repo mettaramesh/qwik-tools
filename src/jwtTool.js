@@ -7,6 +7,12 @@
 export async function loadJWTTool(container) {
   try {
     const html = await fetch('jwtTool.html').then(r => r.text());
+    
+    // Security validation: prevent loading full HTML documents
+    if (html.includes('<html>') || html.includes('<head>') || html.includes('<body>')) {
+      throw new Error('Invalid HTML content - contains full page structure');
+    }
+    
     container.innerHTML = html;
   } catch (error) {
     console.error('Failed to load JWT tool HTML:', error);
@@ -580,7 +586,11 @@ export function setupJWTTool() {
   }
 
   // ---------- Key hygiene ----------
-  $('jwt-forget-secret').addEventListener('click', (e) => { e.preventDefault(); secret.value = ''; });
+  const forgetBtn = $('jwt-forget-secret');
+  if (forgetBtn) {
+    forgetBtn.addEventListener('click', (e) => { e.preventDefault(); secret.value = ''; });
+  }
+  
   //secret.addEventListener('blur', () => { secret.value = ''; }); // auto clear on blur
   let suppressSecretClear = false;
   ['jwt-encode-btn','jwt-decode-btn','jwt-clear-btn','gen-button','kp-generate','kp-mint']
@@ -589,35 +599,42 @@ export function setupJWTTool() {
       if (el) el.addEventListener('mousedown', () => { suppressSecretClear = true; });
     });
 
-  secret.addEventListener('blur', () => {
-    if (suppressSecretClear) { suppressSecretClear = false; return; }
-    secret.value = '';
-  });
+  if (secret) {
+    secret.addEventListener('blur', () => {
+      if (suppressSecretClear) { suppressSecretClear = false; return; }
+      secret.value = '';
+    });
+  }
 
 
   // ---------- Wiring ----------
-  $('jwt-decode-btn').addEventListener('click', decodeJWT);
-  $('jwt-encode-btn').addEventListener('click', encodeJWT);
-  $('jwt-clear-btn').addEventListener('click', clearAll);
-  genBtn.addEventListener('click', generateSampleHS256);
-  kpGen.addEventListener('click', generateKeypair);
-  kpMint.addEventListener('click', mintWithKeypair);
-  jwksBox.addEventListener('input', parseJWKS);
+  const decodeBtn = $('jwt-decode-btn');
+  const encodeBtn = $('jwt-encode-btn');
+  const clearBtn = $('jwt-clear-btn');
+  
+  if (decodeBtn) decodeBtn.addEventListener('click', decodeJWT);
+  if (encodeBtn) encodeBtn.addEventListener('click', encodeJWT);
+  if (clearBtn) clearBtn.addEventListener('click', clearAll);
+  if (genBtn) genBtn.addEventListener('click', generateSampleHS256);
+  if (kpGen) kpGen.addEventListener('click', generateKeypair);
+  if (kpMint) kpMint.addEventListener('click', mintWithKeypair);
+  if (jwksBox) jwksBox.addEventListener('input', parseJWKS);
 
   // Debounced auto-verify
   let t = null;
   function maybeAutoDecode() {
-    if (autoEl.value === 'off') return;
+    if (!autoEl || autoEl.value === 'off') return;
     if (t) clearTimeout(t);
     t = setTimeout(() => decodeJWT(), 250);
   }
-  input.addEventListener('input', maybeAutoDecode);
-  header.addEventListener('input', () => { updateSizes(header.value, payload.value); updateHumanClaims(safeParseJSON(payload.value, {})); });
-  payload.addEventListener('input', () => { updateSizes(header.value, payload.value); updateHumanClaims(safeParseJSON(payload.value, {})); });
-  skewEl.addEventListener('change', maybeAutoDecode);
-  claimsModeEl.addEventListener('change', maybeAutoDecode);
-  pubkey.addEventListener('input', maybeAutoDecode);
-  secret.addEventListener('input', maybeAutoDecode);
+  
+  if (input) input.addEventListener('input', maybeAutoDecode);
+  if (header) header.addEventListener('input', () => { updateSizes(header.value, payload.value); updateHumanClaims(safeParseJSON(payload.value, {})); });
+  if (payload) payload.addEventListener('input', () => { updateSizes(header.value, payload.value); updateHumanClaims(safeParseJSON(payload.value, {})); });
+  if (skewEl) skewEl.addEventListener('change', maybeAutoDecode);
+  if (claimsModeEl) claimsModeEl.addEventListener('change', maybeAutoDecode);
+  if (pubkey) pubkey.addEventListener('input', maybeAutoDecode);
+  if (secret) secret.addEventListener('input', maybeAutoDecode);
 
   if (typeof window.setupCopyButtons === 'function') window.setupCopyButtons();
 

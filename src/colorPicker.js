@@ -5,7 +5,7 @@ function ensureColorPickerStyle(){
         link.id = 'color-picker-style-link';
         link.rel = 'stylesheet';
         link.type = 'text/css';
-        link.href = './colorPicker.css';
+        link.href = 'colorPicker.css';
         document.head.appendChild(link);
     }
 }
@@ -18,9 +18,20 @@ window.rgbToHsl = rgbToHsl;
 // 100% code coverage: Handles color picking, conversion, and UI setup.
 
 export async function loadColorPicker(container) {
-    // Load HTML template from external file
-    const html = await fetch('colorPicker.html').then(r => r.text());
-    container.innerHTML = html;
+    try {
+        // Load HTML template from external file
+        const html = await fetch('colorPicker.html').then(r => r.text());
+        
+        // Security validation: prevent loading full HTML documents
+        if (html.includes('<html>') || html.includes('<head>') || html.includes('<body>')) {
+            throw new Error('Invalid HTML content - contains full page structure');
+        }
+        
+        container.innerHTML = html;
+    } catch (error) {
+        console.error('Failed to load Color Picker HTML:', error);
+        container.innerHTML = '<div class="error">Failed to load Color Picker tool</div>';
+    }
 }
 
 export function setupColorPicker() {
