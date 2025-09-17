@@ -438,10 +438,14 @@ export class Qwik {
                 toolModule = import('./placeholderTool.js');
         }
         if (toolModule) {
-            toolModule.then(module => {
+            toolModule.then(async module => {
                 let loaded = false;
                 if (module.load && typeof module.load === 'function') {
-                    module.load(toolContent, toolId);
+                    if (toolId === 'jwt') {
+                        await module.load(toolContent, toolId);
+                    } else {
+                        module.load(toolContent, toolId);
+                    }
                     loaded = true;
                 } else if (module.default && typeof module.default === 'function') {
                     module.default(toolContent, toolId);

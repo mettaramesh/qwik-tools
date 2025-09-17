@@ -66,9 +66,9 @@ export const toolRegistry = {
   'jwt': async () => {
     const mod = await import('./jwtTool.js');
     return {
-      render: () => {
+      render: async () => {
         const toolContent = document.getElementById('tool-content');
-        if (toolContent && mod.load) mod.load(toolContent, 'jwt');
+        if (toolContent && mod.load) await mod.load(toolContent, 'jwt');
       },
       postLoad: () => {}
     };

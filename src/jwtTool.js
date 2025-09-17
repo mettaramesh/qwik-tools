@@ -4,178 +4,14 @@
 // security banner, HS256 Sample Generator, Ephemeral RS256/ES256 keypair + mint,
 // Human-readable claims panel, and **JWKS input with kid auto-selection**.
 
-export function loadJWTTool(container) {
-  container.innerHTML = `
-    <div class="tool-header">
-      <h2>JWT Encoder/Decoder</h2>
-      <p>Encode and decode JSON Web Tokens. Verify HS256, RS256, ES256 in-browser.</p>
-    </div>
-
-  <div class="security-banner">
-      <strong>Warning:</strong> Client-side verification is for testing only. Don’t paste secrets or production tokens you don’t control.
-    </div>
-
-    <div class="tool-interface">
-      <div class="tool-controls">
-        <button class="btn btn--secondary" id="jwt-decode-btn">Decode</button>
-        <button class="btn btn--primary" id="jwt-encode-btn">Encode</button>
-        <button class="btn btn--outline" id="jwt-clear-btn">Clear</button>
-      </div>
-
-      export async function loadJWTTool(container) {
-        const html = await fetch('src/jwtTool.html').then(r => r.text());
-        container.innerHTML = html;
-  ]
-}'></textarea>
-        <div class="small muted">If Public Key is empty and token header has <code>kid</code>, the tool will auto-select the matching JWK. If there is exactly one JWKS key and no <code>kid</code>, it will try that key if the alg matches.</div>
-  <div class="small muted jwks-note" id="jwks-note"></div>
-      </div>
-
-      <!-- Sample Token Generator (HS256) -->
-  <div class="output-section jwt-mt-16">
-        <div class="section-header">
-          <label class="form-label">Generate Sample Token (HS256)</label>
-        </div>
-  <div class="small muted jwt-mb-8">
-          Uses the Secret (HS256) above. If blank, defaults to <code>testsecret</code>. Outputs a fresh token into the main JWT field.
-        </div>
-
-  <div class="gen-grid jwt-gen-grid">
-          <div class="jwt-col-span-2">
-            <label class="form-label">sub</label>
-            <input id="gen-sub" class="form-control" type="text" placeholder="demo-user" value="demo-user">
-          </div>
-          <div class="jwt-col-span-2">
-            <label class="form-label">name</label>
-            <input id="gen-name" class="form-control" type="text" placeholder="Alice Example" value="Alice Example">
-          </div>
-          <div>
-            <label class="form-label">TTL</label>
-            <select id="gen-ttl" class="form-control">
-              <option value="300">5 min</option>
-              <option value="900" selected>15 min</option>
-              <option value="3600">1 hour</option>
-              <option value="86400">1 day</option>
-            </select>
-          </div>
-          <div>
-            <label class="form-label">Include iat</label>
-            <select id="gen-iat" class="form-control">
-              <option value="yes" selected>Yes</option>
-              <option value="no">No</option>
-            </select>
-          </div>
-          <div class="jwt-col-span-6">
-            <label class="form-label">Extra claims (JSON, optional)</label>
-            <textarea id="gen-extra" class="form-control code-input" rows="3" placeholder='{"role":"tester"}'></textarea>
-          </div>
-          <div class="jwt-col-span-2">
-            <button class="btn btn--primary" id="gen-button">Generate HS256</button>
-          </div>
-          <div class="small muted jwt-col-span-4" id="gen-note"></div>
-        </div>
-      </div>
-
-      <!-- Ephemeral Keypairs + Mint (RS256/ES256) -->
-  <div class="output-section jwt-mt-16">
-        <div class="section-header">
-          <label class="form-label">Ephemeral Keypair & Mint (RS256 / ES256)</label>
-        </div>
-  <div class="small muted jwt-mb-8">
-          Generates keys in-memory. Private keys are not persisted. Use the shown public key to verify minted tokens.
-        </div>
-
-  <div class="gen-grid jwt-gen-grid">
-          <div>
-            <label class="form-label">Algorithm</label>
-            <select id="kp-alg" class="form-control">
-              <option value="RS256" selected>RS256 (RSA 2048)</option>
-              <option value="ES256">ES256 (P-256)</option>
-            </select>
-          </div>
-          <div>
-            <label class="form-label">TTL</label>
-            <select id="kp-ttl" class="form-control">
-              <option value="300">5 min</option>
-              <option value="900" selected>15 min</option>
-              <option value="3600">1 hour</option>
-              <option value="86400">1 day</option>
-            </select>
-          </div>
-          <div class="jwt-col-span-2">
-            <label class="form-label">sub</label>
-            <input id="kp-sub" class="form-control" type="text" placeholder="demo-user" value="demo-user">
-          </div>
-          <div class="jwt-col-span-2">
-            <label class="form-label">name</label>
-            <input id="kp-name" class="form-control" type="text" placeholder="Alice Example" value="Alice Example">
-          </div>
-
-          <div class="jwt-col-span-2">
-            <button class="btn btn--secondary" id="kp-generate">Generate Keypair</button>
-          </div>
-          <div class="jwt-col-span-2">
-            <button class="btn btn--primary" id="kp-mint" disabled>Mint Token</button>
-          </div>
-          <div class="small muted jwt-col-span-2" id="kp-note"></div>
-
-          <div class="jwt-col-span-3">
-            <label class="form-label">Public Key (PEM, SPKI)</label>
-            <textarea id="kp-pub" class="form-control code-input" rows="6" readonly></textarea>
-          </div>
-          <div class="jwt-col-span-3">
-            <label class="form-label">Private Key (PEM, PKCS#8) — for demo only</label>
-            <textarea id="kp-priv" class="form-control code-input" rows="6" readonly></textarea>
-          </div>
-        </div>
-      </div>
-
-      <!-- Human-readable claims panel -->
-  <div class="output-section jwt-mt-16">
-        <div class="section-header">
-          <label class="form-label">Claims (Human-readable)</label>
-        </div>
-  <div class="small muted jwt-mb-8">
-          Shows local & UTC times and relative durations for <code>iat</code>, <code>nbf</code>, and <code>exp</code>.
-        </div>
-  <div id="claims-human" class="small jwt-claims-human">
-          <div class="jwt-fw-600">Claim</div>
-          <div class="jwt-fw-600">Local</div>
-          <div class="jwt-fw-600">UTC</div>
-          <div class="jwt-fw-600">Δ</div>
-          <div>IAT</div><div id="hr-iat-local"></div><div id="hr-iat-utc"></div><div id="hr-iat-rel"></div>
-          <div>NBF</div><div id="hr-nbf-local"></div><div id="hr-nbf-utc"></div><div id="hr-nbf-rel"></div>
-          <div>EXP</div><div id="hr-exp-local"></div><div id="hr-exp-utc"></div><div id="hr-exp-rel"></div>
-        </div>
-      </div>
-
-  <div class="grid-claims jwt-grid-claims">
-        <div>
-          <label class="form-label">Clock Skew (±seconds)</label>
-          <input id="jwt-skew" type="number" class="form-control" min="0" value="60">
-          <div class="small muted">Applied to exp, nbf, iat checks.</div>
-        </div>
-        <div>
-          <label class="form-label">Verify Claims</label>
-          <select id="jwt-claims-mode" class="form-control">
-            <option value="warn">Warn</option>
-            <option value="enforce">Enforce</option>
-            <option value="off">Off</option>
-          </select>
-          <div class="small muted">Enforce fails verification on invalid claims.</div>
-        </div>
-        <div>
-          <label class="form-label">Auto-verify on input</label>
-          <select id="jwt-auto" class="form-control">
-            <option value="on">On (debounced)</option>
-            <option value="off">Off</option>
-          </select>
-        </div>
-      </div>
-
-  <div id="jwt-status" class="hidden jwt-mt-10"></div>
-    </div>
-  `;
+export async function loadJWTTool(container) {
+  try {
+    const html = await fetch('src/jwtTool.html').then(r => r.text());
+    container.innerHTML = html;
+  } catch (error) {
+    console.error('Failed to load JWT tool HTML:', error);
+    container.innerHTML = '<div class="error">Failed to load JWT tool</div>';
+  }
 }
 
 export function setupJWTTool() {
@@ -789,7 +625,7 @@ export function setupJWTTool() {
   parseJWKS();
 }
 
-export function load(container, toolId) {
-  loadJWTTool(container);
+export async function load(container, toolId) {
+  await loadJWTTool(container);
   setupJWTTool();
 }
