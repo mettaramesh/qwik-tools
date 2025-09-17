@@ -2,11 +2,12 @@
 
 export async function loadJSONYAMLTool(container) {
   try {
-    const resp = await fetch('src/jsonYamlTool.html');
+    const resp = await fetch('jsonYamlTool.html');
     if (!resp.ok) {
       throw new Error(`Failed to load JSON-YAML tool HTML: ${resp.status}`);
     }
     const html = await resp.text();
+    console.log('JSON-YAML HTML loaded, length:', html.length, 'first 100 chars:', html.substring(0, 100));
     // Security check: ensure we're not loading the full page
     if (html.includes('<!DOCTYPE html') || html.includes('<html')) {
       throw new Error('Invalid HTML content - contains full page structure');

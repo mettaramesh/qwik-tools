@@ -544,11 +544,12 @@ function cleanJsonFromXml(obj) {
 
 export async function loadJSONXMLTool(container) {
   try {
-    const resp = await fetch('src/jsonXmlConverter.html');
+    const resp = await fetch('jsonXmlConverter.html');
     if (!resp.ok) {
       throw new Error(`Failed to load JSON-XML converter HTML: ${resp.status}`);
     }
     const html = await resp.text();
+    console.log('JSON-XML HTML loaded, length:', html.length, 'first 100 chars:', html.substring(0, 100));
     // Security check: ensure we're not loading the full page
     if (html.includes('<!DOCTYPE html') || html.includes('<html')) {
       throw new Error('Invalid HTML content - contains full page structure');
