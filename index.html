@@ -37,44 +37,9 @@
                 <span class="brand-text"><span class="q-rest">wik-Tools</span></span>
               </a>
             </div>
-            <div class="search-container">
-                <input type="text" id="search-input" placeholder="Search tools..." class="search-input" aria-label="Search tools">
-                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
-                    <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2"/>
-                </svg>
-            </div>
-        </div>
-        <div class="header-right">
-            <button id="why-qwik-header" class="why-qwik-btn why-qwik-header-btn">Why Qwik-tools</button>
-        </div>
-    </header>
-
-    <div class="main-layout">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <nav class="nav-menu">
-                <!-- Keep all original nav categories intact -->
-                <!-- Favourites -->
-                <div class="nav-category nav-favourites">
-                    <div class="category-header nav-favourites-header">
-                        <svg class="category-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
-                            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" stroke="currentColor" stroke-width="2" fill="currentColor"/>
-                        </svg>
-                        <span>Favourites</span>
-                    </div>
-                    <div class="category-items expanded" id="favourites-list"></div>
-                </div>
-
-              <div class="nav-category">
-                        <div class="category-header" data-category="converters">
-                            <svg class="category-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M7 16L17 16M17 16L13 12M17 16L13 20M17 8L7 8M7 8L11 4M7 8L11 12" stroke="currentColor" stroke-width="2"/>
-                            </svg>
-                            <span>Converters</span>
-                            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <polyline points="6,9 12,15 18,9" stroke="currentColor" stroke-width="2"/>
-                            </svg>
+            <main class="main-content">
+               <div id="tool-content" class="tool-container"></div>
+               <!-- Tool content will be rendered dynamically by the router and tool modules -->
                         </div>
                         <div class="category-items">
                             <a href="#json-yaml" class="nav-item" data-tool="json-yaml"><span class="tool-label">JSON ↔ YAML</span></a>
