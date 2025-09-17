@@ -185,19 +185,27 @@ export function setupJWTTool() {
   // ---------- JWKS parsing / selection ----------
   function parseJWKS() {
     jwksState = { keysByKid: new Map(), list: [], parsed: false };
+    if (!jwksBox) return;
+    
     const txt = (jwksBox.value || '').trim();
-    if (!txt) { jwksNote.textContent = ''; return; }
+    if (!txt) { 
+      if (jwksNote) jwksNote.textContent = ''; 
+      return; 
+    }
     try {
       const obj = JSON.parse(txt);
-      if (!obj || !Array.isArray(obj.keys)) { jwksNote.textContent = 'JWKS: expected an object with "keys" array.'; return; }
+      if (!obj || !Array.isArray(obj.keys)) { 
+        if (jwksNote) jwksNote.textContent = 'JWKS: expected an object with "keys" array.'; 
+        return; 
+      }
       obj.keys.forEach(jwk => {
         jwksState.list.push(jwk);
         if (jwk.kid) jwksState.keysByKid.set(jwk.kid, jwk);
       });
       jwksState.parsed = true;
-      jwksNote.textContent = `JWKS loaded: ${jwksState.list.length} key(s). ${jwksState.keysByKid.size} with kid.`;
+      if (jwksNote) jwksNote.textContent = `JWKS loaded: ${jwksState.list.length} key(s). ${jwksState.keysByKid.size} with kid.`;
     } catch (e) {
-      jwksNote.textContent = 'JWKS parse error: ' + e.message;
+      if (jwksNote) jwksNote.textContent = 'JWKS parse error: ' + e.message;
     }
   }
 
@@ -218,24 +226,43 @@ export function setupJWTTool() {
   }
 
   // ---------- Status / hints ----------
-  function setStatus(kind, text) { status.className = kind === 'ok' ? 'success-message' : 'error-message'; status.textContent = text; status.classList.remove('hidden'); }
-  function clearStatus() { status.className = 'hidden'; status.textContent = ''; }
-  function setHints(text) { hints.textContent = text || ''; }
+  function setStatus(kind, text) { 
+    if (status) {
+      status.className = kind === 'ok' ? 'success-message' : 'error-message'; 
+      status.textContent = text; 
+      status.classList.remove('hidden'); 
+    }
+  }
+  function clearStatus() { 
+    if (status) {
+      status.className = 'hidden'; 
+      status.textContent = ''; 
+    }
+  }
+  function setHints(text) { 
+    if (hints) {
+      hints.textContent = text || ''; 
+    }
+  }
   function updateSizes(hStr, pStr) {
     try {
       const hdrObj = JSON.parse(hStr || '{}');
       const pldObj = JSON.parse(pStr || '{}');
       const hdrBytes = te.encode(JSON.stringify(hdrObj)).length;
       const pldBytes = te.encode(JSON.stringify(pldObj)).length;
-      hdrSize.textContent = `Header size: ${hdrBytes} bytes (UTF-8)`;
-      pldSize.textContent = `Payload size: ${pldBytes} bytes (UTF-8)`;
+      if (hdrSize) hdrSize.textContent = `Header size: ${hdrBytes} bytes (UTF-8)`;
+      if (pldSize) pldSize.textContent = `Payload size: ${pldBytes} bytes (UTF-8)`;
       const warnHdr = hasNonASCII(JSON.stringify(hdrObj));
       const warnPld = hasNonASCII(JSON.stringify(pldObj));
       const notes = [];
       if (warnHdr) notes.push('Header contains non-ASCII (UTF-8 required).');
       if (warnPld) notes.push('Payload contains non-ASCII (UTF-8 required).');
       setHints(notes.join(' '));
-    } catch { hdrSize.textContent = ''; pldSize.textContent = ''; setHints(''); }
+    } catch { 
+      if (hdrSize) hdrSize.textContent = ''; 
+      if (pldSize) pldSize.textContent = ''; 
+      setHints(''); 
+    }
   }
 
   // ---------- Human-readable claims ----------
@@ -254,9 +281,9 @@ export function setupJWTTool() {
     const fields = ['iat','nbf','exp'];
     for (const f of fields) {
       const v = (pld && typeof pld[f] === 'number') ? pld[f] : null;
-      hr[f].local.textContent = fmtLocal(v);
-      hr[f].utc.textContent   = fmtUTC(v);
-      hr[f].rel.textContent   = fmtRel(v);
+      if (hr[f] && hr[f].local) hr[f].local.textContent = fmtLocal(v);
+      if (hr[f] && hr[f].utc) hr[f].utc.textContent   = fmtUTC(v);
+      if (hr[f] && hr[f].rel) hr[f].rel.textContent   = fmtRel(v);
     }
   }
 
@@ -277,6 +304,13 @@ export function setupJWTTool() {
   // ---------- Decode & Verify ----------
   async function decodeJWT(e) {
     if (e) { e.preventDefault(); e.stopPropagation(); }
+    
+    // Check if required DOM elements exist
+    if (!input || !header || !payload || !signature) {
+      console.warn('JWT tool: Missing required DOM elements for decoding');
+      return;
+    }
+    
     try {
       const token = (input.value || '').trim();
       updateSizes(header.value, payload.value);
@@ -390,6 +424,13 @@ export function setupJWTTool() {
   // ---------- Encode (manual textareas) ----------
   async function encodeJWT(e) {
     if (e) { e.preventDefault(); e.stopPropagation(); }
+    
+    // Check if required DOM elements exist
+    if (!input || !header || !payload || !signature) {
+      console.warn('JWT tool: Missing required DOM elements for encoding');
+      return;
+    }
+    
     try {
       let hdrStr = (header.value || '').trim();
       let pldStr = (payload.value || '').trim();
@@ -401,8 +442,8 @@ export function setupJWTTool() {
       const hdr = JSON.parse(hdrStr);
       const pld = JSON.parse(pldStr);
 
-      const wantsSignature = !!secret.value || !!pubkey.value;
-      if (secret.value) {
+      const wantsSignature = !!(secret && secret.value) || !!(pubkey && pubkey.value);
+      if (secret && secret.value) {
         if (hdr.alg && hdr.alg !== 'HS256') throw new Error(`Header alg="${hdr.alg}" incompatible with HS256 signing. Use "HS256".`);
         hdr.alg = 'HS256';
       } else if (!hdr.alg) {
