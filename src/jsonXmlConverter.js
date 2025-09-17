@@ -544,7 +544,7 @@ function cleanJsonFromXml(obj) {
 
 export async function loadJSONXMLTool(container) {
   try {
-    const resp = await fetch('./jsonXmlConverter.html');
+    const resp = await fetch('src/jsonXmlConverter.html');
     if (!resp.ok) {
       throw new Error(`Failed to load JSON-XML converter HTML: ${resp.status}`);
     }

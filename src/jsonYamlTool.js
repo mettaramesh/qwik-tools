@@ -2,7 +2,7 @@
 
 export async function loadJSONYAMLTool(container) {
   try {
-    const resp = await fetch('./jsonYamlTool.html');
+    const resp = await fetch('src/jsonYamlTool.html');
     if (!resp.ok) {
       throw new Error(`Failed to load JSON-YAML tool HTML: ${resp.status}`);
     }
