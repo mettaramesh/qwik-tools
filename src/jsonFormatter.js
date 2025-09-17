@@ -3,7 +3,7 @@
 export async function loadJSONFormatter(container) {
     // Loads the JSON Formatter tool UI from external HTML template.
     try {
-        const resp = await fetch('./jsonFormatter.html');
+        const resp = await fetch('jsonFormatter.html');
         if (!resp.ok) {
             throw new Error(`Failed to load JSON Formatter HTML: ${resp.status}`);
         }

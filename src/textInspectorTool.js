@@ -68,7 +68,7 @@ function removeDiacritics(text) {
 
 export async function loadTextInspectorTool(container) {
     try {
-        const resp = await fetch('./textInspector.html');
+        const resp = await fetch('textInspector.html');
         if (!resp.ok) {
             throw new Error(`Failed to load Text Inspector HTML: ${resp.status}`);
         }

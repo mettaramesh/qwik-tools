@@ -41,7 +41,7 @@ function validateJSONSchema(json, schema) {
 
 export async function load(container) {
   try {
-    const resp = await fetch('./jsonValidator.html');
+    const resp = await fetch('jsonValidator.html');
     if (!resp.ok) {
       throw new Error(`Failed to load JSON Validator HTML: ${resp.status}`);
     }
