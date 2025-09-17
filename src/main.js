@@ -1,4 +1,4 @@
-import './router.js';
+// import './router.js'; // Disabled: Qwik.js handles routing
 import { Qwik } from './Qwik.js';
 import { showReadmeModal } from './readmeModal.js';
 import { calculateSubnet } from './subnetCalculator.js';

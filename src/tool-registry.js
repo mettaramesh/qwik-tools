@@ -357,6 +357,50 @@ export const toolRegistry = {
       postLoad: () => {}
     };
   },
+  // Base64 variants
+  'base64-text': async () => {
+    const mod = await import('./base64Tool.js');
+    return {
+      render: () => {
+        const toolContent = document.getElementById('tool-content');
+        if (toolContent && mod.load) mod.load(toolContent, 'base64-text');
+      },
+      postLoad: () => {}
+    };
+  },
+  'base64-image': async () => {
+    const mod = await import('./base64Tool.js');
+    return {
+      render: () => {
+        const toolContent = document.getElementById('tool-content');
+        if (toolContent && mod.load) mod.load(toolContent, 'base64-image');
+      },
+      postLoad: () => {}
+    };
+  },
+  // Additional tools
+  'url': async () => {
+    // Placeholder until urlTool.js is created
+    const mod = await import('./placeholderTool.js');
+    return {
+      render: () => {
+        const toolContent = document.getElementById('tool-content');
+        if (toolContent && mod.load) mod.load(toolContent, 'url');
+      },
+      postLoad: () => {}
+    };
+  },
+  'gzip': async () => {
+    // Placeholder until gzipTool.js is created
+    const mod = await import('./placeholderTool.js');
+    return {
+      render: () => {
+        const toolContent = document.getElementById('tool-content');
+        if (toolContent && mod.load) mod.load(toolContent, 'gzip');
+      },
+      postLoad: () => {}
+    };
+  },
   // Add more tools here following the same pattern...
   '404': async (toolId) => {
     const mod = await import('./placeholderTool.js');

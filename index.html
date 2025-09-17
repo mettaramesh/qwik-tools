@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-color-scheme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,12 +11,32 @@
     <link rel="stylesheet" href="/ui-components.css">
     <link rel="stylesheet" href="/main-content.css">
     <script type="module" src="/main.js"></script>
-    <script type="module" src="/sidebar.js"></script>
 </head>
 <body>
     <div class="app-container">
         <header class="header">
             <div class="header-left">
+                <div class="logo" role="banner" aria-label="Qwik Tools logo">
+                    <a class="brand" href="/" title="Qwik-Tools home">
+                        <svg class="glassy-q" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                            <defs>
+                                <linearGradient id="glassQ" x1="0" x2="1" y1="0" y2="1">
+                                    <stop offset="0%" stop-color="#e3f0ff"></stop>
+                                    <stop offset="100%" stop-color="#1976d2"></stop>
+                                </linearGradient>
+                                <radialGradient id="glassQlight" cx="0.3" cy="0.3" r="0.8">
+                                    <stop offset="0%" stop-color="#fff" stop-opacity="0.7"></stop>
+                                    <stop offset="100%" stop-color="#1976d2" stop-opacity="0.2"></stop>
+                                </radialGradient>
+                            </defs>
+                            <circle cx="48" cy="48" r="40" fill="url(#glassQ)" stroke="#fff" stroke-width="3"></circle>
+                            <ellipse cx="48" cy="48" rx="28" ry="28" fill="url(#glassQlight)"></ellipse>
+                            <path d="M48 24a24 24 0 1 1-12 44" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round"></path>
+                            <rect x="60" y="68" width="16" height="7" rx="3.5" fill="#fff" opacity="0.7" transform="rotate(25 68 71.5)"></rect>
+                        </svg>
+                        <span class="brand-text">Q<span class="q-rest">wik-Tools</span></span>
+                    </a>
+                </div>
                 <div class="search-container">
                     <input type="text" id="search-input" placeholder="Search tools..." class="search-input" aria-label="Search tools">
                     <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -26,14 +46,32 @@
                 </div>
             </div>
             <div class="header-right">
+                <button id="theme-toggle" class="theme-toggle" title="Toggle theme" aria-label="Toggle dark/light theme">
+                    <svg class="theme-icon sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3" stroke="currentColor" stroke-width="2"></line>
+                        <line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" stroke-width="2"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor" stroke-width="2"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="2"></line>
+                        <line x1="1" y1="12" x2="3" y2="12" stroke="currentColor" stroke-width="2"></line>
+                        <line x1="21" y1="12" x2="23" y2="12" stroke="currentColor" stroke-width="2"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="currentColor" stroke-width="2"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="currentColor" stroke-width="2"></line>
+                    </svg>
+                    <svg class="theme-icon moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3A7 7 0 0 0 21 12.79z" stroke="currentColor" stroke-width="2"></path>
+                    </svg>
+                </button>
                 <button id="why-qwik-header" class="why-qwik-btn why-qwik-header-btn">Why Qwik-tools</button>
             </div>
         </header>
+        
         <div class="main-layout">
             <aside class="sidebar">
                 <nav class="nav-menu">
                     <div class="nav-category nav-favourites">
                         <div class="category-header nav-favourites-header">
+                            <span class="collapse-arrow qwik-arrow"></span>
                             <svg class="category-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
                                 <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" stroke="currentColor" stroke-width="2" fill="currentColor"></path>
                             </svg>
@@ -41,6 +79,7 @@
                         </div>
                         <div class="category-items expanded" id="favourites-list"></div>
                     </div>
+                    
                     <div class="nav-category">
                         <div class="category-header" data-category="converters">
                             <svg class="category-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -52,8 +91,8 @@
                             </svg>
                         </div>
                         <div class="category-items">
-                            <a href="#json-yaml" class="nav-item" data-tool="json-yaml"><span class="tool-label">JSON ↔ YAML</span></a>
-                            <a href="#json-xml" class="nav-item" data-tool="json-xml"><span class="tool-label">JSON ↔ XML</span></a>
+                            <a href="#json-yaml" class="nav-item" data-tool="json-yaml"><span class="tool-label">JSON  YAML</span></a>
+                            <a href="#json-xml" class="nav-item" data-tool="json-xml"><span class="tool-label">JSON  XML</span></a>
                             <a href="#timestamp" class="nav-item" data-tool="timestamp"><span class="tool-label">Timestamp Converter</span></a>
                             <a href="#number-base" class="nav-item" data-tool="number-base"><span class="tool-label">Base Calculator</span></a>
                             <a href="#cron-parser" class="nav-item" data-tool="cron-parser"><span class="tool-label">CRON Parser</span></a>
@@ -62,6 +101,7 @@
                             <a href="#text-inspector" class="nav-item" data-tool="text-inspector"><span class="tool-label">Text Inspector</span></a>
                         </div>
                     </div>
+                    
                     <div class="nav-category">
                         <div class="category-header" data-category="encoders">
                             <svg class="category-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -76,13 +116,14 @@
                         </div>
                         <div class="category-items">
                             <a href="#jwt" class="nav-item" data-tool="jwt"><span class="tool-label">JWT</span></a>
-                            <a href="#html" class="nav-item" data-tool="html"><span class="tool-label">HTML</span></a>
+                            <a href="#html-entity" class="nav-item" data-tool="html-entity"><span class="tool-label">HTML Entity</span></a>
                             <a href="#url" class="nav-item" data-tool="url"><span class="tool-label">URL</span></a>
                             <a href="#base64-text" class="nav-item" data-tool="base64-text"><span class="tool-label">Base64 Text</span></a>
                             <a href="#base64-image" class="nav-item" data-tool="base64-image"><span class="tool-label">Base64 Image</span></a>
                             <a href="#gzip" class="nav-item" data-tool="gzip"><span class="tool-label">GZip</span></a>
                         </div>
                     </div>
+                    
                     <div class="nav-category">
                         <div class="category-header" data-category="formatters">
                             <svg class="category-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -103,6 +144,7 @@
                             <a href="#xml-formatter" class="nav-item" data-tool="xml-formatter"><span class="tool-label">XML Formatter</span></a>
                         </div>
                     </div>
+                    
                     <div class="nav-category">
                         <div class="category-header" data-category="generators">
                             <svg class="category-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -122,6 +164,7 @@
                             <a href="#password-generator" class="nav-item" data-tool="password-generator"><span class="tool-label">Password Generator</span></a>
                         </div>
                     </div>
+                    
                     <div class="nav-category">
                         <div class="category-header" data-category="text">
                             <svg class="category-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -143,6 +186,7 @@
                             <a href="#hex-viewer" class="nav-item" data-tool="hex-viewer"><span class="tool-label">Hex Viewer</span></a>
                         </div>
                     </div>
+                    
                     <div class="nav-category">
                         <div class="category-header" data-category="graphic">
                             <svg class="category-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -162,6 +206,7 @@
                             <a href="#image-converter" class="nav-item" data-tool="image-converter"><span class="tool-label">Image Converter</span></a>
                         </div>
                     </div>
+                    
                     <div class="nav-category">
                         <div class="category-header" data-category="networking">
                             <svg class="category-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -182,13 +227,16 @@
                     </div>
                 </nav>
             </aside>
+            
             <main class="main-content">
                 <div id="tool-content" class="tool-container">
-                    <!-- Tool content will be rendered dynamically by the router and tool modules -->
+                    <!-- Tool content will be rendered dynamically -->
                 </div>
             </main>
         </div>
     </div>
+    
+    <!-- Clipboard Consent Modal -->
     <div id="clipboard-consent-modal" class="modal hidden clipboard-modal-center">
         <div class="clipboard-modal-content">
             <h3 class="clipboard-modal-title">Clipboard Access</h3>

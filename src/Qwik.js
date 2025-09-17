@@ -219,54 +219,47 @@ export class Qwik {
         }
     }
 
+    toggleTheme() {
+        const html = document.documentElement;
+        const currentTheme = html.getAttribute('data-color-scheme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-color-scheme', newTheme);
+        localStorage.setItem('theme', newTheme);
+    }
+
     setupNavigation() {
         // Collapse all categories by default except favourites
         document.querySelectorAll('.nav-category').forEach(category => {
+            const items = category.querySelector('.category-items');
             if (!category.classList.contains('nav-favourites')) {
-                category.classList.add('collapsed');
+                items.classList.remove('expanded');
+            } else {
+                items.classList.add('expanded');
             }
         });
-        // Add right angle bracket to Favourites header
-        const favCategory = document.querySelector('.nav-favourites');
-        if (favCategory) {
-            const favHeader = favCategory.querySelector('.category-header');
-            if (favHeader && !favHeader.querySelector('.collapse-arrow')) {
-                const arrow = document.createElement('span');
-                arrow.className = 'collapse-arrow qwik-arrow';
-                arrow.textContent = favCategory.classList.contains('collapsed') ? '▶' : '▼';
-                favHeader.prepend(arrow);
-            }
-            // Remove previous click handler if any
-            if (favHeader._qwikCollapseHandler) {
-                favHeader.removeEventListener('click', favHeader._qwikCollapseHandler);
-            }
-            // Attach click handler for collapse/expand (ignore clicks on remove button)
-            favHeader._qwikCollapseHandler = function(e) {
-                // If the click is on a remove button or inside one, ignore
-                if (e.target.closest('.favourite-remove')) return;
-                e.preventDefault();
-                e.stopPropagation();
-                favCategory.classList.toggle('collapsed');
-                const arrow = favHeader.querySelector('.collapse-arrow');
-                if (arrow) {
-                    arrow.textContent = favCategory.classList.contains('collapsed') ? '▶' : '▼';
-                }
-            };
-            favHeader.addEventListener('click', favHeader._qwikCollapseHandler);
-        }
-        // Category headers (other than favourites)
-        document.querySelectorAll('.nav-category:not(.nav-favourites) .category-header').forEach(header => {
+        
+        // Add collapse functionality to category headers
+        document.querySelectorAll('.nav-category .category-header').forEach(header => {
             header.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
+                
                 const category = header.closest('.nav-category');
-                category.classList.toggle('collapsed');
+                const items = category.querySelector('.category-items');
+                const chevron = header.querySelector('.chevron');
+                
+                // Toggle expanded state
+                items.classList.toggle('expanded');
+                if (chevron) {
+                    chevron.classList.toggle('rotate');
+                }
             });
         });
-        // Only attach handlers to main nav, not favourites
+        
+        // Setup navigation item handlers and stars
         this.attachNavItemHandlers();
         this.renderFavourites();
-        this.renderStarButtons(); // always after renderFavourites
+        this.renderStarButtons();
     }
 
     attachNavItemHandlers() {
@@ -413,6 +406,27 @@ export class Qwik {
                 break;
             case 'html-entity':
                 toolModule = import('./htmlEntityTool.js');
+                break;
+            case 'charset-converter':
+                toolModule = import('./charsetConverterTool.js');
+                break;
+            case 'hex-ascii-converter':
+                toolModule = import('./hexAsciiConverter.js');
+                break;
+            case 'base64-image':
+                toolModule = import('./base64Tool.js');
+                break;
+            case 'gzip':
+                toolModule = import('./placeholderTool.js');
+                break;
+            case 'image-compressor':
+                toolModule = import('./imageCompressor.js');
+                break;
+            case 'image-converter':
+                toolModule = import('./imageConverter.js');
+                break;
+            case 'color-blindness':
+                toolModule = import('./placeholderTool.js');
                 break;
             case 'subnet-calculator':
                 toolModule = import('./subnetCalculator.js');

@@ -872,6 +872,43 @@ select.form-control {
   gap: var(--space-16);
 }
 
+/* Logo/Brand Styles */
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  text-decoration: none;
+  color: var(--color-text);
+  transition: opacity var(--duration-fast) var(--ease-standard);
+}
+
+.brand:hover {
+  opacity: 0.8;
+}
+
+.glassy-q {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.brand-text {
+  font-family: 'Orbitron', 'Inter', Arial, sans-serif;
+  font-weight: 700;
+  font-size: var(--font-size-lg);
+  color: var(--color-primary);
+  letter-spacing: -0.02em;
+}
+
+.q-rest {
+  color: var(--color-text);
+}
+
 
 /* Search Container */
 .search-container {
@@ -916,6 +953,29 @@ select.form-control {
 
 .theme-toggle:hover {
   background-color: var(--color-secondary);
+}
+
+/* Theme Icon Visibility */
+.theme-icon {
+  transition: opacity var(--duration-fast) var(--ease-standard);
+}
+
+/* Light mode: show sun icon */
+[data-color-scheme="light"] .theme-toggle .moon-icon {
+  display: none;
+}
+
+[data-color-scheme="light"] .theme-toggle .sun-icon {
+  display: block;
+}
+
+/* Dark mode: show moon icon */
+[data-color-scheme="dark"] .theme-toggle .sun-icon {
+  display: none;
+}
+
+[data-color-scheme="dark"] .theme-toggle .moon-icon {
+  display: block;
 }
 
 .theme-icon {
