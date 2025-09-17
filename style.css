@@ -980,6 +980,18 @@ select.form-control {
   color: var(--color-text);
   cursor: pointer;
   transition: background-color var(--duration-fast) var(--ease-standard);
+ }
+
+.category-header > span {
+  flex: 1 1 auto;
+  color: var(--color-text, #222) !important;
+  font-size: inherit;
+  font-weight: inherit;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  z-index: 1;
 }
 
 .category-header:hover {
