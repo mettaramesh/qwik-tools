@@ -872,28 +872,6 @@ select.form-control {
   gap: var(--space-16);
 }
 
-.logo {
-  display: flex;
-  align-items: center;
-  gap: var(--space-8);
-  color: var(--color-primary);
-}
-
-.logo--hidden { visibility: hidden; }
-
-.logo h1 {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
-  margin: 0;
-  font-family: 'Orbitron', 'Inter', Arial, sans-serif;
-}
-
-.logo svg {
-  width: 32px !important;
-  height: 32px !important;
-  max-width: 40px;
-  max-height: 40px;
-}
 
 /* Search Container */
 .search-container {
