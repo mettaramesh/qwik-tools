@@ -93,6 +93,9 @@ function setupHexAsciiConverter() {
         const a = asciiInput.value;
         asciiInput.value = hexInput.value;
         hexInput.value = a;
+        // Clear metrics when swapping
+        asciiMetrics.innerHTML = '';
+        hexMetrics.innerHTML = '';
     });
 }
 
