@@ -9,17 +9,32 @@ if (!window.setupCopyButtons) {
 }
 
 export async function loadURLTool(container) {
-    // Fetch and inject the external HTML template for the URL Encoder/Decoder tool UI.
-    const response = await fetch('urlTool.html');
-    const html = await response.text();
-    container.innerHTML = html;
-    // Ensure fields are empty on load
-    setTimeout(() => {
-        const input = container.querySelector('#url-input');
-        const output = container.querySelector('#url-output');
-        if (input) input.value = '';
-        if (output) output.value = '';
-    }, 0);
+    try {
+        // Fetch and inject the external HTML template for the URL Encoder/Decoder tool UI.
+        const response = await fetch('urlTool.html');
+        if (!response.ok) {
+            throw new Error(`Failed to load URL tool HTML: ${response.status}`);
+        }
+        const html = await response.text();
+        
+        // Security validation: prevent loading full HTML documents
+        if (html.includes('<html>') || html.includes('<head>') || html.includes('<body>')) {
+            throw new Error('Invalid HTML content - contains full page structure');
+        }
+        
+        container.innerHTML = html;
+        
+        // Ensure fields are empty on load
+        setTimeout(() => {
+            const input = container.querySelector('#url-input');
+            const output = container.querySelector('#url-output');
+            if (input) input.value = '';
+            if (output) output.value = '';
+        }, 0);
+    } catch (error) {
+        console.error('Failed to load URL tool:', error);
+        container.innerHTML = '<div class="error">Failed to load URL tool</div>';
+    }
 }
 
 export function setupURLTool() {
@@ -74,4 +89,5 @@ export function setupURLTool() {
 
 export async function load(container, toolId) {
     await loadURLTool(container);
+    setupURLTool();
 }
