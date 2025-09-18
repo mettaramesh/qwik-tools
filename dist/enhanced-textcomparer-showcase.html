@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Enhanced Text Comparer UI Showcase</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            background: #f5f5f5; 
+        }
+        .showcase-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .showcase-container {
+            height: calc(100vh - 140px);
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            position: relative;
+        }
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            font-size: 1.2rem;
+            color: #666;
+        }
+        .features-list {
+            text-align: left;
+            margin: 1rem 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+        .feature-group {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 6px;
+            border-left: 4px solid #21808d;
+        }
+        .feature-group h4 {
+            margin: 0 0 0.5rem 0;
+            color: #21808d;
+        }
+        .feature-group ul {
+            margin: 0;
+            padding-left: 1.2rem;
+            font-size: 0.9rem;
+        }
+        .feature-group li {
+            margin-bottom: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="showcase-header">
+        <h1>🎨 Enhanced Text Comparer UI</h1>
+        <p><strong>Professional-grade text comparison with modern UI design</strong></p>
+        
+        <div class="features-list">
+            <div class="feature-group">
+                <h4>✨ Visual Enhancements</h4>
+                <ul>
+                    <li>Modern theme-consistent design</li>
+                    <li>Improved button styling with icons</li>
+                    <li>Better screen presence & spacing</li>
+                    <li>Responsive layout for all devices</li>
+                    <li>Professional typography</li>
+                </ul>
+            </div>
+            
+            <div class="feature-group">
+                <h4>📋 Enhanced Copy Features</h4>
+                <ul>
+                    <li>Copy full comparison result</li>
+                    <li>Copy only differences</li>
+                    <li>Copy original/modified text separately</li>
+                    <li>Visual feedback on copy actions</li>
+                    <li>Paste from clipboard buttons</li>
+                </ul>
+            </div>
+            
+            <div class="feature-group">
+                <h4>⌨️ Improved Interactions</h4>
+                <ul>
+                    <li>Keyboard shortcuts (Ctrl+Enter to compare)</li>
+                    <li>Enhanced search functionality</li>
+                    <li>Better checkbox styling</li>
+                    <li>Resizable panels with visual handles</li>
+                    <li>Status indicators & feedback</li>
+                </ul>
+            </div>
+            
+            <div class="feature-group">
+                <h4>🎯 User Experience</h4>
+                <ul>
+                    <li>Clear panel headers with actions</li>
+                    <li>Improved placeholder text</li>
+                    <li>Loading states & animations</li>
+                    <li>Accessible design patterns</li>
+                    <li>Dark mode support</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="showcase-container">
+        <div class="loading" id="loading">
+            Loading Enhanced Text Comparer...
+        </div>
+        <div id="textcomparer-container" style="height: 100%; display: none;"></div>
+    </div>
+    
+    <script>
+        async function loadEnhancedTextComparer() {
+            const loading = document.getElementById('loading');
+            const container = document.getElementById('textcomparer-container');
+            
+            try {
+                // Load the latest enhanced module
+                const timestamp = Date.now();
+                const moduleUrl = `/assets/textComparer-nuVEer8p.js?v=${timestamp}`;
+                
+                console.log('Loading enhanced Text Comparer module...');
+                const module = await import(moduleUrl);
+                
+                if (!module.load || typeof module.load !== 'function') {
+                    throw new Error('Module missing load function');
+                }
+                
+                console.log('Loading Text Comparer UI...');
+                await module.load(container, 'text-comparer');
+                
+                // Hide loading, show container
+                loading.style.display = 'none';
+                container.style.display = 'block';
+                
+                console.log('✅ Enhanced Text Comparer loaded successfully!');
+                
+                // Add some sample text to showcase the features
+                setTimeout(() => {
+                    const text1 = container.querySelector('#tc-text1');
+                    const text2 = container.querySelector('#tc-text2');
+                    
+                    if (text1 && text2) {
+                        text1.value = `{
+  "name": "qwik-tools",
+  "version": "1.0.0",
+  "description": "A collection of developer tools",
+  "features": [
+    "JSON formatting",
+    "Text comparison",
+    "Base64 encoding",
+    "UUID generation"
+  ],
+  "author": "Developer",
+  "license": "MIT"
+}`;
+                        
+                        text2.value = `{
+  "name": "qwik-tools-enhanced",
+  "version": "2.0.0",
+  "description": "A comprehensive collection of developer tools with enhanced UI",
+  "features": [
+    "JSON formatting & validation",
+    "Advanced text comparison",
+    "Base64 encoding/decoding",
+    "UUID generation",
+    "Color picker",
+    "Password generator"
+  ],
+  "author": "Developer Team",
+  "license": "MIT",
+  "repository": "https://github.com/example/qwik-tools"
+}`;
+                        
+                        // Trigger comparison after a brief delay
+                        setTimeout(() => {
+                            const compareBtn = container.querySelector('#tc-compare');
+                            if (compareBtn) {
+                                compareBtn.click();
+                            }
+                        }, 500);
+                    }
+                }, 1000);
+                
+            } catch (error) {
+                loading.innerHTML = `
+                    <div style="text-align: center; color: #dc3545;">
+                        <h3>❌ Failed to load Enhanced Text Comparer</h3>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                        <p>Please try refreshing the page or check the browser console for details.</p>
+                        <button onclick="location.reload()" style="padding: 0.5rem 1rem; margin-top: 1rem; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                            🔄 Refresh Page
+                        </button>
+                    </div>
+                `;
+                console.error('Failed to load Text Comparer:', error);
+            }
+        }
+        
+        // Start loading when page is ready
+        document.addEventListener('DOMContentLoaded', loadEnhancedTextComparer);
+    </script>
+</body>
+</html>
