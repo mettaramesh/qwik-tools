@@ -33,8 +33,17 @@ export function setupPasswordGeneratorTool() {
     };
     const SIMILAR = new Set('O0oIl1|S5B8Z2'.split(''));
     const AMBIG   = new Set('{}[]()/\\\'"`~,;:.'.split(''));
-    // DOM
-    const el = id => document.getElementById(id);
+    
+    // DOM element helper with null check
+    const el = id => {
+        const element = document.getElementById(id);
+        if (!element) {
+            console.error(`Password Generator: Element with ID '${id}' not found`);
+        }
+        return element;
+    };
+    
+    // Get DOM elements
     const len = el('pwgen-len');
     const lenNum = el('pwgen-lenNum');
     const lower = el('pwgen-lower');
@@ -54,13 +63,25 @@ export function setupPasswordGeneratorTool() {
     const metaLen = el('pwgen-metaLen');
     const metaPool = el('pwgen-metaPool');
     const metaEntropy = el('pwgen-metaEntropy');
+    
+    // Check if critical elements exist
+    const requiredElements = [len, lenNum, lower, upper, digits, symbols, btnGen, list, allOut, metaLen, metaPool, metaEntropy];
+    const missingElements = requiredElements.filter(el => !el);
+    
+    if (missingElements.length > 0) {
+        console.error('Password Generator: Required DOM elements are missing');
+        return;
+    }
+    
     // Bind length controls
     len.addEventListener('input', ()=>{ lenNum.value = len.value; updateMeta(); });
     lenNum.addEventListener('input', ()=>{
         const v = Math.min(128, Math.max(8, parseInt(lenNum.value || 8)));
         lenNum.value = v; len.value = v; updateMeta();
     });
-    [lower,upper,digits,symbols,symset,noSimilar,noAmbig].forEach(el => el.addEventListener('input', updateMeta));
+    [lower,upper,digits,symbols,symset,noSimilar,noAmbig].forEach(el => {
+        if (el) el.addEventListener('input', updateMeta);
+    });
     // Pool build
     function buildPool(){
         let pool = "";
@@ -202,30 +223,38 @@ export function setupPasswordGeneratorTool() {
         allOut.value = all.join('\n');
     }
     // Buttons
-    btnGen.addEventListener('click', () => {
-        try{
-            const n = Math.min(200, Math.max(1, parseInt(count.value||1)));
-            const out = Array.from({length:n}, genOne);
-            renderList(out);
-        }catch(e){
-            alert(e.message);
-        }
-    });
-    btnCopyAll.addEventListener('click', async ()=>{
-        try{
-            await navigator.clipboard.writeText(allOut.value);
-            btnCopyAll.textContent = '📋 Copied!';
-            setTimeout(()=>btnCopyAll.textContent='📋 Copy All', 900);
-        }catch{ alert('Clipboard copy failed.'); }
-    });
-    btnDownload.addEventListener('click', ()=>{
-        const blob = new Blob([allOut.value], {type:'text/plain;charset=utf-8'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url; a.download = 'passwords.txt';
-        document.body.appendChild(a); a.click();
-        setTimeout(()=>{URL.revokeObjectURL(url); a.remove();},0);
-    });
+    if (btnGen) {
+        btnGen.addEventListener('click', () => {
+            try{
+                const n = Math.min(200, Math.max(1, parseInt(count?.value||1)));
+                const out = Array.from({length:n}, genOne);
+                renderList(out);
+            }catch(e){
+                alert(e.message);
+            }
+        });
+    }
+    
+    if (btnCopyAll) {
+        btnCopyAll.addEventListener('click', async ()=>{
+            try{
+                await navigator.clipboard.writeText(allOut.value);
+                btnCopyAll.textContent = '📋 Copied!';
+                setTimeout(()=>btnCopyAll.textContent='📋 Copy All', 900);
+            }catch{ alert('Clipboard copy failed.'); }
+        });
+    }
+    
+    if (btnDownload) {
+        btnDownload.addEventListener('click', ()=>{
+            const blob = new Blob([allOut.value], {type:'text/plain;charset=utf-8'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'passwords.txt';
+            document.body.appendChild(a); a.click();
+            setTimeout(()=>{URL.revokeObjectURL(url); a.remove();},0);
+        });
+    }
 }
 
 // Qwik expects a default export named 'load' for dynamic tool loading
