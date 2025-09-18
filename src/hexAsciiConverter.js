@@ -2,8 +2,41 @@
 // Converts ASCII text to hexadecimal and vice versa
 
 export async function loadHexAsciiConverter(container) {
-    // Load HTML template from external file (do not overwrite user manual edits)
-    const html = await fetch('hexAsciiConverter.html').then(r => r.text());
+    // Use inline HTML to avoid corruption issues
+    const html = `
+        <div class="tool-header">
+            <h2>Hex ↔ ASCII Converter</h2>
+            <p class="small">Convert between ASCII text and hexadecimal representation. Non-ASCII bytes will be shown as "." in ASCII output.</p>
+        </div>
+
+        <div class="grid-hexascii">
+            <div class="card">
+                <h3>ASCII Input</h3>
+                <textarea id="asciiInput" rows="8" placeholder="Type or paste ASCII text here..."></textarea>
+                <div class="row">
+                    <button class="btn btn--primary" id="btnToHex">ASCII → Hex</button>
+                    <button class="btn btn--outline" id="btnClearAscii">Clear</button>
+                    <button class="btn btn--outline" id="btnCopyHex">Copy Hex</button>
+                </div>
+                <div class="metrics" id="asciiMetrics"></div>
+            </div>
+
+            <div class="card">
+                <h3>Hex Input</h3>
+                <textarea id="hexInput" rows="8" placeholder="Type or paste hex codes here (e.g. 48656c6c6f)..."></textarea>
+                <div class="row">
+                    <button class="btn btn--primary" id="btnToAscii">Hex → ASCII</button>
+                    <button class="btn btn--outline" id="btnClearHex">Clear</button>
+                    <button class="btn btn--outline" id="btnCopyAscii">Copy ASCII</button>
+                </div>
+                <div class="metrics" id="hexMetrics"></div>
+            </div>
+        </div>
+
+        <div class="row mt-24 jc-center">
+            <button class="btn btn--outline" id="btnSwap">Swap ↔</button>
+        </div>
+    `;
     container.innerHTML = html;
     setupHexAsciiConverter();
 }
