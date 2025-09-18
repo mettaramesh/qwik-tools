@@ -503,11 +503,11 @@ pre code {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-8) var(--space-16);
+  padding: var(--space-6) var(--space-12);
   border-radius: var(--radius-base);
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm);
   font-weight: 500;
-  line-height: 1.5;
+  line-height: 1.4;
   cursor: pointer;
   transition: all var(--duration-normal) var(--ease-standard);
   border: none;
@@ -557,14 +557,14 @@ pre code {
 }
 
 .btn--sm {
-  padding: var(--space-4) var(--space-12);
-  font-size: var(--font-size-sm);
+  padding: var(--space-4) var(--space-8);
+  font-size: var(--font-size-xs);
   border-radius: var(--radius-sm);
 }
 
 .btn--lg {
-  padding: var(--space-10) var(--space-20);
-  font-size: var(--font-size-lg);
+  padding: var(--space-8) var(--space-16);
+  font-size: var(--font-size-base);
   border-radius: var(--radius-md);
 }
 
