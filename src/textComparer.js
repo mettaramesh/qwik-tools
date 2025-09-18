@@ -14,6 +14,14 @@ export async function load(container, toolId) {
       throw new Error('Invalid HTML content - contains full page structure');
     }
     container.innerHTML = html;
+
+    // Load CSS if not already loaded
+    if (!document.querySelector('link[href*="textComparer.css"]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = '/textComparer.css';
+      document.head.appendChild(link);
+    }
   } catch (error) {
     console.error('Error loading Text Comparer:', error);
     container.innerHTML = '<div class="error">Failed to load Text Comparer tool</div>';
@@ -31,6 +39,11 @@ export async function load(container, toolId) {
   const compareBtn = container.querySelector('#tc-compare');
   const clearBtn = container.querySelector('#tc-clear');
   const copyBtn = container.querySelector('#tc-copy');
+  const copyDiffBtn = container.querySelector('#tc-copy-diff-only');
+  const copyLeftBtn = container.querySelector('#tc-copy-left');
+  const copyRightBtn = container.querySelector('#tc-copy-right');
+  const pasteLeftBtn = container.querySelector('#tc-paste-left');
+  const pasteRightBtn = container.querySelector('#tc-paste-right');
   const resultEl = container.querySelector('#tc-result');
   const statusEl = container.querySelector('#tc-status');
   const simEl = container.querySelector('#tc-similarity');
@@ -435,8 +448,86 @@ export async function load(container, toolId) {
 
   if (copyBtn) {
     copyBtn.addEventListener('click', async ()=>{
-      try { await navigator.clipboard.writeText(resultEl.innerText || ''); setStatus('Result copied to clipboard'); }
+      try { 
+        await navigator.clipboard.writeText(resultEl.innerText || ''); 
+        setStatus('Result copied to clipboard'); 
+        copyBtn.classList.add('tc-success');
+        setTimeout(() => copyBtn.classList.remove('tc-success'), 300);
+      }
       catch { setStatus('Copy failed', false); }
+    });
+  }
+
+  // Copy diff only button
+  if (copyDiffBtn) {
+    copyDiffBtn.addEventListener('click', async ()=>{
+      try {
+        const diffElements = resultEl.querySelectorAll('.diff-added, .diff-removed, .diff-modified');
+        const diffText = Array.from(diffElements).map(el => el.textContent).join('\n');
+        await navigator.clipboard.writeText(diffText || 'No differences found'); 
+        setStatus('Differences copied to clipboard'); 
+        copyDiffBtn.classList.add('tc-success');
+        setTimeout(() => copyDiffBtn.classList.remove('tc-success'), 300);
+      }
+      catch { setStatus('Copy failed', false); }
+    });
+  }
+
+  // Copy left text button
+  if (copyLeftBtn) {
+    copyLeftBtn.addEventListener('click', async ()=>{
+      try { 
+        await navigator.clipboard.writeText(t1?.value || ''); 
+        setStatus('Original text copied to clipboard'); 
+        copyLeftBtn.classList.add('tc-success');
+        setTimeout(() => copyLeftBtn.classList.remove('tc-success'), 300);
+      }
+      catch { setStatus('Copy failed', false); }
+    });
+  }
+
+  // Copy right text button
+  if (copyRightBtn) {
+    copyRightBtn.addEventListener('click', async ()=>{
+      try { 
+        await navigator.clipboard.writeText(t2?.value || ''); 
+        setStatus('Modified text copied to clipboard'); 
+        copyRightBtn.classList.add('tc-success');
+        setTimeout(() => copyRightBtn.classList.remove('tc-success'), 300);
+      }
+      catch { setStatus('Copy failed', false); }
+    });
+  }
+
+  // Paste left button
+  if (pasteLeftBtn) {
+    pasteLeftBtn.addEventListener('click', async ()=>{
+      try { 
+        const text = await navigator.clipboard.readText(); 
+        if (t1) {
+          t1.value = text;
+          updateGutters(); 
+          scheduleUpdate();
+          setStatus('Text pasted to original side'); 
+        }
+      }
+      catch { setStatus('Paste failed - check clipboard permissions', false); }
+    });
+  }
+
+  // Paste right button
+  if (pasteRightBtn) {
+    pasteRightBtn.addEventListener('click', async ()=>{
+      try { 
+        const text = await navigator.clipboard.readText(); 
+        if (t2) {
+          t2.value = text;
+          updateGutters(); 
+          scheduleUpdate();
+          setStatus('Text pasted to modified side'); 
+        }
+      }
+      catch { setStatus('Paste failed - check clipboard permissions', false); }
     });
   }
   
@@ -458,7 +549,14 @@ export async function load(container, toolId) {
     if (ta) {
       ta.addEventListener('input', ()=>{ updateGutters(); scheduleUpdate(); });
       ta.addEventListener('paste', ()=>{ setTimeout(()=>{ updateGutters(); scheduleUpdate(); }, 20); });
-      ta.addEventListener('keydown', (ev)=>{ const isMac = navigator.platform.toLowerCase().includes('mac'); const mod = isMac?ev.metaKey:ev.ctrlKey; if (mod && ev.key.toLowerCase()==='b'){ ev.preventDefault(); updateResult(); } });
+      ta.addEventListener('keydown', (ev)=>{ 
+        const isMac = navigator.platform.toLowerCase().includes('mac'); 
+        const mod = isMac ? ev.metaKey : ev.ctrlKey; 
+        if (mod && ev.key === 'Enter'){ 
+          ev.preventDefault(); 
+          updateResult(true); 
+        } 
+      });
     }
   });
 

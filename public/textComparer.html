@@ -1,24 +1,37 @@
 <!-- Text Comparer Tool HTML (template only, logic in JS) -->
 <div class="tc-app" role="application" aria-label="Text Comparer">
   <div class="tc-header">
-    <div>
-      <div class="tc-title">Text Comparer</div>
-      <div class="tc-sub">Local, fast, structured-aware diffs for JSON / XML / CSV / plain text</div>
-    </div>
-    <div class="tc-top">
-      <div class="tc-options">
-        <label><input type="checkbox" id="tc-word-level"> Word-level</label>
-        <label><input type="checkbox" id="tc-ignore-ws"> Ignore whitespace</label>
-        <label><input type="checkbox" id="tc-ignore-case"> Ignore case</label>
-        <label><input type="checkbox" id="tc-show-lines" checked> Show lines</label>
+    <div class="tc-header-content">
+      <div class="tc-title-section">
+        <div class="tc-title">Text Comparer</div>
+        <div class="tc-sub">Local, fast, structured-aware diffs for JSON / XML / CSV / plain text</div>
       </div>
-      <input id="tc-search" class="tc-search" placeholder="Search..." aria-label="Search diff" />
-      <button id="tc-search-prev" class="tc-btn" title="Previous match">&#8593;</button>
-      <button id="tc-search-next" class="tc-btn" title="Next match">&#8595;</button>
-      <div class="tc-controls">
-        <button id="tc-compare" class="tc-btn primary" title="Compare (Ctrl/Cmd+B)">Compare</button>
-        <button id="tc-copy" class="tc-btn" title="Copy result">Copy</button>
-        <button id="tc-clear" class="tc-btn" title="Clear all">Clear</button>
+      <div class="tc-toolbar">
+        <div class="tc-options-group">
+          <label class="tc-option"><input type="checkbox" id="tc-word-level"><span class="checkmark"></span>Word-level</label>
+          <label class="tc-option"><input type="checkbox" id="tc-ignore-ws"><span class="checkmark"></span>Ignore whitespace</label>
+          <label class="tc-option"><input type="checkbox" id="tc-ignore-case"><span class="checkmark"></span>Ignore case</label>
+          <label class="tc-option"><input type="checkbox" id="tc-show-lines" checked><span class="checkmark"></span>Show lines</label>
+        </div>
+        <div class="tc-search-group">
+          <input id="tc-search" class="tc-search" placeholder="Search differences..." aria-label="Search diff" />
+          <button id="tc-search-prev" class="tc-btn tc-btn-icon" title="Previous match">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
+          </button>
+          <button id="tc-search-next" class="tc-btn tc-btn-icon" title="Next match">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7.41 8.84L12 13.42l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+          </button>
+        </div>
+        <div class="tc-action-group">
+          <button id="tc-compare" class="tc-btn tc-btn-primary" title="Compare texts (Ctrl/Cmd+Enter)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+            Compare
+          </button>
+          <button id="tc-clear" class="tc-btn tc-btn-secondary" title="Clear all content">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            Clear
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -27,20 +40,56 @@
   <div id="tc-main" class="tc-main">
     <!-- Left side -->
     <div id="left-wrap" class="tc-side">
+      <div class="tc-panel-header">
+        <div class="tc-panel-title">
+          <span>Original Text</span>
+          <div class="tc-panel-actions">
+            <button id="tc-copy-left" class="tc-btn tc-btn-sm tc-btn-copy" title="Copy original text">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+              Copy
+            </button>
+            <button id="tc-paste-left" class="tc-btn tc-btn-sm" title="Paste from clipboard">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 2h-4.18C14.4.84 13.3 0 12 0c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm7 18H5V4h2v3h10V4h2v16z"/></svg>
+              Paste
+            </button>
+          </div>
+        </div>
+      </div>
       <div class="tc-editor-wrap">
         <div id="gutter-left" class="tc-gutter"></div>
-        <textarea id="tc-text1" class="tc-textarea" placeholder="Enter first text to compare..."></textarea>
+        <textarea id="tc-text1" class="tc-textarea" placeholder="Enter or paste the first text to compare..."></textarea>
       </div>
     </div>
     
     <!-- Splitter -->
-    <div id="splitter" class="tc-splitter"></div>
+    <div id="splitter" class="tc-splitter">
+      <div class="tc-splitter-handle">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+        </svg>
+      </div>
+    </div>
     
     <!-- Right side -->
     <div id="right-wrap" class="tc-side">
+      <div class="tc-panel-header">
+        <div class="tc-panel-title">
+          <span>Modified Text</span>
+          <div class="tc-panel-actions">
+            <button id="tc-copy-right" class="tc-btn tc-btn-sm tc-btn-copy" title="Copy modified text">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+              Copy
+            </button>
+            <button id="tc-paste-right" class="tc-btn tc-btn-sm" title="Paste from clipboard">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 2h-4.18C14.4.84 13.3 0 12 0c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm7 18H5V4h2v3h10V4h2v16z"/></svg>
+              Paste
+            </button>
+          </div>
+        </div>
+      </div>
       <div class="tc-editor-wrap">
         <div id="gutter-right" class="tc-gutter"></div>
-        <textarea id="tc-text2" class="tc-textarea" placeholder="Enter second text to compare..."></textarea>
+        <textarea id="tc-text2" class="tc-textarea" placeholder="Enter or paste the second text to compare..."></textarea>
       </div>
     </div>
   </div>
@@ -48,8 +97,20 @@
   <!-- Result section -->
   <div class="tc-result-section">
     <div class="tc-result-header">
-      <h3>Comparison Result</h3>
-      <div id="tc-status" class="tc-status">Ready to compare</div>
+      <div class="tc-result-title">
+        <h3>Comparison Result</h3>
+        <div id="tc-status" class="tc-status">Ready to compare</div>
+      </div>
+      <div class="tc-result-actions">
+        <button id="tc-copy" class="tc-btn tc-btn-copy" title="Copy comparison result">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+          Copy Result
+        </button>
+        <button id="tc-copy-diff-only" class="tc-btn tc-btn-secondary" title="Copy only the differences">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M9 3H5c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h4c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 9H5V5h4v4zm10-6h-4c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h4c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 6h-4V5h4v4zM9 13H5c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h4c1.1 0 2-.9 2-2v-4c0-1.1-.9-2-2-2zm0 6H5v-4h4v4z"/></svg>
+          Copy Diff
+        </button>
+      </div>
     </div>
     <div id="tc-result" class="tc-result" aria-live="polite"></div>
     <div id="tc-result-meta" class="tc-meta">
