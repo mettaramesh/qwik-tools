@@ -18,7 +18,7 @@
 .chip { padding: 6px 10px; border: 1px solid var(--color-border, #2a2f47); background: var(--color-background, #f4f8fa); color: var(--color-text, #13343b); border-radius: 999px; cursor: pointer; user-select: none; font-size: .85rem; }
 .chip:hover { border-color: var(--color-primary, #21808d); }
 .tabs { display: flex; gap: 6px; flex-wrap: wrap; }
-.tab { padding: 4px 8px; border-radius: 10px; border: 1px solid var(--color-border, #e0e0e0); background: var(--color-background, #f4f8fa); cursor: pointer; font-size: .75rem; color: var(--color-text-secondary, #626c71); }
+.tab { padding: 4px 8px; border-radius: 10px; border: 1px solid var(--color-border, #e0e0e0); background: var(--color-background, #f4f8fa); cursor: pointer; font-size: .75rem; color: var(--color-text-secondary, #626c71); text-align: center; }
 .tab.active { color: var(--color-text, #13343b); border-color: var(--color-primary, #21808d); background: var(--color-accent, #e0f7fa); }
 .hidden { display: none !important; }
 .inline { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
