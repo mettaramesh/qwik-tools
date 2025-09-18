@@ -181,24 +181,8 @@ select:hover {
   background: linear-gradient(135deg, var(--cron-surface) 0%, rgba(37, 99, 235, 0.02) 100%);
 }
 
-/* Enhanced Button System */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  padding: 0.5rem 1rem;
-  border-radius: var(--cron-radius);
-  font-weight: 600;
-  font-size: 0.8125rem;
-  text-decoration: none;
-  transition: var(--cron-transition);
-  cursor: pointer;
-  border: 2px solid transparent;
-  min-height: 36px;
-  position: relative;
-  overflow: hidden;
-}
+/* Enhanced Button System - Use Global Styles */
+/* Remove custom .btn styles to use global button classes */
 
 .btn::before {
   content: '';
@@ -211,38 +195,7 @@ select:hover {
   transition: left 0.5s;
 }
 
-.btn:hover::before {
-  left: 100%;
-}
-
-.btn.btn--primary {
-  background: linear-gradient(135deg, var(--cron-primary) 0%, var(--cron-primary-dark) 100%);
-  color: white;
-  box-shadow: var(--cron-shadow);
-}
-
-.btn.btn--primary:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--cron-shadow-lg);
-  background: linear-gradient(135deg, var(--cron-primary-light) 0%, var(--cron-primary) 100%);
-}
-
-.btn.btn--primary:active {
-  transform: translateY(0);
-}
-
-.btn.btn--outline {
-  background: var(--cron-surface);
-  color: var(--cron-primary);
-  border-color: var(--cron-primary);
-}
-
-.btn.btn--outline:hover {
-  background: var(--cron-primary);
-  color: white;
-  transform: translateY(-1px);
-  box-shadow: var(--cron-shadow);
-}
+/* Remove all custom btn variant styles to use global classes */
 
 .btns {
   display: flex;
@@ -511,9 +464,7 @@ select:hover {
     gap: 0.5rem;
   }
   
-  .btn {
-    width: 100%;
-  }
+  /* Remove mobile btn width override to use global styles */
   
   .chips {
     justify-content: center;
