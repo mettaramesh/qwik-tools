@@ -81,13 +81,13 @@
 
 .tab {
   flex: 1;
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 0.75rem;
   text-align: center;
   border-radius: calc(var(--cron-radius) - 2px);
   cursor: pointer;
   transition: var(--cron-transition);
   font-weight: 500;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   color: var(--cron-text-muted);
   border: none;
   background: transparent;
