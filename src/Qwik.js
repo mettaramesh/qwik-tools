@@ -217,6 +217,20 @@ export class Qwik {
                 this.selectTool('json-formatter');
             });
         }
+        // Hash change handling for URL navigation
+        window.addEventListener('hashchange', () => {
+            const hash = window.location.hash.slice(1);
+            if (hash && hash !== this.currentTool) {
+                this.selectTool(hash);
+            }
+        });
+        // Initial hash handling on page load
+        setTimeout(() => {
+            const hash = window.location.hash.slice(1);
+            if (hash) {
+                this.selectTool(hash);
+            }
+        }, 50);
     }
 
     toggleTheme() {
@@ -294,6 +308,10 @@ export class Qwik {
         // Load tool
         this.currentTool = toolId;
         localStorage.setItem('qwik-last-tool', toolId);
+        // Update URL hash without triggering hashchange event
+        if (window.location.hash.slice(1) !== toolId) {
+            window.history.replaceState(null, null, `#${toolId}`);
+        }
         this.loadTool(toolId);
         // Re-attach nav handlers in case sidebar changed
         this.attachNavItemHandlers();

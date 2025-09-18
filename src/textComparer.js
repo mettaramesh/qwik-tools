@@ -4,7 +4,7 @@
 
 export async function load(container, toolId) {
   try {
-    const resp = await fetch('textComparer.html');
+    const resp = await fetch('/textComparer.html');
     if (!resp.ok) {
       throw new Error(`Failed to load Text Comparer HTML: ${resp.status}`);
     }
