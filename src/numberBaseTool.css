@@ -1,19 +1,6 @@
 /* Number Base Tool CSS - Complete Styling */
 
-.number-base-tool {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 1.5rem;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
-
-.number-base-tool h2 {
-  margin-bottom: 1.5rem;
-  color: #2c3e50;
-  text-align: center;
-  font-size: 1.8rem;
-  font-weight: 600;
-}
+/* Remove custom number-base-tool styling to use global styles */
 
 /* Controls Section */
 .nb-controls {
@@ -47,21 +34,6 @@
   border-radius: 4px;
   background: white;
   font-size: 0.9rem;
-}
-
-.nb-controls button {
-  padding: 0.5rem 1rem;
-  background: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.2s;
-}
-
-.nb-controls button:hover {
-  background: #c82333;
 }
 
 /* Input Fields Section */

@@ -1,5 +1,8 @@
-<div class="nb-grid-span number-base-tool">
+<div class="tool-header">
   <h2>Number Base Converter</h2>
+  <p>Convert numbers between different base systems (binary, decimal, hexadecimal, etc.)</p>
+</div>
+<div class="tool-interface">
   <div class="nb-controls">
     <label for="signedToggle"><input type="checkbox" id="signedToggle"> Signed</label>
     <label for="groupSize">Group: 
@@ -19,7 +22,7 @@
     <label for="customBase">Custom Base:
       <select id="customBase"></select>
     </label>
-    <button id="clearAll" type="button">Clear All</button>
+    <button class="btn btn--outline" id="clearAll" type="button">Clear All</button>
   </div>
   <div class="nb-fields">
     <div class="nb-row">
@@ -53,4 +56,5 @@
       <span id="nb-customMsg" class="hint">Base 2–36</span>
     </div>
   </div>
+</div>
 </div>
