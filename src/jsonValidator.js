@@ -105,5 +105,5 @@ function setup() {
     output.value = '';
     clearError();
   };
-  setupCopyButtons();
+  if (typeof window.setupCopyButtons === 'function') window.setupCopyButtons();
 }

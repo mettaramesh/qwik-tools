@@ -54,8 +54,8 @@ export async function loadHexAsciiConverter(container) {
     asciiRow.appendChild(btnClearAscii);
     
     const btnCopyHex = document.createElement('button');
-    btnCopyHex.className = 'btn btn--outline';
-    btnCopyHex.id = 'btnCopyHex';
+    btnCopyHex.className = 'btn btn--outline copy-btn';
+    btnCopyHex.setAttribute('data-target', 'hexInput');
     btnCopyHex.textContent = 'Copy Hex';
     asciiRow.appendChild(btnCopyHex);
     
@@ -98,8 +98,8 @@ export async function loadHexAsciiConverter(container) {
     hexRow.appendChild(btnClearHex);
     
     const btnCopyAscii = document.createElement('button');
-    btnCopyAscii.className = 'btn btn--outline';
-    btnCopyAscii.id = 'btnCopyAscii';
+    btnCopyAscii.className = 'btn btn--outline copy-btn';
+    btnCopyAscii.setAttribute('data-target', 'asciiInput');
     btnCopyAscii.textContent = 'Copy ASCII';
     hexRow.appendChild(btnCopyAscii);
     
@@ -136,8 +136,6 @@ function setupHexAsciiConverter() {
     const btnToAscii = el('btnToAscii');
     const btnClearAscii = el('btnClearAscii');
     const btnClearHex = el('btnClearHex');
-    const btnCopyHex = el('btnCopyHex');
-    const btnCopyAscii = el('btnCopyAscii');
     const btnSwap = el('btnSwap');
     const asciiMetrics = el('asciiMetrics');
     const hexMetrics = el('hexMetrics');
@@ -193,22 +191,6 @@ function setupHexAsciiConverter() {
         hexInput.value = '';
         hexMetrics.innerHTML = '';
     });
-    btnCopyHex.addEventListener('click', async () => {
-        try {
-            await navigator.clipboard.writeText(hexInput.value);
-            setMetrics(hexMetrics, { status:{ok:true, msg:'Copied to clipboard'} });
-        } catch {
-            alert('Clipboard copy failed.');
-        }
-    });
-    btnCopyAscii.addEventListener('click', async () => {
-        try {
-            await navigator.clipboard.writeText(asciiInput.value);
-            setMetrics(asciiMetrics, { status:{ok:true, msg:'Copied to clipboard'} });
-        } catch {
-            alert('Clipboard copy failed.');
-        }
-    });
     btnSwap.addEventListener('click', () => {
         const a = asciiInput.value;
         asciiInput.value = hexInput.value;
@@ -217,6 +199,9 @@ function setupHexAsciiConverter() {
         asciiMetrics.innerHTML = '';
         hexMetrics.innerHTML = '';
     });
+    
+    // Setup copy button functionality
+    if (typeof window.setupCopyButtons === 'function') window.setupCopyButtons();
 }
 
 // Qwik expects a default export named 'load' for dynamic tool loading

@@ -2,9 +2,10 @@
 // 100% code coverage: Initializes theme and Qwik app on DOMContentLoaded.
 
 import { Qwik } from './src/Qwik.js';
-import { simpleMD5 } from './src/utils.js';
+import { simpleMD5, setupCopyButtons } from './src/utils.js';
 
 window.simpleMD5 = simpleMD5;
+window.setupCopyButtons = setupCopyButtons;
 
 
 document.addEventListener('DOMContentLoaded', () => {
