@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Text Comparer Debug Test</title>
+    <style>
+        .error { color: red; padding: 10px; border: 1px solid red; margin: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Text Comparer Debug Test</h1>
+    <div id="test-container"></div>
+    
+    <script>
+        // Force fresh load without cache
+        const timestamp = Date.now();
+        
+        async function testTextComparer() {
+            try {
+                // Import the module with cache-busting
+                const module = await import(`./dist/assets/textComparer-CqnBPtyR.js?v=${timestamp}`);
+                console.log('Module loaded:', module);
+                
+                const container = document.getElementById('test-container');
+                await module.load(container, 'text-comparer');
+                
+                console.log('Text Comparer loaded successfully!');
+            } catch (error) {
+                console.error('Error loading Text Comparer:', error);
+                document.getElementById('test-container').innerHTML = 
+                    `<div class="error">Failed to load: ${error.message}</div>`;
+            }
+        }
+        
+        // Load when page is ready
+        document.addEventListener('DOMContentLoaded', testTextComparer);
+    </script>
+</body>
+</html>

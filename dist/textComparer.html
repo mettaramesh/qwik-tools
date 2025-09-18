@@ -17,8 +17,43 @@
       <button id="tc-search-next" class="tc-btn" title="Next match">&#8595;</button>
       <div class="tc-controls">
         <button id="tc-compare" class="tc-btn primary" title="Compare (Ctrl/Cmd+B)">Compare</button>
+        <button id="tc-copy" class="tc-btn" title="Copy result">Copy</button>
+        <button id="tc-clear" class="tc-btn" title="Clear all">Clear</button>
       </div>
     </div>
   </div>
-  <!-- ...rest of the template (editors, result, etc.)... -->
+  
+  <!-- Main content area -->
+  <div id="tc-main" class="tc-main">
+    <!-- Left side -->
+    <div id="left-wrap" class="tc-side">
+      <div class="tc-editor-wrap">
+        <div id="gutter-left" class="tc-gutter"></div>
+        <textarea id="tc-text1" class="tc-textarea" placeholder="Enter first text to compare..."></textarea>
+      </div>
+    </div>
+    
+    <!-- Splitter -->
+    <div id="splitter" class="tc-splitter"></div>
+    
+    <!-- Right side -->
+    <div id="right-wrap" class="tc-side">
+      <div class="tc-editor-wrap">
+        <div id="gutter-right" class="tc-gutter"></div>
+        <textarea id="tc-text2" class="tc-textarea" placeholder="Enter second text to compare..."></textarea>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Result section -->
+  <div class="tc-result-section">
+    <div class="tc-result-header">
+      <h3>Comparison Result</h3>
+      <div id="tc-status" class="tc-status">Ready to compare</div>
+    </div>
+    <div id="tc-result" class="tc-result" aria-live="polite"></div>
+    <div id="tc-result-meta" class="tc-meta">
+      <span id="tc-similarity" class="tc-similarity"></span>
+    </div>
+  </div>
 </div>

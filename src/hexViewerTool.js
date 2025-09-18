@@ -1,17 +1,19 @@
 // Hex Viewer Tool: UTF-8 Char to Hex
 // Usage: loadHexViewerTool(container)
 
-function ensureHexViewerToolStyle() {
-    if (document.getElementById('hex-viewer-style')) return;
-    const link = document.createElement('link');
-    link.id = 'hex-viewer-style';
-    link.rel = 'stylesheet';
-    link.href = './hexViewerTool.css';
-    document.head.appendChild(link);
-}
-
 export async function loadHexViewerTool(container) {
+    // Ensure CSS is loaded
+    function ensureHexViewerToolStyle() {
+        if (document.getElementById('hex-viewer-style')) return;
+        const link = document.createElement('link');
+        link.id = 'hex-viewer-style';
+        link.rel = 'stylesheet';
+        link.href = './hexViewerTool.css';
+        document.head.appendChild(link);
+    }
+    
     ensureHexViewerToolStyle();
+    
     try {
         // Load HTML template from external file
         const response = await fetch('hexViewerTool.html');

@@ -20,6 +20,9 @@ export async function load(container, toolId) {
     return;
   }
 
+  // Wait a brief moment for DOM to be ready
+  await new Promise(resolve => setTimeout(resolve, 10));
+
   // === refs ===
   const t1 = container.querySelector('#tc-text1');
   const t2 = container.querySelector('#tc-text2');
@@ -47,6 +50,14 @@ export async function load(container, toolId) {
   // Check if essential elements exist
   if (!t1 || !t2 || !resultEl || !statusEl) {
     console.error('Text Comparer: Missing essential DOM elements');
+    console.error('Debug info:', {
+      't1 (tc-text1)': !!t1,
+      't2 (tc-text2)': !!t2, 
+      'resultEl (tc-result)': !!resultEl,
+      'statusEl (tc-status)': !!statusEl,
+      'containerHTML': container.innerHTML.length + ' chars',
+      'containerChildrenCount': container.children.length
+    });
     container.innerHTML = '<div class="error">Failed to initialize Text Comparer - missing elements</div>';
     return;
   }

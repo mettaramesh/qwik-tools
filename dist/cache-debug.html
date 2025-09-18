@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cache Debug Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .debug { background: #f0f0f0; padding: 10px; margin: 10px 0; font-family: monospace; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Cache Debug Test</h1>
+    <div id="debug"></div>
+    
+    <script>
+        const debugEl = document.getElementById('debug');
+        
+        function log(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `debug ${type}`;
+            div.innerHTML = `${new Date().toLocaleTimeString()}: ${message}`;
+            debugEl.appendChild(div);
+            console.log(message);
+        }
+        
+        // Check what files are actually being loaded
+        const scripts = Array.from(document.scripts);
+        const links = Array.from(document.querySelectorAll('link'));
+        
+        log('=== CACHE DEBUG TEST ===');
+        log(`Page loaded at: ${window.location.href}`);
+        log(`User agent: ${navigator.userAgent}`);
+        
+        // Check for old cached files
+        const oldFiles = [
+            'textComparer-BW8PyJVZ.js',
+            'index-SU3NHoYx.js'
+        ];
+        
+        log('\\n=== CHECKING FOR OLD CACHED FILES ===');
+        oldFiles.forEach(file => {
+            const hasOld = scripts.some(s => s.src.includes(file)) || 
+                          links.some(l => l.href.includes(file));
+            if (hasOld) {
+                log(`❌ FOUND OLD FILE: ${file}`, 'error');
+            } else {
+                log(`✅ Old file NOT found: ${file}`, 'success');
+            }
+        });
+        
+        // Check for new files
+        log('\\n=== CHECKING FOR NEW TIMESTAMPED FILES ===');
+        const hasTimestamp = scripts.some(s => s.src.includes('1758164614013')) || 
+                            links.some(l => l.href.includes('1758164614013'));
+        
+        if (hasTimestamp) {
+            log('✅ NEW TIMESTAMPED FILES DETECTED!', 'success');
+        } else {
+            log('❌ No timestamped files found - cache may still be active', 'error');
+        }
+        
+        // List all script and link sources
+        log('\\n=== ALL LOADED RESOURCES ===');
+        scripts.forEach(s => {
+            if (s.src) log(`Script: ${s.src}`);
+        });
+        links.forEach(l => {
+            if (l.href && l.rel === 'stylesheet') log(`CSS: ${l.href}`);
+        });
+        
+        // Check if we can access the new textComparer
+        log('\\n=== TESTING MODULE LOADING ===');
+        setTimeout(async () => {
+            try {
+                // Try to load the new textComparer module
+                const textComparerPath = './assets/textComparer-1758164614013-CqnBPtyR.js';
+                log(`Attempting to load: ${textComparerPath}`);
+                
+                const module = await import(textComparerPath);
+                log('✅ NEW TEXT COMPARER MODULE LOADED SUCCESSFULLY!', 'success');
+                log(`Module exports: ${Object.keys(module).join(', ')}`);
+                
+                // Test basic functionality
+                if (module.load) {
+                    const testDiv = document.createElement('div');
+                    testDiv.id = 'test-container';
+                    document.body.appendChild(testDiv);
+                    
+                    await module.load(testDiv, 'text-comparer');
+                    log('✅ TEXT COMPARER INITIALIZED SUCCESSFULLY!', 'success');
+                } else {
+                    log('❌ Module does not export load function', 'error');
+                }
+                
+            } catch (error) {
+                log(`❌ Error loading new module: ${error.message}`, 'error');
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
