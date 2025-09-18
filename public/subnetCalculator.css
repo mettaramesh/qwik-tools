@@ -1,0 +1,24 @@
+/* Utility classes for hiding and margin */
+.hidden { display: none !important; }
+.ml-10 { margin-left: 10px; }
+.mt-1-5em { margin-top: 1.5em; }
+/* NOTE: All selectors in this file must be scoped to the #subnet-calculator-tool container to avoid global style leaks. */
+/* Subnet Calculator Tool CSS */
+#subnet-calculator-tool .tool-header h2 {
+  color: #1976d2;
+}
+#subnet-calculator-tool .results-table td {
+  padding: 0.25em 0.75em;
+}
+#subnet-calculator-tool .progress-indicator {
+  color: #1976d2;
+  font-weight: 500;
+}
+#subnet-calculator-tool .user-feedback {
+  color: #1976d2;
+  font-style: italic;
+}
+#subnet-calculator-tool .error-message {
+  color: #d32f2f;
+  font-weight: 500;
+}

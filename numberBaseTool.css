@@ -15,15 +15,160 @@
   margin-bottom: 8px;
   display: block;
 }
-.grid-base input[type="text"] {
-  width: 100%;
-  background: var(--color-background, #f9f9f9);
-  border: 1.5px solid var(--color-border, #e0e0e0);
-  color: var(--color-text, #13343b);
-  padding: 13px 14px;
-  border-radius: 10px;
-  font-size: 1.08em;
-  margin-bottom: 10px;
+/* Number Base Tool CSS - Complete Styling */
+
+.number-base-tool {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.number-base-tool h2 {
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+/* Controls Section */
+.nb-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  align-items: center;
+}
+
+.nb-controls label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  color: #495057;
+  white-space: nowrap;
+}
+
+.nb-controls input[type="checkbox"] {
+  margin-right: 0.25rem;
+}
+
+.nb-controls select {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  background: white;
+  font-size: 0.9rem;
+}
+
+.nb-controls button {
+  padding: 0.5rem 1rem;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.nb-controls button:hover {
+  background: #c82333;
+}
+
+/* Input Fields Section */
+.nb-fields {
+  display: grid;
+  gap: 1rem;
+}
+
+.nb-row {
+  display: grid;
+  grid-template-columns: 100px 1fr auto auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.75rem;
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.nb-row:hover {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.1rem rgba(0, 123, 255, 0.1);
+}
+
+.nb-row label {
+  font-weight: 600;
+  color: #495057;
+  text-align: right;
+  font-size: 0.9rem;
+}
+
+.nb-row input[type="text"] {
+  padding: 0.5rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.9rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.nb-row input[type="text"]:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.1rem rgba(0, 123, 255, 0.25);
+}
+
+.nb-row input[type="text"]:invalid {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.1rem rgba(220, 53, 69, 0.25);
+}
+
+.nb-row button {
+  padding: 0.4rem 0.6rem;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: background-color 0.2s;
+}
+
+.nb-row button:hover {
+  background: #545b62;
+}
+
+.nb-row button:active {
+  transform: scale(0.95);
+}
+
+/* Message Spans */
+.nb-row span {
+  font-size: 0.8rem;
+  font-style: italic;
+  min-width: 120px;
+}
+
+.hint {
+  color: #6c757d;
+}
+
+.ok {
+  color: #28a745;
+  font-weight: 500;
+}
+
+.err {
+  color: #dc3545;
+  font-weight: 500;
 }
 .base-select {
   font-size: 1.08em;

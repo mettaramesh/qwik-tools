@@ -32,7 +32,7 @@ export async function load(container) {
         const link = document.createElement('link');
         link.id = 'numberbase-css-link';
         link.rel = 'stylesheet';
-        link.href = '/numberBaseTool.css'; // Load from public root
+        link.href = 'numberBaseTool.css'; // Load from public directory
         if (document.head) document.head.appendChild(link);
     }
     await loadNumberBaseTool(container);
