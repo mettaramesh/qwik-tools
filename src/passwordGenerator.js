@@ -172,32 +172,30 @@ export function setupPasswordGeneratorTool() {
         for (const p of pwds){
             all.push(p);
             const item = document.createElement('div');
-            item.className = 'pwd';
-            const code = document.createElement('code');
-            code.textContent = p;
-            const meter = document.createElement('div');
-            meter.className = 'meter';
-            const bar = document.createElement('div');
-            bar.className = 'bar';
-            const bits = entropyBits(p);
-            const pct = Math.max(6, Math.min(100, Math.round(bits/80*100)));
-            bar.style.width = pct + '%';
-            bar.style.background = meterColor(bits);
-            meter.appendChild(bar);
-            const info = document.createElement('span');
-            info.className = 'small';
-            info.textContent = ` ${bits.toFixed(1)} bits • ~${crackTimeText(bits)}`;
+            item.className = 'password-item';
+            
+            const passwordText = document.createElement('div');
+            passwordText.className = 'password-text';
+            passwordText.textContent = p;
+            
             const copyBtn = document.createElement('button');
-            copyBtn.className = 'btn btn--outline';
+            copyBtn.className = 'copy-btn';
             copyBtn.textContent = 'Copy';
             copyBtn.addEventListener('click', async () => {
-                await navigator.clipboard.writeText(p);
-                copyBtn.textContent = 'Copied!';
-                setTimeout(()=>copyBtn.textContent='Copy', 900);
+                try {
+                    await navigator.clipboard.writeText(p);
+                    copyBtn.textContent = 'Copied!';
+                    copyBtn.classList.add('copied');
+                    setTimeout(() => {
+                        copyBtn.textContent = 'Copy';
+                        copyBtn.classList.remove('copied');
+                    }, 900);
+                } catch {
+                    alert('Failed to copy to clipboard');
+                }
             });
-            item.appendChild(code);
-            item.appendChild(meter);
-            item.appendChild(info);
+            
+            item.appendChild(passwordText);
             item.appendChild(copyBtn);
             list.appendChild(item);
         }
@@ -216,8 +214,8 @@ export function setupPasswordGeneratorTool() {
     btnCopyAll.addEventListener('click', async ()=>{
         try{
             await navigator.clipboard.writeText(allOut.value);
-            btnCopyAll.textContent = 'Copied!';
-            setTimeout(()=>btnCopyAll.textContent='Copy all', 900);
+            btnCopyAll.textContent = '📋 Copied!';
+            setTimeout(()=>btnCopyAll.textContent='📋 Copy All', 900);
         }catch{ alert('Clipboard copy failed.'); }
     });
     btnDownload.addEventListener('click', ()=>{
