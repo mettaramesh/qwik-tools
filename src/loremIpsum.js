@@ -1,11 +1,13 @@
 // Lorem Ipsum Generator module
 // 100% code coverage: Handles lorem ipsum text generation and UI setup.
-import { escapeHtml } from './utils.js';
 
 export async function loadLoremIpsum(container) {
     // Load HTML template from external file
     const html = await fetch('loremIpsum.html').then(r => r.text());
     container.innerHTML = html;
+    
+    // Setup functionality after HTML is loaded
+    setupLoremIpsum();
 }
 
 export function setupLoremIpsum() {
@@ -57,7 +59,7 @@ export function setupLoremIpsum() {
                 result.push(sentences.join(' '));
             }
         }
-        output.value = escapeHtml(typeValue === 'paragraphs' ? result.join('\n\n') : result.join(typeValue === 'words' ? ' ' : '\n'));
+        output.value = typeValue === 'paragraphs' ? result.join('\n\n') : result.join(typeValue === 'words' ? ' ' : '\n');
     };
     const generateBtn = document.getElementById('lorem-generate-btn');
     if (generateBtn) {
@@ -68,6 +70,6 @@ export function setupLoremIpsum() {
     if (typeof window.setupCopyButtons === 'function') window.setupCopyButtons();
 }
 
-export function load(container, toolId) {
-    loadLoremIpsum(container);
+export async function load(container, toolId) {
+    await loadLoremIpsum(container);
 }
