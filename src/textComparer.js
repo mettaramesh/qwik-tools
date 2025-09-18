@@ -44,6 +44,13 @@ export async function load(container, toolId) {
   const leftWrap = container.querySelector('#left-wrap');
   const rightWrap = container.querySelector('#right-wrap');
 
+  // Check if essential elements exist
+  if (!t1 || !t2 || !resultEl || !statusEl) {
+    console.error('Text Comparer: Missing essential DOM elements');
+    container.innerHTML = '<div class="error">Failed to initialize Text Comparer - missing elements</div>';
+    return;
+  }
+
   // === utilities ===
   function setStatus(msg, ok=true){
     statusEl.textContent = msg;
@@ -118,15 +125,18 @@ export async function load(container, toolId) {
 
   // scroll sync
   function attachScrollSync() {
+    if (!t1 || !t2 || !gutterLeft || !gutterRight) return;
+    
     t1.addEventListener('scroll', () => {
-      gutterLeft.scrollTop = t1.scrollTop;
-      if (Math.abs(t2.scrollTop - t1.scrollTop) > 1) t2.scrollTop = t1.scrollTop;
-      gutterRight.scrollTop = t1.scrollTop;
+      if (gutterLeft) gutterLeft.scrollTop = t1.scrollTop;
+      if (t2 && Math.abs(t2.scrollTop - t1.scrollTop) > 1) t2.scrollTop = t1.scrollTop;
+      if (gutterRight) gutterRight.scrollTop = t1.scrollTop;
     }, { passive: true });
+    
     t2.addEventListener('scroll', () => {
-      gutterRight.scrollTop = t2.scrollTop;
-      if (Math.abs(t1.scrollTop - t2.scrollTop) > 1) t1.scrollTop = t2.scrollTop;
-      gutterLeft.scrollTop = t2.scrollTop;
+      if (gutterRight) gutterRight.scrollTop = t2.scrollTop;
+      if (t1 && Math.abs(t1.scrollTop - t2.scrollTop) > 1) t1.scrollTop = t2.scrollTop;
+      if (gutterLeft) gutterLeft.scrollTop = t2.scrollTop;
     }, { passive: true });
 
     gutterLeft.addEventListener('click', (ev) => {
@@ -405,30 +415,44 @@ export async function load(container, toolId) {
   }
 
   // hook control events to update
-  [wordLevelChk, ignoreWsChk, ignoreCaseChk, showLinesChk].forEach(cb=>{
-    cb.addEventListener('change', ()=>{ updateGutters(); scheduleUpdate(60); });
+  [wordLevelChk, ignoreWsChk, ignoreCaseChk, showLinesChk].filter(Boolean).forEach(cb=>{
+    if (cb) cb.addEventListener('change', ()=>{ updateGutters(); scheduleUpdate(60); });
   });
-  compareBtn.addEventListener('click', ()=> updateResult(true));
-  searchInput.addEventListener('input', ()=> scheduleUpdate(80));
+  
+  if (compareBtn) compareBtn.addEventListener('click', ()=> updateResult(true));
+  if (searchInput) searchInput.addEventListener('input', ()=> scheduleUpdate(80));
 
-  copyBtn.addEventListener('click', async ()=>{
-    try { await navigator.clipboard.writeText(resultEl.innerText || ''); setStatus('Result copied to clipboard'); }
-    catch { setStatus('Copy failed', false); }
-  });
-  clearBtn.addEventListener('click', ()=>{
-    t1.value=''; t2.value=''; resultEl.innerHTML=''; updateGutters(); setStatus('Cleared'); simEl.textContent=''; notice(''); 
-    highlightSearch(); // <-- clear search highlights after clearing
-  });
+  if (copyBtn) {
+    copyBtn.addEventListener('click', async ()=>{
+      try { await navigator.clipboard.writeText(resultEl.innerText || ''); setStatus('Result copied to clipboard'); }
+      catch { setStatus('Copy failed', false); }
+    });
+  }
+  
+  if (clearBtn) {
+    clearBtn.addEventListener('click', ()=>{
+      if (t1) t1.value=''; 
+      if (t2) t2.value=''; 
+      if (resultEl) resultEl.innerHTML=''; 
+      updateGutters(); 
+      setStatus('Cleared'); 
+      if (simEl) simEl.textContent=''; 
+      notice(''); 
+      highlightSearch(); // <-- clear search highlights after clearing
+    });
+  }
 
   // textareas: input/paste -> update gutters & schedule diff
-  [t1,t2].forEach(ta=>{
-    ta.addEventListener('input', ()=>{ updateGutters(); scheduleUpdate(); });
-    ta.addEventListener('paste', ()=>{ setTimeout(()=>{ updateGutters(); scheduleUpdate(); }, 20); });
-    ta.addEventListener('keydown', (ev)=>{ const isMac = navigator.platform.toLowerCase().includes('mac'); const mod = isMac?ev.metaKey:ev.ctrlKey; if (mod && ev.key.toLowerCase()==='b'){ ev.preventDefault(); updateResult(); } });
+  [t1,t2].filter(Boolean).forEach(ta=>{
+    if (ta) {
+      ta.addEventListener('input', ()=>{ updateGutters(); scheduleUpdate(); });
+      ta.addEventListener('paste', ()=>{ setTimeout(()=>{ updateGutters(); scheduleUpdate(); }, 20); });
+      ta.addEventListener('keydown', (ev)=>{ const isMac = navigator.platform.toLowerCase().includes('mac'); const mod = isMac?ev.metaKey:ev.ctrlKey; if (mod && ev.key.toLowerCase()==='b'){ ev.preventDefault(); updateResult(); } });
+    }
   });
 
   // initial sample
-  if (!t1.value && !t2.value) {
+  if (t1 && t2 && !t1.value && !t2.value) {
     t1.value = `The quick brown fox\njumps over the lazy dog.\nThis is the left file.\nIt has several lines.\nSome lines will be changed.`;
     t2.value = `The quick brown fox\njumps over the lazy dog!\nThis is the right file.\nIt has several lines.\nSome lines will be added.\nAnd some will be removed.`;
     updateGutters();
@@ -440,6 +464,8 @@ export async function load(container, toolId) {
 
   // splitter logic
   (function attachSplitter(){
+    if (!splitter || !leftWrap || !rightWrap || !mainEl) return;
+    
     let startX=0, leftWidth=0;
     splitter.addEventListener('pointerdown', (e)=>{
       e.preventDefault();
@@ -511,15 +537,23 @@ export async function load(container, toolId) {
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
-  searchInput.addEventListener('input', () => { highlightSearch(); });
-  searchPrevBtn.addEventListener('click', () => {
-    if (!searchMatches.length) return;
-    searchIndex = (searchIndex - 1 + searchMatches.length) % searchMatches.length;
-    scrollToCurrentMatch();
-  });
-  searchNextBtn.addEventListener('click', () => {
-    if (!searchMatches.length) return;
-    searchIndex = (searchIndex + 1) % searchMatches.length;
-    scrollToCurrentMatch();
-  });
+  if (searchInput) {
+    searchInput.addEventListener('input', () => { highlightSearch(); });
+  }
+  
+  if (searchPrevBtn) {
+    searchPrevBtn.addEventListener('click', () => {
+      if (!searchMatches.length) return;
+      searchIndex = (searchIndex - 1 + searchMatches.length) % searchMatches.length;
+      scrollToCurrentMatch();
+    });
+  }
+  
+  if (searchNextBtn) {
+    searchNextBtn.addEventListener('click', () => {
+      if (!searchMatches.length) return;
+      searchIndex = (searchIndex + 1) % searchMatches.length;
+      scrollToCurrentMatch();
+    });
+  }
 }

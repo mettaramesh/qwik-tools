@@ -1,12 +1,36 @@
 // Hex Viewer Tool: UTF-8 Char to Hex
 // Usage: loadHexViewerTool(container)
 
+function ensureHexViewerToolStyle() {
+    if (document.getElementById('hex-viewer-style')) return;
+    const link = document.createElement('link');
+    link.id = 'hex-viewer-style';
+    link.rel = 'stylesheet';
+    link.href = './hexViewerTool.css';
+    document.head.appendChild(link);
+}
+
 export async function loadHexViewerTool(container) {
     ensureHexViewerToolStyle();
-    // Load HTML template from external file
-    const html = await fetch('hexViewerTool.html').then(r => r.text());
-    container.innerHTML = html;
-    setupHexViewerTool();
+    try {
+        // Load HTML template from external file
+        const response = await fetch('hexViewerTool.html');
+        if (!response.ok) {
+            throw new Error(`Failed to load Hex Viewer HTML: ${response.status}`);
+        }
+        const html = await response.text();
+        
+        // Security check: ensure we're not loading the full page
+        if (html.includes('<!DOCTYPE html') || html.includes('<html')) {
+            throw new Error('Invalid HTML content - contains full page structure');
+        }
+        
+        container.innerHTML = html;
+        setupHexViewerTool();
+    } catch (error) {
+        console.error('Error loading Hex Viewer:', error);
+        container.innerHTML = '<div class="error">Failed to load Hex Viewer tool</div>';
+    }
 }
 
 export function setupHexViewerTool() {
@@ -16,10 +40,18 @@ export function setupHexViewerTool() {
     const copyBtn = document.getElementById('hexCopyBtn');
     const clearBtn = document.getElementById('hexClearBtn');
     const showBtn = document.getElementById('hexShowBtn');
+    
+    // Check if essential elements exist
+    if (!input || !output) {
+        console.error('Hex Viewer: Missing essential DOM elements');
+        return;
+    }
+    
     function toHex(byte) {
         return byte.toString(16).padStart(2, '0').toUpperCase();
     }
     function render(str, mode) {
+        if (!output) return;
         if (!str) { output.innerHTML = ''; return; }
         if (mode === 'hex') {
             let html = '';
@@ -45,10 +77,18 @@ export function setupHexViewerTool() {
         return Array.from(modeRadios).find(r=>r.checked)?.value || 'hex';
     }
     if (showBtn) showBtn.addEventListener('click', () => render(input.value, getMode()));
+    if (input) {
+        input.addEventListener('input', () => render(input.value, getMode()));
+    }
+    
     if (modeRadios && modeRadios.length) {
         modeRadios.forEach(r => {
             if (r) r.addEventListener('change', () => render(input.value, getMode()));
         });
+    }
+    
+    if (showBtn && input) {
+        showBtn.addEventListener('click', () => render(input.value, getMode()));
     }
     // Tooltip on hover (hexcode and codepoint)
     if (output) {

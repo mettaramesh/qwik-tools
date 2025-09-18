@@ -2,6 +2,17 @@
 // Drop-in module: call load(container) then setup(container).
 // Improved tokenizer + formatter to handle quotes, comments, parentheses, CASE, joins, subqueries, etc.
 
+// Load CSS for SQL Formatter
+function loadSQLFormatterCSS() {
+  const existingLink = document.querySelector('link[href*="sqlFormatter.css"]');
+  if (existingLink) return; // CSS already loaded
+  
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = './sqlFormatter.css';
+  document.head.appendChild(link);
+}
+
 const KEYWORD_CLAUSES = new Set([
   'select','from','where','group by','order by','having','limit','offset',
   'insert','into','values','update','set','delete','with','union','except','intersect',
@@ -580,6 +591,9 @@ function minifySQL(sql) {
 
 // UI Module (load + setup) — container-based
 export function load(container) {
+  // Load CSS styles
+  loadSQLFormatterCSS();
+  
   container.innerHTML = `
     <div class="tool-header"><h2>SQL Formatter</h2><p class="small">Format, beautify, or minify SQL queries — robust tokenizer & formatter.</p></div>
     <div class="card">

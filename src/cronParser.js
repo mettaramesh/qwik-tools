@@ -12,6 +12,51 @@ function ensureQwikCronStyle(){
 }
 ensureQwikCronStyle();
 
+// Enhanced User Feedback System
+function showSuccessAnimation(element) {
+  if (element) {
+    element.classList.add('success-animation');
+    setTimeout(() => element.classList.remove('success-animation'), 600);
+  }
+}
+
+function showLoadingState(element, isLoading = true) {
+  if (element) {
+    element.classList.toggle('loading', isLoading);
+  }
+}
+
+function createToast(message, type = 'success') {
+  const existingToast = document.querySelector('.cron-toast');
+  if (existingToast) existingToast.remove();
+  
+  const toast = document.createElement('div');
+  toast.className = `cron-toast cron-toast--${type}`;
+  toast.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    background: ${type === 'success' ? 'var(--cron-success)' : type === 'error' ? 'var(--cron-error)' : 'var(--cron-warning)'};
+    color: white;
+    font-weight: 600;
+    font-size: 0.875rem;
+    box-shadow: var(--cron-shadow-lg);
+    z-index: 1000;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+  `;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  
+  setTimeout(() => toast.style.transform = 'translateX(0)', 50);
+  setTimeout(() => {
+    toast.style.transform = 'translateX(100%)';
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+
 // ---- Helpers: script loading + parser resolution ----
 function loadScript(src) {
   return new Promise((resolve, reject) => {
@@ -200,32 +245,84 @@ function cronBuilderLogic() {
     });
   }
 
-  // Presets
+  // Enhanced Presets with Visual Feedback
   const presets = document.getElementById('cronPresets');
   if (presets) {
     presets.innerHTML='';
-    const addPreset=(label,expr)=>{
+    const addPreset=(label,expr,description)=>{
       const chip=document.createElement('div');
-      chip.className='chip'; chip.textContent=label; chip.title=expr;
-      chip.addEventListener('click',()=>{
-        const m=document.getElementById('simple-minute'); if(m) m.value='0';
-        const h=document.getElementById('simple-hour');  if(h) h.value='0';
-        const d=document.getElementById('simple-dom');   if(d) d.value='1';
-        const mo=document.getElementById('simple-month');if(mo) mo.value='1';
-        const w=document.getElementById('simple-dow');   if(w) w.value='0';
-        const out=document.getElementById('cronOut'); if(out) out.textContent=expr;
-        const ex=document.getElementById('explainText'); if(ex) ex.textContent=`At ${label.toLowerCase()}.`;
-        const vb=document.getElementById('validBox'); if(vb) vb.className='status ok';
-        const vt=document.getElementById('validTitle'); if(vt) vt.innerHTML='<strong>Looks good.</strong>';
-        const vd=document.getElementById('validDetail'); if(vd) vd.textContent='Expression structure is valid.';
+      chip.className='chip'; 
+      chip.textContent=label; 
+      chip.title=`${expr}\n${description || `Sets cron to: ${label.toLowerCase()}`}`;
+      
+      chip.addEventListener('click', async ()=>{
+        // Visual feedback for selection
+        showLoadingState(chip, true);
+        
+        // Remove active state from other chips
+        presets.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        
+        // Parse expression to set individual fields
+        const parts = expr.split(/\s+/);
+        const [min, hr, dom, mon, dow] = parts;
+        
+        const m=document.getElementById('simple-minute'); 
+        const h=document.getElementById('simple-hour');  
+        const d=document.getElementById('simple-dom');   
+        const mo=document.getElementById('simple-month');
+        const w=document.getElementById('simple-dow');   
+        
+        if(m) m.value = min || '*';
+        if(h) h.value = hr || '*';
+        if(d) d.value = dom || '*';
+        if(mo) mo.value = mon || '*';
+        if(w) w.value = dow || '*';
+        
+        // Update output with animation
+        const out=document.getElementById('cronOut'); 
+        if(out) {
+          out.textContent = expr;
+          showSuccessAnimation(out);
+        }
+        
+        // Update explanation
+        const ex=document.getElementById('explainText'); 
+        if(ex) {
+          ex.textContent = description || `Runs ${label.toLowerCase()}.`;
+          showSuccessAnimation(ex);
+        }
+        
+        // Update validation status
+        const vb=document.getElementById('validBox'); 
+        const vt=document.getElementById('validTitle'); 
+        const vd=document.getElementById('validDetail');
+        if(vb) vb.className='status ok';
+        if(vt) vt.innerHTML='<strong>✓ Preset applied</strong>';
+        if(vd) vd.textContent='Using predefined schedule pattern.';
+        
+        // Show success toast
+        createToast(`Applied preset: ${label}`, 'success');
+        
+        // Remove loading and active states
+        setTimeout(() => {
+          showLoadingState(chip, false);
+          chip.classList.remove('active');
+        }, 1000);
       });
       presets.appendChild(chip);
     };
-    addPreset('Every 5 Minutes','*/5 * * * *');
-    addPreset('Hourly','0 * * * *');
-    addPreset('Daily','0 0 * * *');
-    addPreset('Weekly','0 0 * * 0');
-    addPreset('Monthly','0 0 1 * *');
+    
+    addPreset('Every 5 Minutes','*/5 * * * *', 'Runs every 5 minutes');
+    addPreset('Every 15 Minutes','*/15 * * * *', 'Runs every 15 minutes');
+    addPreset('Every 30 Minutes','*/30 * * * *', 'Runs every 30 minutes');
+    addPreset('Hourly','0 * * * *', 'Runs at the top of every hour');
+    addPreset('Daily at Midnight','0 0 * * *', 'Runs once a day at midnight');
+    addPreset('Daily at 9 AM','0 9 * * *', 'Runs every day at 9:00 AM');
+    addPreset('Weekdays at 9 AM','0 9 * * 1-5', 'Runs Monday through Friday at 9:00 AM');
+    addPreset('Weekly (Sunday)','0 0 * * 0', 'Runs every Sunday at midnight');
+    addPreset('Monthly (1st)','0 0 1 * *', 'Runs on the 1st day of every month at midnight');
+    addPreset('Quarterly','0 0 1 */3 *', 'Runs every 3 months on the 1st day at midnight');
   }
 
   // Update Simple tab → cronOut
@@ -263,21 +360,99 @@ function cronBuilderLogic() {
     infoBoxTimeout=setTimeout(()=>{ infoBox.style.display='none'; }, 120000);
   }
 
-  // Copy
+  // Enhanced Copy Button with Visual Feedback
   const btnCopy=document.getElementById('btnCopy');
   if (btnCopy) btnCopy.addEventListener('click', async ()=>{
-    const txt=document.getElementById('cronOut')?.textContent?.trim() ?? '';
-    try { await navigator.clipboard.writeText(txt); showInfo('Cron expression copied to clipboard.','info'); }
-    catch { showInfo('Could not copy to clipboard.','warn'); }
+    const cronOut = document.getElementById('cronOut');
+    const txt = cronOut?.textContent?.trim() ?? '';
+    
+    if (!txt || txt === '* * * * *') {
+      createToast('Please generate a cron expression first!', 'warning');
+      return;
+    }
+    
+    try {
+      showLoadingState(btnCopy, true);
+      await navigator.clipboard.writeText(txt);
+      
+      // Visual success feedback
+      showSuccessAnimation(cronOut);
+      createToast('Cron expression copied to clipboard!', 'success');
+      
+      // Temporarily change button appearance
+      const originalText = btnCopy.textContent;
+      btnCopy.textContent = '✓ Copied!';
+      btnCopy.style.background = 'var(--cron-success)';
+      btnCopy.style.borderColor = 'var(--cron-success)';
+      
+      setTimeout(() => {
+        btnCopy.textContent = originalText;
+        btnCopy.style.background = '';
+        btnCopy.style.borderColor = '';
+      }, 2000);
+    } catch (err) {
+      createToast('Failed to copy to clipboard', 'error');
+      console.error('Copy failed:', err);
+    } finally {
+      showLoadingState(btnCopy, false);
+    }
   });
 
-  // Explain
+  // Enhanced Explain Button with Better UX
   const btnExplain=document.getElementById('btnExplain');
-  if (btnExplain) btnExplain.addEventListener('click', ()=>{
-    const cronOut=document.getElementById('cronOut')?.textContent?.trim();
-    if (!cronOut || cronOut==='* * * * *') return showInfo('Nothing to explain. Generate a cron first.','warn');
-    const ex=document.getElementById('explainText'); if (ex) ex.textContent = (window.cronstrue?.toString?.(cronOut) ?? explainCron(cronOut));
-    showInfo('Explanation updated.','info');
+  if (btnExplain) btnExplain.addEventListener('click', async ()=>{
+    const cronOut = document.getElementById('cronOut');
+    const explainText = document.getElementById('explainText');
+    const cronOutText = cronOut?.textContent?.trim();
+    
+    if (!cronOutText || cronOutText === '* * * * *') {
+      createToast('Please generate a cron expression first!', 'warning');
+      return;
+    }
+    
+    if (!explainText) return;
+    
+    try {
+      showLoadingState(btnExplain, true);
+      showLoadingState(explainText, true);
+      
+      // Show immediate feedback
+      explainText.textContent = 'Generating explanation...';
+      
+      // Simulate processing for better UX
+      await new Promise(resolve => setTimeout(resolve, 300));
+      
+      await ensureCronLibsLoaded();
+      
+      let explanation;
+      if (window.cronstrue?.toString) {
+        try {
+          explanation = window.cronstrue.toString(cronOutText, { 
+            use24HourTimeFormat: true,
+            verbose: true 
+          });
+          createToast('Expression explained successfully!', 'success');
+        } catch (cronstrueErr) {
+          console.warn('cronstrue failed, using fallback:', cronstrueErr);
+          explanation = explainCron(cronOutText);
+          createToast('Generated basic explanation', 'warning');
+        }
+      } else {
+        explanation = explainCron(cronOutText);
+        createToast('Generated basic explanation', 'warning');
+      }
+      
+      explainText.textContent = explanation;
+      showSuccessAnimation(explainText);
+      
+    } catch (err) {
+      explainText.textContent = 'Failed to explain expression';
+      createToast('Failed to explain expression', 'error');
+      console.error('Explain failed:', err);
+    } finally {
+      showLoadingState(btnExplain, false);
+      showLoadingState(explainText, false);
+    }
   });
 
   // ---- Validation helpers (DEFENSIVE) ----
