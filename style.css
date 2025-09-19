@@ -1,16 +1,3 @@
-/* JWT Tool JS-injected Styles */
-.jwks-note { margin-top: 4px; }
-.jwt-mt-16 { margin-top: 16px; }
-.jwt-mb-8 { margin-bottom: 8px; }
-.jwt-gen-grid { display: grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap: 8px; align-items: end; }
-.jwt-col-span-2 { grid-column: span 2; }
-.jwt-col-span-3 { grid-column: span 3; }
-.jwt-col-span-4 { grid-column: span 4; }
-.jwt-col-span-6 { grid-column: span 6; }
-.jwt-claims-human { display: grid; grid-template-columns: 1fr 2fr 2fr 1fr; gap: 8px; }
-.jwt-fw-600 { font-weight: 600; }
-.jwt-grid-claims { display: grid; gap: 16px; grid-template-columns: 1fr 1fr 1fr; margin-top: 16px; }
-.jwt-mt-10 { margin-top: 10px; }
 /* HTML Entity Tool Preview Empty State */
 .html-entity-preview-empty {
   color: #666;
@@ -38,29 +25,6 @@
 .json-yaml-checkbox {
   vertical-align: middle;
   margin-right: 4px;
-}
-/* JWT Tool Styles */
-.security-banner {
-  border: 1px solid var(--warn, #f5a623);
-  background: #fff7e6;
-  padding: 10px;
-  margin-bottom: 12px;
-  font-size: 0.95rem;
-}
-.jwt-hints {
-  margin-top: 6px;
-}
-.grid-keys {
-  display: grid;
-  gap: 16px;
-  grid-template-columns: 1fr 1fr;
-}
-.jwt-secret-row {
-  display: flex;
-  gap: 8px;
-}
-.jwt-secret-input {
-  flex: 1;
 }
 /* Markdown Preview Output */
 #md-output {
@@ -1560,7 +1524,7 @@ select:disabled {
 }
 
 .star-btn.favourite-remove {
-  color: #e53935 !important;
+  color: #1976d2 !important;
   font-size: 1.2em !important;
   margin-left: 8px !important;
   background: none !important;
@@ -1574,7 +1538,7 @@ select:disabled {
 }
 
 .favourite-remove {
-  color: #e53935 !important;
+  color: #1976d2 !important;
   font-size: 1.2em !important;
   margin-left: 8px !important;
   background: none !important;
@@ -1588,7 +1552,7 @@ select:disabled {
 }
 
 #favourites-list .favourite-remove {
-  color: #e53935 !important;
+  color: #1976d2 !important;
   display: inline !important;
 }
 
@@ -1626,10 +1590,6 @@ select:disabled {
   border: none;
   cursor: pointer;
   margin: 0 8px;
-}
-
-.nav-favourites-header {
-  cursor: default;
 }
 
 .clipboard-modal-center {

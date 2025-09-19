@@ -1,6 +1,22 @@
 // Text Inspector & Case Converter Tool
 // Provides text statistics, case conversions, and various text transformations
 
+// Load external stylesheet for text inspector tool
+function loadTextInspectorStyles() {
+  // Remove any existing CSS first
+  const existingLink = document.getElementById('textinspector-css-link');
+  if (existingLink) {
+    existingLink.remove();
+  }
+  
+  const link = document.createElement('link');
+  link.id = 'textinspector-css-link';
+  link.rel = 'stylesheet';
+  link.type = 'text/css';
+  link.href = '/textInspectorTool.css?v=' + Date.now(); // Cache busting
+  if (document.head) document.head.appendChild(link);
+}
+
 function getTextStats(text) {
     const lines = text.split(/\r?\n/);
     const words = text.match(/\b\w+\b/g) || [];
@@ -67,6 +83,9 @@ function removeDiacritics(text) {
 }
 
 export async function loadTextInspectorTool(container) {
+    // Load the CSS for this tool first
+    loadTextInspectorStyles();
+    
     try {
         const resp = await fetch('textInspector.html');
         if (!resp.ok) {
@@ -78,6 +97,17 @@ export async function loadTextInspectorTool(container) {
             throw new Error('Invalid HTML content - contains full page structure');
         }
         container.innerHTML = html;
+        
+        // Add loading class to prevent FOUC
+        const layout = container.querySelector('.text-inspector-layout');
+        if (layout) {
+            layout.classList.add('loading');
+            // Wait for CSS to load before showing content
+            setTimeout(() => {
+                layout.classList.remove('loading');
+                layout.classList.add('loaded');
+            }, 100); // Small delay to ensure CSS is applied
+        }
     } catch (error) {
         console.error('Error loading Text Inspector:', error);
         container.innerHTML = '<div class="error">Failed to load Text Inspector tool</div>';

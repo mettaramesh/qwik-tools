@@ -31,36 +31,7 @@ export class Qwik {
         };
         this.favourites = this.loadFavourites();
         this.init();
-        // Attach event delegation for remove/select in favourites ONCE
-        setTimeout(() => {
-            const favList = document.getElementById('favourites-list');
-            if (favList && !favList._qwikHandlerAttached) {
-                favList.addEventListener('click', (e) => {
-                    const removeBtn = e.target.closest('.favourite-remove');
-                    if (removeBtn && removeBtn.parentElement && removeBtn.parentElement.dataset.tool) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        this.toggleFavourite(removeBtn.parentElement.dataset.tool);
-                        return;
-                    }
-                    const toolLink = e.target.closest('.favourite-tool-link');
-                    if (toolLink && toolLink.parentElement && toolLink.parentElement.dataset.tool) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        this.selectTool(toolLink.parentElement.dataset.tool);
-                        return;
-                    }
-                    // Fallback: click on nav-item itself
-                    const navItem = e.target.closest('.favourite-item');
-                    if (navItem && navItem.dataset.tool) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        this.selectTool(navItem.dataset.tool);
-                    }
-                });
-                favList._qwikHandlerAttached = true;
-            }
-        }, 0);
+        
         setTimeout(() => {
             const toolContent = document.getElementById('tool-content');
             if (toolContent && !toolContent.innerHTML.trim()) {
@@ -103,17 +74,21 @@ export class Qwik {
             // No favourites to render
         }
         this.favourites.forEach(toolId => {
-            const navItem = document.createElement('div');
+            // Create proper nav-item structure like other categories
+            const navItem = document.createElement('a');
             navItem.className = 'nav-item favourite-item';
+            navItem.href = `#${toolId}`;
             navItem.dataset.tool = toolId;
-            // Tool name as a span (not a link, event delegation will handle click)
-            const toolLink = document.createElement('span');
-            toolLink.textContent = this.getToolName(toolId);
-            toolLink.className = 'favourite-tool-link';
-            navItem.appendChild(toolLink);
-            // Add clickable shallow red star after tool name
+            
+            // Tool name with proper structure
+            const toolLabel = document.createElement('span');
+            toolLabel.className = 'tool-label';
+            toolLabel.textContent = this.getToolName(toolId);
+            navItem.appendChild(toolLabel);
+            
+            // Add clickable red star after tool name
             const star = document.createElement('button');
-            star.className = 'star-btn favourite-star qwik-star';
+            star.className = 'star-btn favourite-star qwik-star favourite-remove';
             star.title = 'Remove from Favourites';
             star.setAttribute('aria-label', 'Remove from Favourites');
             star.textContent = '★';
@@ -123,6 +98,15 @@ export class Qwik {
                 this.toggleFavourite(toolId);
             });
             navItem.appendChild(star);
+            
+            // Add click handler for navigation
+            navItem.addEventListener('click', (e) => {
+                if (!e.target.closest('.favourite-remove')) {
+                    e.preventDefault();
+                    this.selectTool(toolId);
+                }
+            });
+            
             favList.appendChild(navItem);
         });
     }
@@ -178,8 +162,9 @@ export class Qwik {
                 e.preventDefault();
                 e.stopPropagation();
                 this.toggleFavourite(toolId);
-                // Update star icon immediately
-                this.renderStarButtons();
+                // Update just this star immediately
+                star.title = this.isFavourite(toolId) ? 'Remove from Favourites' : 'Add to Favourites';
+                star.innerHTML = this.isFavourite(toolId) ? '★' : '☆';
             });
             item.appendChild(star);
         });
@@ -188,6 +173,7 @@ export class Qwik {
     init() {
         this.setupEventListeners();
         this.setupNavigation();
+        this.renderFavourites();
         this.loadTool(this.currentTool);
     }
 
