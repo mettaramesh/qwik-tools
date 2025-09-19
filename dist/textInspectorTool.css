@@ -80,6 +80,12 @@
     margin-bottom: 8px;
 }
 
+.button-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
 .form-label {
     font-weight: 600;
     font-size: 14px;
