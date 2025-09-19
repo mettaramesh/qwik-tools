@@ -93,9 +93,6 @@ export function loadCharsetConverterTool(container) {
                 <button class="btn btn--outline" id="btnDownload">Download</button>
               </div>
               <div class="metrics" id="outMetrics"></div>
-              <div class="compat-note" id="compat">
-                Browser support: <code>TextDecoder</code> decodes many legacy encodings; EBCDIC CP037 is implemented here via a built-in table. <code>TextEncoder</code> officially encodes UTF-8 only; UTF-16 here is manual.
-              </div>
             </div>
           </div>
         </section>
@@ -109,6 +106,12 @@ export function loadCharsetConverterTool(container) {
               <li><strong>File Processing:</strong> Handles binary files directly in the browser</li>
               <li><strong>Export Formats:</strong> Text, Base64, Hex, URL-encoded, and binary downloads</li>
             </ul>
+          </div>
+          
+          <!-- Browser Support Panel -->
+          <div class="browser-support-panel">
+            <h4>Browser Support</h4>
+            <p><code>TextDecoder</code> decodes many legacy encodings; EBCDIC CP037 is implemented here via a built-in table. <code>TextEncoder</code> officially encodes UTF-8 only; UTF-16 here is manual.</p>
           </div>
         </aside>
       </div>
@@ -497,10 +500,17 @@ export function loadCharsetConverterTool(container) {
         blob = new Blob([lastBytes], { type: 'application/octet-stream' }); name = "converted-" + enc + ".bin";
       } else {
         const txt=outputArea?.value ?? '';
+        if (!txt.trim()) {
+          setMetrics(outMetrics,{status:{ok:false,msg:'No content to download. Convert something first.'}});
+          return;
+        }
         blob=new Blob([txt],{type:'text/plain;charset=utf-8'}); name="converted-"+kind+".txt";
       }
       const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove();
       setTimeout(()=>URL.revokeObjectURL(url),0);
+      
+      // Show success feedback
+      setMetrics(outMetrics,{status:{ok:true,msg:'File downloaded successfully!'}});
     });
   }
 
