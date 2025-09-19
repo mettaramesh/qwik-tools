@@ -610,7 +610,7 @@ export class Qwik {
                 <li><strong>Mobile Friendly</strong> - Works on any device with a browser</li>
                 <li><strong>Always Available</strong> - Works offline once loaded</li>
             </ul>
-            <h3>Tools Available:</h3>
+            <h3>Tools Available:</h3><p/>
             <p>JSON formatter, Base64 encoder/decoder, Hash generator, Text comparison, 
             Color picker, Password generator, Regex tester, Timestamp converter, 
             URL encoder/decoder, UUID generator, and many more!</p>
