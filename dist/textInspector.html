@@ -3,61 +3,57 @@
     <p>Analyze and transform your text with various tools</p>
 </div>
 <div class="text-inspector-layout">
+    <!-- Button Rows -->
+    <div class="button-section">
+        <div class="button-row">
+            <div class="button-group-label">Case Conversions:</div>
+            <button class="btn-compact btn--primary" id="to-upper">UPPER</button>
+            <button class="btn-compact btn--outline" id="to-lower">lower</button>
+            <button class="btn-compact btn--outline" id="to-title">Title</button>
+            <button class="btn-compact btn--outline" id="to-sentence">Sentence</button>
+        </div>
+        
+        <div class="button-row">
+            <div class="button-group-label">Programming Cases:</div>
+            <button class="btn-compact btn--outline" id="to-camel">camelCase</button>
+            <button class="btn-compact btn--outline" id="to-pascal">PascalCase</button>
+            <button class="btn-compact btn--outline" id="to-snake">snake_case</button>
+            <button class="btn-compact btn--outline" id="to-kebab">kebab-case</button>
+        </div>
+        
+        <div class="button-row">
+            <div class="button-group-label">Text Operations:</div>
+            <button class="btn-compact btn--outline" id="reverse-words">Reverse Words</button>
+            <button class="btn-compact btn--outline" id="sort-asc">Sort ↑</button>
+            <button class="btn-compact btn--outline" id="sort-desc">Sort ↓</button>
+            <button class="btn-compact btn--outline" id="trim-whitespace">Trim</button>
+            <button class="btn-compact btn--outline" id="collapse-blank">Collapse</button>
+            <button class="btn-compact btn--outline" id="remove-diacritics">Remove Accents</button>
+        </div>
+        
+        <div class="clear-section">
+            <button class="btn-clear btn--secondary" id="clear-btn">Clear All</button>
+        </div>
+    </div>
+    
     <!-- Main Content Panel -->
-    <div class="main-panel">
+    <div class="content-panel">
         <div class="io-container">
             <div class="input-section">
                 <div class="section-header">
                     <label class="form-label">Input</label>
                     <button class="btn btn--sm copy-btn" data-target="text-inspector-input">Copy</button>
                 </div>
-                <textarea id="text-inspector-input" class="form-control code-input" placeholder="Paste or type text here..." rows="12"></textarea>
+                <textarea id="text-inspector-input" class="form-control code-input" placeholder="Paste or type text here..." rows="10"></textarea>
             </div>
             <div class="output-section">
                 <div class="section-header">
                     <label class="form-label">Output</label>
                     <button class="btn btn--sm copy-btn" data-target="text-inspector-output">Copy</button>
                 </div>
-                <textarea id="text-inspector-output" class="form-control code-input" readonly rows="12"></textarea>
+                <textarea id="text-inspector-output" class="form-control code-input" readonly rows="10"></textarea>
             </div>
         </div>
         <div id="text-inspector-stats" class="stats-box"></div>
-    </div>
-    
-    <!-- Groove Separator -->
-    <div class="groove-separator"></div>
-    
-    <!-- Vertical Button Panel -->
-    <div class="button-panel">
-        <div class="button-group">
-            <h4>Case Conversions</h4>
-            <button class="btn-small btn--primary" id="to-upper">UPPER</button>
-            <button class="btn-small btn--outline" id="to-lower">lower</button>
-            <button class="btn-small btn--outline" id="to-title">Title</button>
-            <button class="btn-small btn--outline" id="to-sentence">Sentence</button>
-        </div>
-        
-        <div class="button-group">
-            <h4>Programming Cases</h4>
-            <button class="btn-small btn--outline" id="to-camel">camelCase</button>
-            <button class="btn-small btn--outline" id="to-pascal">PascalCase</button>
-            <button class="btn-small btn--outline" id="to-snake">snake_case</button>
-            <button class="btn-small btn--outline" id="to-kebab">kebab-case</button>
-        </div>
-        
-        <div class="button-group">
-            <h4>Text Operations</h4>
-            <button class="btn-small btn--outline" id="reverse-words">Reverse Words</button>
-            <button class="btn-small btn--outline" id="sort-asc">Sort Lines ↑</button>
-            <button class="btn-small btn--outline" id="sort-desc">Sort Lines ↓</button>
-            <button class="btn-small btn--outline" id="trim-whitespace">Trim Spaces</button>
-            <button class="btn-small btn--outline" id="collapse-blank">Collapse Lines</button>
-            <button class="btn-small btn--outline" id="remove-diacritics">Remove Accents</button>
-        </div>
-        
-        <div class="button-group">
-            <h4>Actions</h4>
-            <button class="btn-small btn--secondary" id="clear-btn">Clear All</button>
-        </div>
     </div>
 </div>
