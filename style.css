@@ -1515,6 +1515,7 @@ select:disabled {
 }
 
 .nav-favourites .category-header > span {
+  flex: none;
   text-align: left;
   margin-left: 0;
 }
