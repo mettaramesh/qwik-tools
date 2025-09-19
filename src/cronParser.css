@@ -1,7 +1,7 @@
 /* Extracted from cronParser.js */
-.grid-cron { display: grid; gap: 28px 36px; grid-template-columns: 1.1fr .9fr; margin-bottom: 24px; }
+.grid-cron { display: grid; gap: 16px 20px; grid-template-columns: 1.1fr .9fr; margin-bottom: 16px; }
 @media (max-width: 900px) { .grid-cron { grid-template-columns: 1fr; } }
-.card { background: var(--color-surface, #fff); border: 1.5px solid var(--color-border, #e0e0e0); border-radius: 14px; padding: 18px 18px 22px 18px; box-shadow: 0 2px 8px #0001; }
+.card { background: var(--color-surface, #fff); border: 1.5px solid var(--color-border, #e0e0e0); border-radius: 14px; padding: 12px 12px 16px 12px; box-shadow: 0 2px 8px #0001; }
 .btn.btn--primary { background: var(--color-primary, #21808d); color: #fff; border: none; padding: 10px 18px; font-size: 1em; border-radius: 10px; }
 .btn.btn--outline { background: var(--color-surface, #fff); color: var(--color-primary, #21808d); border: 1.5px solid var(--color-primary, #21808d); padding: 10px 18px; font-size: 1em; border-radius: 10px; }
 .code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; background: var(--color-background, #f9f9f9); border: 1px dashed var(--color-border, #2a2f47); border-radius: 12px; padding: 10px 12px; word-break: break-all; }
@@ -18,7 +18,7 @@
 .chip { padding: 6px 10px; border: 1px solid var(--color-border, #2a2f47); background: var(--color-background, #f4f8fa); color: var(--color-text, #13343b); border-radius: 999px; cursor: pointer; user-select: none; font-size: .85rem; }
 .chip:hover { border-color: var(--color-primary, #21808d); }
 .tabs { display: flex; gap: 6px; flex-wrap: wrap; }
-.tab { padding: 4px 8px; border-radius: 10px; border: 1px solid var(--color-border, #e0e0e0); background: var(--color-background, #f4f8fa); cursor: pointer; font-size: .75rem; color: var(--color-text-secondary, #626c71); text-align: center; }
+.tab { padding: 4px 8px; border-radius: 10px; border: 1px solid var(--color-border, #e0e0e0); background: var(--color-background, #f4f8fa); cursor: pointer; font-size: .75rem; color: var(--color-text-secondary, #626c71); text-align: center; display: flex; align-items: center; justify-content: center; }
 .tab.active { color: var(--color-text, #13343b); border-color: var(--color-primary, #21808d); background: var(--color-accent, #e0f7fa); }
 .hidden { display: none !important; }
 .inline { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
@@ -34,8 +34,8 @@ label { font-size: .9rem; color: var(--color-primary, #21808d); }
 .bar.cron-bar .presets-label { flex:1 1 auto; min-width:180px; }
 .bar.cron-bar .switch { flex:0 0 auto; }
 .card select, .stack select, .field select { font-size:.93em; padding:7px 12px; border-radius:8px; min-width:90px; }
-.grid-cron { font-size:.97em; gap:22px 28px; }
-.card, .card.card--section { font-size:.96em; padding:16px 12px 18px 12px; }
+.grid-cron { font-size:.97em; gap:14px 18px; }
+.card, .card.card--section { font-size:.96em; padding:12px 10px 14px 10px; }
 .stack { gap:7px; }
 .row { gap:12px; margin-bottom:6px; }
 .field { gap:4px; }
@@ -50,8 +50,8 @@ label { font-size:.85em; }
 .card, .card.card--section { background:var(--color-bg-card); border:1.5px solid var(--color-border); color:var(--color-text); }
 .bar.cron-bar, .divider { background:var(--color-surface); }
 label, .tab, .chip, .btn, .btn.btn--primary, .btn.btn--outline { color:var(--color-primary); }
-.tab { background:var(--color-bg-tab); border:1.5px solid var(--color-border); text-align: center; }
-.tab.active { background:var(--color-bg-chip); color:var(--color-primary-dark); border-color:var(--color-primary); text-align: center; }
+.tab { background:var(--color-bg-tab); border:1.5px solid var(--color-border); text-align: center; display: flex; align-items: center; justify-content: center; }
+.tab.active { background:#f0f0f0; color:#333; border-color:#ccc; text-align: center; display: flex; align-items: center; justify-content: center; }
 .chip { background:var(--color-bg-chip); border:1.5px solid var(--color-primary); color:var(--color-primary-dark); }
 .chip:hover { background:var(--color-primary); color:#fff; border-color:var(--color-primary-dark); }
 .btn.btn--primary { background:var(--color-primary); color:#fff; border:none; }
