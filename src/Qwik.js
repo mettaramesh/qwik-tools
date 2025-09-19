@@ -540,8 +540,25 @@ export class Qwik {
             } else {
                 navCategory.classList.remove('qwik-hide');
                 items.classList.remove('qwik-hide');
-                items.classList.remove('expanded');
-                navCategory.classList.add('collapsed');
+                
+                if (navCategory.classList.contains('nav-favourites')) {
+                    // Favourites should always remain expanded
+                    items.classList.add('expanded');
+                    navCategory.classList.remove('collapsed');
+                    const chevron = navCategory.querySelector('.chevron');
+                    if (chevron) {
+                        chevron.classList.remove('rotate');
+                    }
+                } else {
+                    // Other categories return to collapsed state
+                    items.classList.remove('expanded');
+                    navCategory.classList.add('collapsed');
+                    const chevron = navCategory.querySelector('.chevron');
+                    if (chevron) {
+                        chevron.classList.add('rotate');
+                    }
+                }
+                
                 items.querySelectorAll('.nav-item').forEach(link => link.classList.remove('qwik-hide'));
             }
         });

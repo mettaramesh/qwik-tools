@@ -1,4 +1,5 @@
 // Robust YAML ↔ JSON Tool (browser-compatible)
+import { loadJsyaml } from './jsyamlLoader.js';
 
 export async function loadJSONYAMLTool(container) {
   try {
@@ -143,5 +144,21 @@ function setupJSONYAMLTool() {
 
 export async function load(container, toolId) {
   await loadJSONYAMLTool(container);
-  setupJSONYAMLTool();
+  
+  // Load js-yaml library before setting up the tool
+  return new Promise((resolve, reject) => {
+    loadJsyaml((jsyaml) => {
+      if (jsyaml) {
+        setupJSONYAMLTool();
+        resolve();
+      } else {
+        console.error('Failed to load js-yaml library');
+        const container = document.getElementById('tool-content');
+        if (container) {
+          container.innerHTML = '<div class="error">Failed to load YAML library</div>';
+        }
+        reject(new Error('Failed to load js-yaml library'));
+      }
+    });
+  });
 }
