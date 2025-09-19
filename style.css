@@ -945,53 +945,6 @@ select:disabled {
   pointer-events: none;
 }
 
-/* Theme Toggle */
-.theme-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-base);
-  background-color: var(--color-background);
-  color: var(--color-text);
-  cursor: pointer;
-  transition: all var(--duration-fast) var(--ease-standard);
-}
-
-.theme-toggle:hover {
-  background-color: var(--color-secondary);
-}
-
-/* Theme Icon Visibility */
-.theme-icon {
-  transition: opacity var(--duration-fast) var(--ease-standard);
-}
-
-/* Light mode: show sun icon */
-[data-color-scheme="light"] .theme-toggle .moon-icon {
-  display: none;
-}
-
-[data-color-scheme="light"] .theme-toggle .sun-icon {
-  display: block;
-}
-
-/* Dark mode: show moon icon */
-[data-color-scheme="dark"] .theme-toggle .sun-icon {
-  display: none;
-}
-
-[data-color-scheme="dark"] .theme-toggle .moon-icon {
-  display: block;
-}
-
-.theme-icon {
-  width: 16px;
-  height: 16px;
-}
-
 /* Main Layout */
 .main-layout {
   display: flex;
@@ -1554,21 +1507,6 @@ select:disabled {
 #favourites-list .favourite-remove {
   color: #1976d2 !important;
   display: inline !important;
-}
-
-/* Smart Detection Toggle Colors (ON is green, OFF is red) */
-#smart-detection-toggle.status-on {
-  background: var(--color-success);
-  color: #fff;
-  border: none;
-}
-#smart-detection-toggle.status-off {
-  background: var(--color-error);
-  color: #fff;
-  border: none;
-}
-#smart-detection-toggle {
-  transition: background 0.2s, color 0.2s;
 }
 
 .xml-validator-root {

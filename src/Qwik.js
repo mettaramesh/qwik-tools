@@ -178,15 +178,6 @@ export class Qwik {
     }
 
     setupEventListeners() {
-        // Theme toggle
-        const themeToggle = document.getElementById('theme-toggle');
-        if (themeToggle) {
-            themeToggle.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                this.toggleTheme();
-            });
-        }
         // Search functionality
         const searchInput = document.getElementById('search-input');
         if (searchInput) {
@@ -217,14 +208,6 @@ export class Qwik {
                 this.selectTool(hash);
             }
         }, 50);
-    }
-
-    toggleTheme() {
-        const html = document.documentElement;
-        const currentTheme = html.getAttribute('data-color-scheme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        html.setAttribute('data-color-scheme', newTheme);
-        localStorage.setItem('theme', newTheme);
     }
 
     setupNavigation() {
