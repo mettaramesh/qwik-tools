@@ -54,9 +54,12 @@ export function loadCharsetConverterTool(container) {
                 <div class="muted-note ml-auto">Tip: When using Base64/Hex as input, choose the correct decode bytes with encoding.</div>
               </div>
 
-              <div id="fileBox" class="file-input d-none">
+              <div id="fileBox" class="file-input">
+                <label for="fileInput" style="cursor: pointer; font-weight: 500; color: var(--blue);">
+                  📁 Choose file to upload
+                </label>
                 <input type="file" id="fileInput" />
-                <span id="fileInfo" class="file-info"></span>
+                <span id="fileInfo" class="file-info">Select a file to decode its bytes with the chosen encoding</span>
               </div>
 
               <div class="textarea-container">
