@@ -83,40 +83,30 @@ function removeDiacritics(text) {
 }
 
 export async function loadTextInspectorTool(container) {
-    console.log('🎯 loadTextInspectorTool called!');
-    
     // Load the CSS for this tool first
     loadTextInspectorStyles();
     
     try {
-        console.log('📡 Fetching textInspector.html...');
-        const resp = await fetch('textInspector.html?v=' + Date.now() + '&refresh=' + Math.random());
+        const resp = await fetch('textInspector.html');
         if (!resp.ok) {
             throw new Error(`Failed to load Text Inspector HTML: ${resp.status}`);
         }
         const html = await resp.text();
-        console.log('✅ HTML loaded successfully, length:', html.length);
-        
         // Security check: ensure we're not loading the full page
         if (html.includes('<!DOCTYPE html') || html.includes('<html')) {
             throw new Error('Invalid HTML content - contains full page structure');
         }
         container.innerHTML = html;
-        console.log('✅ HTML inserted into container');
         
         // Add loading class to prevent FOUC
         const layout = container.querySelector('.text-inspector-layout');
         if (layout) {
             layout.classList.add('loading');
-            console.log('🎨 Added loading class');
             // Wait for CSS to load before showing content
             setTimeout(() => {
                 layout.classList.remove('loading');
                 layout.classList.add('loaded');
-                console.log('🎨 Removed loading class, added loaded class');
             }, 100); // Small delay to ensure CSS is applied
-        } else {
-            console.warn('⚠️ Could not find .text-inspector-layout element');
         }
     } catch (error) {
         console.error('Error loading Text Inspector:', error);
@@ -124,19 +114,9 @@ export async function loadTextInspectorTool(container) {
         return;
     }
     setTimeout(() => {
-        console.log('🚀 Text Inspector JavaScript is starting...');
-        console.log('🔍 Looking for DOM elements...');
-        
         const input = document.getElementById('text-inspector-input');
         const output = document.getElementById('text-inspector-output');
         const stats = document.getElementById('text-inspector-stats');
-        
-        console.log('📝 Found elements:', {
-            input: !!input,
-            output: !!output,
-            stats: !!stats
-        });
-        
         function updateStats() {
             if (!input || !stats) return;
             const s = getTextStats(input.value);
@@ -160,192 +140,104 @@ export async function loadTextInspectorTool(container) {
             ['collapse-blank', () => { if (output && input) output.value = collapseBlankLines(input.value); }],
             ['remove-diacritics', () => { if (output && input) output.value = removeDiacritics(input.value); }],
         ];
+        
+        // Track currently active button
+        let activeButtonId = 'to-upper'; // Default to Upper
+        
+        // Function to update active button styling
+        function setActiveButton(buttonId) {
+            // Reset all buttons to outline styling
+            actions.forEach(([id]) => {
+                const btn = document.getElementById(id);
+                if (btn) {
+                    btn.classList.remove('btn--primary');
+                    btn.classList.add('btn--outline');
+                }
+            });
+            
+            // Set the active button to primary styling
+            const activeBtn = document.getElementById(buttonId);
+            if (activeBtn) {
+                activeBtn.classList.remove('btn--outline');
+                activeBtn.classList.add('btn--primary');
+                activeButtonId = buttonId;
+            }
+        }
+        
         actions.forEach(([id, fn]) => {
             const btn = document.getElementById(id);
             if (btn) {
-                btn.onclick = fn;
+                btn.onclick = () => {
+                    fn(); // Execute the transformation
+                    setActiveButton(id); // Update active button styling
+                };
                 
-                // Debug: Log when attaching event listeners
-                console.log('Attaching hover events to button:', id);
-                
-                // Remove all CSS classes and apply base styles via JavaScript
-                btn.className = ''; // Remove all CSS classes
-                
-                // Apply base styles
-                Object.assign(btn.style, {
-                    padding: '4px 8px',
-                    fontSize: '11px',
-                    fontWeight: '500',
-                    border: '1px solid rgba(94, 82, 64, 0.2)',
-                    borderRadius: '4px',
-                    background: 'transparent',
-                    color: 'rgba(19, 52, 59, 1)',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                    textAlign: 'center',
-                    whiteSpace: 'nowrap',
-                    minWidth: '60px',
-                    maxWidth: '120px',
-                    height: '28px',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: '0',
-                    margin: '2px'
-                });
-                
-                // Add primary button styling if needed
-                if (id === 'to-upper') {
-                    btn.style.background = 'rgba(33, 128, 141, 1)';
-                    btn.style.color = 'white';
-                    btn.style.borderColor = 'rgba(33, 128, 141, 1)';
-                }
-                
-                // Add JavaScript hover effects
+                // Add JavaScript hover effects to override CSS conflicts
                 btn.addEventListener('mouseenter', function() {
-                    console.log('Mouse enter:', id);
-                    Object.assign(this.style, {
-                        background: '#f8f9fa',
-                        borderColor: '#2196f3',
-                        color: '#495057',
-                        transform: 'translateY(-1px)',
-                        boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)'
-                    });
+                    this.style.background = '#f8f9fa';
+                    this.style.borderColor = '#2196f3';
+                    this.style.color = '#495057';
+                    this.style.transform = 'translateY(-1px)';
+                    this.style.boxShadow = '0 2px 6px rgba(0, 0, 0, 0.1)';
                 });
                 
                 btn.addEventListener('mouseleave', function() {
-                    console.log('Mouse leave:', id);
-                    if (id === 'to-upper') {
-                        // Primary button
-                        Object.assign(this.style, {
-                            background: 'rgba(33, 128, 141, 1)',
-                            borderColor: 'rgba(33, 128, 141, 1)',
-                            color: 'white',
-                            transform: '',
-                            boxShadow: ''
-                        });
+                    // Reset to default styles
+                    if (this.classList.contains('btn--primary')) {
+                        this.style.background = '';
+                        this.style.borderColor = '';
+                        this.style.color = '';
                     } else {
-                        // Outline button
-                        Object.assign(this.style, {
-                            background: 'transparent',
-                            borderColor: 'rgba(94, 82, 64, 0.2)',
-                            color: 'rgba(19, 52, 59, 1)',
-                            transform: '',
-                            boxShadow: ''
-                        });
+                        this.style.background = 'transparent';
+                        this.style.borderColor = 'rgba(94, 82, 64, 0.2)';
+                        this.style.color = 'rgba(19, 52, 59, 1)';
                     }
+                    this.style.transform = '';
+                    this.style.boxShadow = '';
                 });
                 
                 btn.addEventListener('mousedown', function() {
-                    console.log('Mouse down:', id);
-                    Object.assign(this.style, {
-                        background: '#e9ecef',
-                        borderColor: '#1976d2',
-                        color: '#495057',
-                        transform: 'translateY(0)',
-                        boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)'
-                    });
+                    this.style.background = '#e9ecef';
+                    this.style.borderColor = '#1976d2';
+                    this.style.color = '#495057';
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 1px 2px rgba(0, 0, 0, 0.1)';
                 });
-                
-                btn.addEventListener('mouseup', function() {
-                    console.log('Mouse up:', id);
-                    // Return to hover state
-                    Object.assign(this.style, {
-                        background: '#f8f9fa',
-                        borderColor: '#2196f3',
-                        color: '#495057',
-                        transform: 'translateY(-1px)',
-                        boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)'
-                    });
-                });
-            } else {
-                console.warn('Button not found:', id);
             }
         });
         
-        // Handle both copy buttons and clear button with same styling
-        const copyAndClearButtons = document.querySelectorAll('.copy-btn, .clear-btn');
-        console.log('Found copy and clear buttons:', copyAndClearButtons.length);
+        // Set initial active button
+        setActiveButton('to-upper');
         
-        // Also try to find clear button by ID as backup
-        const clearBtnById = document.getElementById('clear-btn');
-        if (clearBtnById) {
-            console.log('Found clear button by ID:', clearBtnById.textContent);
+        const clearBtn = document.getElementById('clear-btn');
+        if (clearBtn && input && output) {
+            clearBtn.onclick = () => { input.value = ''; output.value = ''; updateStats(); };
+            
+            // Add hover effects for clear button
+            clearBtn.addEventListener('mouseenter', function() {
+                this.style.background = '#dc3545';
+                this.style.borderColor = '#dc3545';
+                this.style.color = 'white';
+                this.style.transform = 'translateY(-1px)';
+                this.style.boxShadow = '0 3px 8px rgba(0, 0, 0, 0.15)';
+            });
+            
+            clearBtn.addEventListener('mouseleave', function() {
+                this.style.background = '';
+                this.style.borderColor = '';
+                this.style.color = '';
+                this.style.transform = '';
+                this.style.boxShadow = '';
+            });
+            
+            clearBtn.addEventListener('mousedown', function() {
+                this.style.background = '#c82333';
+                this.style.borderColor = '#c82333';
+                this.style.color = 'white';
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.15)';
+            });
         }
-        
-        // Combine both approaches
-        const allButtons = Array.from(copyAndClearButtons);
-        if (clearBtnById && !allButtons.includes(clearBtnById)) {
-            allButtons.push(clearBtnById);
-            console.log('Added clear button by ID to list');
-        }
-        
-        console.log('Total buttons to style:', allButtons.length);
-        
-        allButtons.forEach((btn, index) => {
-            console.log(`Styling button ${index}:`, btn.textContent, btn.className, btn.id);
-            
-            // Remove all CSS classes and apply base styles via JavaScript
-            btn.className = '';
-            
-            // Apply consistent base styles for copy and clear buttons using setProperty with important
-            btn.style.setProperty('padding', '4px 8px', 'important');
-            btn.style.setProperty('font-size', '12px', 'important');
-            btn.style.setProperty('font-weight', '500', 'important');
-            btn.style.setProperty('color', '#495057', 'important');
-            btn.style.setProperty('background', '#f8f9fa', 'important');
-            btn.style.setProperty('border', '1px solid #dee2e6', 'important');
-            btn.style.setProperty('border-radius', '4px', 'important');
-            btn.style.setProperty('cursor', 'pointer', 'important');
-            btn.style.setProperty('text-align', 'center', 'important');
-            btn.style.setProperty('text-decoration', 'none', 'important');
-            btn.style.setProperty('display', 'inline-block', 'important');
-            btn.style.setProperty('line-height', '1.2', 'important');
-            btn.style.setProperty('min-width', '50px', 'important');
-            btn.style.setProperty('transition', 'all 0.15s ease-in-out', 'important');
-            btn.style.setProperty('margin-left', '8px', 'important');
-            btn.style.setProperty('visibility', 'visible', 'important');
-            btn.style.setProperty('opacity', '1', 'important');
-            
-            console.log('Applied base styles to:', btn.textContent);
-            
-            // Add hover effects
-            btn.addEventListener('mouseenter', function() {
-                console.log('Mouse enter on button:', this.textContent);
-                this.style.setProperty('background', '#e9ecef', 'important');
-                this.style.setProperty('border-color', '#adb5bd', 'important');
-                this.style.setProperty('color', '#495057', 'important');
-                this.style.setProperty('transform', 'translateY(-1px)', 'important');
-                this.style.setProperty('box-shadow', '0 2px 4px rgba(0, 0, 0, 0.1)', 'important');
-            });
-            
-            btn.addEventListener('mouseleave', function() {
-                console.log('Mouse leave on button:', this.textContent);
-                this.style.setProperty('background', '#f8f9fa', 'important');
-                this.style.setProperty('border-color', '#dee2e6', 'important');
-                this.style.setProperty('color', '#495057', 'important');
-                this.style.setProperty('transform', '', 'important');
-                this.style.setProperty('box-shadow', '', 'important');
-            });
-            
-            btn.addEventListener('mousedown', function() {
-                this.style.setProperty('background', '#dee2e6', 'important');
-                this.style.setProperty('border-color', '#adb5bd', 'important');
-                this.style.setProperty('color', '#495057', 'important');
-                this.style.setProperty('transform', 'translateY(0)', 'important');
-                this.style.setProperty('box-shadow', '0 1px 2px rgba(0, 0, 0, 0.1)', 'important');
-            });
-            
-            btn.addEventListener('mouseup', function() {
-                this.style.setProperty('background', '#e9ecef', 'important');
-                this.style.setProperty('border-color', '#adb5bd', 'important');
-                this.style.setProperty('color', '#495057', 'important');
-                this.style.setProperty('transform', 'translateY(-1px)', 'important');
-                this.style.setProperty('box-shadow', '0 2px 4px rgba(0, 0, 0, 0.1)', 'important');
-            });
-        });
-        
-        // Handle copy functionality
         document.querySelectorAll('.copy-btn').forEach(btn => {
             btn.onclick = function() {
                 const targetId = btn.getAttribute('data-target');
@@ -359,20 +251,6 @@ export async function loadTextInspectorTool(container) {
                 }
             };
         });
-        
-        // Handle clear functionality
-        const clearBtn = document.getElementById('clear-btn');
-        if (clearBtn && input && output) {
-            clearBtn.onclick = () => { 
-                input.value = ''; 
-                output.value = ''; 
-                updateStats(); 
-                // Visual feedback
-                const oldText = clearBtn.textContent;
-                clearBtn.textContent = 'Cleared!';
-                setTimeout(() => { clearBtn.textContent = oldText; }, 1000);
-            };
-        }
     }, 0);
 }
 
