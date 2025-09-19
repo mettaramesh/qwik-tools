@@ -615,6 +615,7 @@ export class Qwik {
             Color picker, Password generator, Regex tester, Timestamp converter, 
             URL encoder/decoder, UUID generator, and many more!</p>
             <p>Perfect for developers, designers, and anyone who needs quick access to common web development utilities.</p>
+            <p style="font-size: 12px; color: #888; margin-top: 20px;">* This tool can make mistakes.</p>
         `;
         body.style.cssText = `
             line-height: 1.6;
