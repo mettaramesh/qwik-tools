@@ -499,6 +499,19 @@ select:focus-visible {
   outline-offset: 2px;
 }
 
+/* Button Hover and Active States */
+.btn:hover {
+  background: #f0f0f0;
+  color: #333;
+  border-color: #ccc;
+}
+
+.btn:active {
+  background: #e0e0e0;
+  color: #333;
+  border-color: #999;
+}
+
 /* Success States */
 .success-animation {
   animation: successPulse 0.6s ease-out;
