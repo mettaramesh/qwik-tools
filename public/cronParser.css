@@ -282,9 +282,9 @@ select:hover {
   font-weight: 500;
   letter-spacing: 0.03em;
   border-style: solid;
-  background: linear-gradient(135deg, var(--cron-primary) 0%, var(--cron-primary-dark) 100%);
-  color: white;
-  border-color: var(--cron-primary);
+  background: #fff;
+  color: #000;
+  border: 1px solid var(--cron-border, #e0e0e0);
   padding: 6px 8px;
 }
 
