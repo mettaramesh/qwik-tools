@@ -220,17 +220,27 @@ export class Qwik {
     }
 
     setupNavigation() {
-        // Collapse all categories by default except favourites
+        // Ensure favourites is always expanded on load, collapse others
         document.querySelectorAll('.nav-category').forEach(category => {
             const items = category.querySelector('.category-items');
-            if (!category.classList.contains('nav-favourites')) {
-                items.classList.remove('expanded');
-            } else {
+            const chevron = category.querySelector('.chevron');
+            
+            if (category.classList.contains('nav-favourites')) {
+                // Favourites should always start expanded
                 items.classList.add('expanded');
+                if (chevron) {
+                    chevron.classList.remove('rotate');
+                }
+            } else {
+                // Other categories start collapsed
+                items.classList.remove('expanded');
+                if (chevron) {
+                    chevron.classList.add('rotate');
+                }
             }
         });
         
-        // Add collapse functionality to category headers
+        // Add collapse functionality to ALL category headers (including favourites)
         document.querySelectorAll('.nav-category .category-header').forEach(header => {
             header.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -240,7 +250,7 @@ export class Qwik {
                 const items = category.querySelector('.category-items');
                 const chevron = header.querySelector('.chevron');
                 
-                // Toggle expanded state
+                // Toggle expanded state for any category (including favourites)
                 items.classList.toggle('expanded');
                 if (chevron) {
                     chevron.classList.toggle('rotate');

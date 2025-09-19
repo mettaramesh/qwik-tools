@@ -1509,6 +1509,26 @@ select:disabled {
   display: inline !important;
 }
 
+/* Favourites header styling */
+.nav-favourites .category-header {
+  justify-content: flex-start;
+}
+
+.nav-favourites .category-header > span {
+  text-align: left;
+  margin-left: 0;
+}
+
+.nav-favourites .category-header .category-icon {
+  order: 0;
+  margin-right: var(--space-8);
+}
+
+.nav-favourites .category-header .chevron {
+  margin-left: auto;
+  margin-right: 0;
+}
+
 .xml-validator-root {
   color: #111 !important;
 }
