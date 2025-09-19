@@ -557,59 +557,21 @@ export class Qwik {
         // Create simple modal
         const modal = document.createElement('div');
         modal.id = 'why-qwik-modal';
-        modal.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-        `;
+        modal.className = 'why-qwik-modal';
 
         const content = document.createElement('div');
-        content.style.cssText = `
-            background: white;
-            border-radius: 8px;
-            padding: 24px;
-            max-width: 600px;
-            max-height: 80vh;
-            overflow-y: auto;
-            margin: 20px;
-            position: relative;
-            color: #333;
-        `;
+        content.className = 'why-qwik-modal-content';
 
         const closeBtn = document.createElement('button');
         closeBtn.innerHTML = '×';
-        closeBtn.style.cssText = `
-            position: absolute;
-            top: 12px;
-            right: 16px;
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #666;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        `;
+        closeBtn.className = 'why-qwik-modal-close';
 
         const title = document.createElement('h2');
         title.textContent = 'Why Qwik-tools?';
-        title.style.cssText = `
-            margin: 0 0 16px 0;
-            color: #333;
-            font-size: 24px;
-        `;
+        title.className = 'why-qwik-modal-title';
 
         const body = document.createElement('div');
+        body.className = 'why-qwik-modal-body';
         body.innerHTML = `
             <p><strong>Qwik-tools</strong> is a fast, lightweight collection of developer utilities that work entirely in your browser.</p>
             <h3>Key Features:</h3>
@@ -620,16 +582,12 @@ export class Qwik {
                 <li><strong>Mobile Friendly</strong> - Works on any device with a browser</li>
                 <li><strong>Always Available</strong> - Works offline once loaded</li>
             </ul>
-            <h3>Tools Available:</h3><p/>
+            <h3>Tools Available:</h3>
             <p>JSON formatter, Base64 encoder/decoder, Hash generator, Text comparison, 
             Color picker, Password generator, Regex tester, Timestamp converter, 
             URL encoder/decoder, UUID generator, and many more!</p>
             <p>Perfect for developers, designers, and anyone who needs quick access to common web development utilities.</p>
-            <p style="font-size: 12px; color: #888; margin-top: 20px;">* This tool can make mistakes.</p>
-        `;
-        body.style.cssText = `
-            line-height: 1.6;
-            color: #444;
+            <p class="why-qwik-modal-disclaimer">* This tool can make mistakes.</p>
         `;
 
         // Close functionality
