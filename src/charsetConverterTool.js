@@ -31,7 +31,15 @@ export function loadCharsetConverterTool(container) {
             <div class="panel" aria-label="Input panel">
               <div class="panel-title">
                 <h3>Input</h3>
-                <small id="inputModeDisplay">Interpret input as <strong>Text</strong></small>
+                <label class="select-row-small">Interpret as
+                  <select id="inputMode" aria-label="input-format-select">
+                    <option value="text">Text</option>
+                    <option value="base64">Base64</option>
+                    <option value="hex">Hex</option>
+                    <option value="url">URL-encoded</option>
+                    <option value="file">File</option>
+                  </select>
+                </label>
               </div>
 
               <div class="controls">
@@ -151,7 +159,7 @@ export function loadCharsetConverterTool(container) {
 
   // DOM (scoped to container) - Updated for new design
   const el = id => container.querySelector('#'+id);
-  const inputModeDisplay = el('inputModeDisplay');
+  const inputModeSelect = /** @type {HTMLSelectElement} */(el('inputMode'));
   const byteDecode  = /** @type {HTMLSelectElement} */(el('byteDecode'));
   const normalizeNEL = /** @type {HTMLInputElement} */(el('normalizeNEL'));
   const fileBox     = el('fileBox');
@@ -172,34 +180,11 @@ export function loadCharsetConverterTool(container) {
   const outMetrics  = el('outMetrics');
   const compatBox   = el('compat');
 
-  // Simulate input mode select for display
+  // Current input mode tracking
   let currentInputMode = 'text';
-  
-  // Create virtual input mode selector for functionality
-  const inputMode = {
-    value: 'text',
-    addEventListener: function(event, callback) {
-      // We'll trigger this manually when needed
-      this._changeCallback = callback;
-    },
-    dispatchEvent: function() {
-      if (this._changeCallback) this._changeCallback();
-    }
-  };
 
-  // Update display labels when modes change
-  function updateModeDisplays() {
-    if (inputModeDisplay) {
-      const modeText = {
-        'text': 'Text',
-        'base64': 'Base64',
-        'hex': 'Hex',
-        'url': 'URL-encoded',
-        'file': 'File'
-      };
-      inputModeDisplay.innerHTML = `Interpret input as <strong>${modeText[currentInputMode] || 'Text'}</strong>`;
-    }
-    
+  // Update output display label when output mode changes
+  function updateOutputModeDisplay() {
     if (outputModeDisplay) {
       const outputText = {
         'text': 'Text',
@@ -220,7 +205,8 @@ export function loadCharsetConverterTool(container) {
       <option value="hex">Hex</option>
       <option value="url">URL-encoded</option>
       <option value="download">Download bytes</option>`;
-    outputAs.addEventListener('change', updateModeDisplays);
+    outputAs.addEventListener('change', updateOutputModeDisplay);
+    updateOutputModeDisplay(); // Initial call
   }
   
   if (encodeWith) {
@@ -269,18 +255,19 @@ export function loadCharsetConverterTool(container) {
   }
 
   // Mode switching (adapted for new design)
-  inputMode.addEventListener('change', onModeChange);
-  function onModeChange() {
-    const mode = inputMode.value;
-    if (fileBox) {
-      fileBox.style.display = (mode === 'file') ? '' : 'none';
+  if (inputModeSelect) {
+    inputModeSelect.addEventListener('change', onModeChange);
+    function onModeChange() {
+      currentInputMode = inputModeSelect.value;
+      if (fileBox) {
+        fileBox.style.display = (currentInputMode === 'file') ? '' : 'none';
+      }
+      if (inputArea) {
+        inputArea.style.display = (currentInputMode === 'file') ? 'none' : '';
+      }
     }
-    if (inputArea) {
-      inputArea.style.display = (mode === 'file') ? 'none' : '';
-    }
-    updateModeDisplays();
+    onModeChange();
   }
-  onModeChange();
 
   // Helpers
   function utf8Encode(str){

@@ -189,6 +189,25 @@
   color: var(--muted);
 }
 
+.charset-converter-redesign .select-row-small {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0;
+}
+
+.charset-converter-redesign .select-row-small select {
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(11, 111, 168, 0.2);
+  background: var(--bg);
+  color: var(--blue);
+  font-weight: 500;
+}
+
 /* Form elements */
 .charset-converter-redesign select,
 .charset-converter-redesign input[type="checkbox"],
