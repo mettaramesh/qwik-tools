@@ -40,9 +40,9 @@
 .tool-interface {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-top: 1.5rem;
-  min-height: 600px;
+  gap: 1rem;
+  margin-top: 1rem;
+  min-height: 500px;
 }
 
 @media (max-width: 1024px) {
@@ -81,16 +81,25 @@
 
 .tab {
   flex: 1;
-  padding: 0.75rem 1rem;
+  padding: 0.25rem 0.5rem;
   text-align: center;
   border-radius: calc(var(--cron-radius) - 2px);
   cursor: pointer;
   transition: var(--cron-transition);
   font-weight: 500;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   color: var(--cron-text-muted);
   border: none;
   background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tab.active {
+  background: #f0f0f0;
+  color: #333;
+  border: 1px solid #ccc;
 }
 
 .tab:hover {
@@ -149,7 +158,6 @@
 
 /* Enhanced Input Styling */
 input[type="text"],
-select,
 .form-control {
   width: 100%;
   padding: 0.75rem 1rem;
@@ -162,8 +170,9 @@ select,
   box-sizing: border-box;
 }
 
+/* Selects use global .base-select styles from style.css */
+
 input[type="text"]:focus,
-select:focus,
 .form-control:focus {
   outline: none;
   border-color: var(--cron-primary);
@@ -171,8 +180,7 @@ select:focus,
   transform: translateY(-1px);
 }
 
-input[type="text"]:hover,
-select:hover {
+input[type="text"]:hover {
   border-color: var(--cron-primary-light);
 }
 
@@ -278,13 +286,14 @@ select:hover {
 }
 
 #cronOut {
-  font-size: 1.125rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
   border-style: solid;
-  background: linear-gradient(135deg, var(--cron-primary) 0%, var(--cron-primary-dark) 100%);
-  color: white;
-  border-color: var(--cron-primary);
+  background: #fff;
+  color: #000;
+  border: 1px solid var(--cron-border, #e0e0e0);
+  padding: 6px 8px;
 }
 
 #cronOut:hover {
@@ -487,6 +496,98 @@ input:focus-visible,
 select:focus-visible {
   outline: 2px solid var(--cron-primary);
   outline-offset: 2px;
+}
+
+/* Button Hover and Active States */
+.btn:hover {
+  background: #f0f0f0 !important;
+  color: #333 !important;
+  border-color: #ccc !important;
+}
+
+.btn:active {
+  background: #e0e0e0 !important;
+  color: #333 !important;
+  border-color: #999 !important;
+}
+
+/* Additional specific overrides for cron parser buttons */
+#cronBuilderPanel .btn:hover, #cronOutputPanel .btn:hover, .tool-interface .btn:hover {
+  background: #f0f0f0 !important;
+  color: #333 !important;
+  border-color: #ccc !important;
+}
+
+#cronBuilderPanel .btn:active, #cronOutputPanel .btn:active, .tool-interface .btn:active {
+  background: #e0e0e0 !important;
+  color: #333 !important;
+  border-color: #999 !important;
+}
+
+#cronBuilderPanel .btn.btn--primary:hover, #cronOutputPanel .btn.btn--primary:hover, .tool-interface .btn.btn--primary:hover {
+  background: #666 !important;
+  color: #fff !important;
+}
+
+#cronBuilderPanel .btn.btn--primary:active, #cronOutputPanel .btn.btn--primary:active, .tool-interface .btn.btn--primary:active {
+  background: #555 !important;
+  color: #fff !important;
+}
+
+/* Very specific button overrides with IDs */
+#btnAdvancedApply:hover, #btnSpecialApply:hover, #btnParse:hover, #btnExplain:hover {
+  background: #666 !important;
+  color: #fff !important;
+  border: none !important;
+}
+
+#btnAdvancedApply:active, #btnSpecialApply:active, #btnParse:active, #btnExplain:active {
+  background: #555 !important;
+  color: #fff !important;
+  border: none !important;
+}
+
+#btnCopy:hover {
+  background: #f0f0f0 !important;
+  color: #333 !important;
+  border-color: #ccc !important;
+}
+
+#btnCopy:active {
+  background: #e0e0e0 !important;
+  color: #333 !important;
+  border-color: #999 !important;
+}
+
+/* Ultimate fallback - target all buttons in cron parser tool */
+[data-tool="cron-parser"] button:hover, 
+[data-tool="cron-parser"] .btn:hover,
+.tool-content button:hover,
+.tool-content .btn:hover {
+  background: #666 !important;
+  color: #fff !important;
+}
+
+[data-tool="cron-parser"] button:active, 
+[data-tool="cron-parser"] .btn:active,
+.tool-content button:active,
+.tool-content .btn:active {
+  background: #555 !important;
+  color: #fff !important;
+}
+
+[data-tool="cron-parser"] .btn--outline:hover,
+.tool-content .btn--outline:hover {
+  background: #f0f0f0 !important;
+  color: #333 !important;
+  border-color: #ccc !important;
+}
+
+[data-tool="cron-parser"] .btn--outline:active,
+.tool-content .btn--outline:active {
+  background: #e0e0e0 !important;
+  color: #333 !important;
+  border-color: #999 !important;
 }
 
 /* Success States */

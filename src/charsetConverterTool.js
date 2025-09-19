@@ -197,6 +197,11 @@ export function loadCharsetConverterTool(container) {
     }
   }
 
+  // Legacy function name for compatibility
+  function updateModeDisplays() {
+    updateOutputModeDisplay();
+  }
+
   // Populate selects
   if (outputAs) {
     outputAs.innerHTML = `
