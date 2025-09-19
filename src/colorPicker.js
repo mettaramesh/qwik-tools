@@ -70,7 +70,7 @@ export function setupColorPicker() {
     if (typeof window.setupCopyButtons === 'function') window.setupCopyButtons();
 }
 
-export function load(container, toolId) {
-    loadColorPicker(container);
+export async function load(container, toolId) {
+    await loadColorPicker(container);
     setupColorPicker();
 }
