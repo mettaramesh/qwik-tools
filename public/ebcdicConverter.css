@@ -223,10 +223,19 @@
 
 /* Metrics */
 .metrics {
-  display: flex;
+  display: none; /* Initially hidden, shown when content is added */
   gap: 8px;
   flex-wrap: wrap;
   margin-bottom: 8px;
+}
+
+.metrics.show {
+  display: flex;
+}
+
+/* Utility classes for show/hide */
+.hidden {
+  display: none !important;
 }
 
 .pill {

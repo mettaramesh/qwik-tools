@@ -59,7 +59,7 @@ export function loadEbcdicConverterTool(container) {
             </div>
 
             <!-- Text Input Area -->
-            <div id="textInputArea" class="textarea-container" style="display: none;">
+            <div id="textInputArea" class="textarea-container hidden">
               <textarea id="inputText" placeholder="Enter ASCII/Unicode text to convert to EBCDIC..." rows="8"></textarea>
             </div>
 
@@ -235,9 +235,19 @@ export function loadEbcdicConverterTool(container) {
   function setMetrics(node, { textLen = null, byteLen = null, status = null }) {
     if (!node) return;
     node.innerHTML = '';
-    if (textLen != null) addPill(node, `Characters: ${textLen}`);
-    if (byteLen != null) addPill(node, `Bytes: ${byteLen}`);
-    if (status) addPill(node, status.msg, status.ok ? 'ok' : 'bad');
+    
+    // Check if there's any content to display
+    const hasContent = textLen != null || byteLen != null || status != null;
+    
+    // Show/hide the metrics container using CSS classes
+    if (hasContent) {
+      node.classList.add('show');
+      if (textLen != null) addPill(node, `Characters: ${textLen}`);
+      if (byteLen != null) addPill(node, `Bytes: ${byteLen}`);
+      if (status) addPill(node, status.msg, status.ok ? 'ok' : 'bad');
+    } else {
+      node.classList.remove('show');
+    }
   }
 
   function addPill(node, text, cls = '') {
@@ -250,8 +260,16 @@ export function loadEbcdicConverterTool(container) {
   // Mode switching
   function updateInputMode() {
     const isFileMode = inputModeFile.checked;
-    fileInputArea.style.display = isFileMode ? 'block' : 'none';
-    textInputArea.style.display = isFileMode ? 'none' : 'block';
+    
+    // Use CSS classes instead of inline styles
+    if (isFileMode) {
+      fileInputArea.classList.remove('hidden');
+      textInputArea.classList.add('hidden');
+    } else {
+      fileInputArea.classList.add('hidden');
+      textInputArea.classList.remove('hidden');
+    }
+    
     isEbcdicToText = isFileMode;
     
     if (inputModeDisplay) {
