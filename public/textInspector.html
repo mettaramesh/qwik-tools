@@ -31,9 +31,6 @@
             <button class="btn-compact btn--outline" id="remove-diacritics">Remove Accents</button>
         </div>
         
-        <div class="clear-section">
-            <button class="btn-clear btn--secondary" id="clear-btn">Clear All</button>
-        </div>
     </div>
     
     <!-- Main Content Panel -->
@@ -42,7 +39,10 @@
             <div class="input-section">
                 <div class="section-header">
                     <label class="form-label">Input</label>
-                    <button class="btn btn--sm copy-btn" data-target="text-inspector-input">Copy</button>
+                    <div class="button-group">
+                        <button class="btn btn--sm copy-btn" data-target="text-inspector-input">Copy</button>
+                        <button class="btn btn--sm clear-btn" id="clear-btn">Clear All</button>
+                    </div>
                 </div>
                 <textarea id="text-inspector-input" class="form-control code-input" placeholder="Paste or type text here..." rows="10"></textarea>
             </div>
