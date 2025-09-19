@@ -99,38 +99,6 @@ export function loadCharsetConverterTool(container) {
         </div>
       </section>
 
-      <!-- Quick Convert Section -->
-      <section class="card quick-convert">
-        <div class="card-header">
-          <h3>Quick Convert: EBCDIC CP037 ↔ ASCII/Unicode</h3>
-          <small>Direct conversion using built-in tables (independent of TextDecoder/TextEncoder)</small>
-        </div>
-
-        <div class="quick-panel">
-          <div class="quick-group">
-            <label class="file-label" for="ebcFileInput">Select EBCDIC file</label>
-            <input type="file" id="ebcFileInput" class="file-input" />
-            <div id="ebcFileInfo" class="file-info"></div>
-          </div>
-
-          <div class="quick-options">
-            <label class="checkbox-label">
-              <input type="checkbox" id="ebcNormalizeNEL" checked> Normalize NEL (U+0085) → LF
-            </label>
-            <label class="checkbox-label">
-              <input type="checkbox" id="ebcCRLF"> Use CRLF line endings in download
-            </label>
-          </div>
-
-          <div class="quick-actions">
-            <button class="btn-primary" id="ebcConvert">Convert to Text</button>
-            <button class="btn-ghost" id="ebcDownload">Download as UTF-8</button>
-          </div>
-
-          <div class="quick-note">This panel ignores other encoders/decoders and always treats input as CP037 bytes → ASCII/Unicode text.</div>
-        </div>
-      </section>
-
       <!-- Notes Section -->
       <section class="card notes">
         <div class="note-content">
@@ -140,6 +108,7 @@ export function loadCharsetConverterTool(container) {
             <li><strong>EBCDIC:</strong> Built-in CP037 table provides direct conversion without TextDecoder dependency</li>
             <li><strong>File Processing:</strong> Handles binary files directly in the browser</li>
             <li><strong>Export Formats:</strong> Text, Base64, Hex, URL-encoded, and binary downloads</li>
+            <li><strong>Dedicated EBCDIC Tool:</strong> For focused EBCDIC ↔ ASCII/Unicode conversion, use the dedicated EBCDIC Converter tool</li>
           </ul>
         </div>
       </section>
@@ -199,14 +168,6 @@ export function loadCharsetConverterTool(container) {
   const inMetrics   = el('inMetrics');
   const outMetrics  = el('outMetrics');
   const compatBox   = el('compat');
-
-  // Quick panel DOM
-  const ebcFileInput = /** @type {HTMLInputElement} */(el('ebcFileInput'));
-  const ebcFileInfo  = el('ebcFileInfo');
-  const btnEbcConvert = el('ebcConvert');
-  const btnEbcDownload = el('ebcDownload');
-  const ebcNormalize = /** @type {HTMLInputElement} */(el('ebcNormalizeNEL'));
-  const ebcCRLF      = /** @type {HTMLInputElement} */(el('ebcCRLF'));
 
   // Simulate input mode select for display
   let currentInputMode = 'text';
@@ -539,48 +500,6 @@ export function loadCharsetConverterTool(container) {
         blob=new Blob([txt],{type:'text/plain;charset=utf-8'}); name="converted-"+kind+".txt";
       }
       const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove();
-      setTimeout(()=>URL.revokeObjectURL(url),0);
-    });
-  }
-
-  // ----- QUICK PANEL: CP037 file → ASCII -----
-  let ebcBytes=null;
-  if (ebcFileInput) {
-    ebcFileInput.addEventListener('change', async () => {
-      if (ebcFileInfo) ebcFileInfo.textContent=''; 
-      ebcBytes=null;
-      const f=ebcFileInput.files && ebcFileInput.files[0]; if (!f) return;
-      ebcBytes=new Uint8Array(await f.arrayBuffer());
-      if (ebcFileInfo) ebcFileInfo.textContent = f.name + " - " + ebcBytes.length + " bytes";
-    });
-  }
-
-  if (btnEbcConvert) {
-    btnEbcConvert.addEventListener('click', () => {
-      if (!ebcBytes) return;
-      let txt = decodeCP037(ebcBytes, ebcNormalize?.checked || false);
-      // Set as input for main converter
-      if (inputArea) {
-        inputArea.value = txt.slice(0, 2000); // Limit to prevent UI freeze
-        currentInputMode = 'text';
-        inputMode.value = 'text';
-        updateModeDisplays();
-      }
-    });
-  }
-
-  if (btnEbcDownload) {
-    btnEbcDownload.addEventListener('click', () => {
-      if (!ebcBytes) return;
-      let txt = decodeCP037(ebcBytes, ebcNormalize?.checked || false);
-      // Apply CRLF if requested
-      if (ebcCRLF?.checked){
-        if (ebcNormalize?.checked) txt = txt.replace(/\n/g, '\r\n');
-        else txt = txt.replace(/\u0085/g, '\r\n'); // raw NEL to CRLF
-      }
-      const blob=new Blob([txt],{type:'text/plain;charset=us-ascii'}); // ASCII/Unicode text
-      const url=URL.createObjectURL(blob);
-      const a=document.createElement('a'); a.href=url; a.download='converted-cp037.txt'; document.body.appendChild(a); a.click(); a.remove();
       setTimeout(()=>URL.revokeObjectURL(url),0);
     });
   }

@@ -368,6 +368,9 @@ export class Qwik {
             case 'charset-converter':
                 toolModule = import('./charsetConverterTool.js');
                 break;
+            case 'ebcdic-converter':
+                toolModule = import('./ebcdicConverter.js');
+                break;
             case 'hex-ascii-converter':
                 toolModule = import('./hexAsciiConverter.js');
                 break;
@@ -427,6 +430,9 @@ export class Qwik {
                 break;
             case 'charset-converter':
                 toolModule = import('./charsetConverterTool.js');
+                break;
+            case 'ebcdic-converter':
+                toolModule = import('./ebcdicConverter.js');
                 break;
             case 'hex-ascii-converter':
                 toolModule = import('./hexAsciiConverter.js');
