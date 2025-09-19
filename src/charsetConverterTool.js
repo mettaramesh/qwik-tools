@@ -20,98 +20,98 @@ export function loadCharsetConverterTool(container) {
           <h2>Encodings Converter</h2>
           <p>Decode bytes with legacy encodings, export as Text, Base64, Hex, URL-encoded or download bytes in UTF-8/UTF-16/EBCDIC.</p>
         </div>
-        <div class="chip">Clean redesign</div>
       </div>
 
-      <!-- Main Input/Output Section -->
-      <section class="card">
-        <div class="io-grid">
-          <!-- INPUT PANEL -->
-          <div class="panel" aria-label="Input panel">
-            <div class="panel-title">
-              <h3>Input</h3>
-              <small id="inputModeDisplay">Interpret input as <strong>Text</strong></small>
+      <!-- Main Content Grid -->
+      <div class="main-content-grid">
+        <!-- Main Input/Output Section -->
+        <section class="card main-section">
+          <div class="io-grid">
+            <!-- INPUT PANEL -->
+            <div class="panel" aria-label="Input panel">
+              <div class="panel-title">
+                <h3>Input</h3>
+                <small id="inputModeDisplay">Interpret input as <strong>Text</strong></small>
+              </div>
+
+              <div class="controls">
+                <label class="select-row">Decode bytes with
+                  <select id="byteDecode" aria-label="encoding-select"></select>
+                </label>
+
+                <label class="checkbox-label">
+                  <input type="checkbox" id="normalizeNEL" checked /> Normalize NEL (U+0085) → LF
+                </label>
+
+                <div class="muted-note ml-auto">Tip: When using Base64/Hex as input, choose the correct decode bytes with encoding.</div>
+              </div>
+
+              <div id="fileBox" class="file-input d-none">
+                <input type="file" id="fileInput" />
+                <span id="fileInfo" class="file-info"></span>
+              </div>
+
+              <div class="textarea-container">
+                <textarea id="inputArea" rows="10" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="Paste your text / Base64 / Hex / URL-encoded here..."></textarea>
+              </div>
+
+              <div class="action-row">
+                <button class="btn btn--primary" id="btnConvert">Convert ✨</button>
+                <button class="btn btn--outline" id="btnSwap">Swap panels</button>
+                <button class="btn btn--outline" id="btnClear">Clear</button>
+              </div>
+              <div class="metrics" id="inMetrics"></div>
             </div>
 
-            <div class="controls">
-              <label class="select-row">Decode bytes with
-                <select id="byteDecode" aria-label="encoding-select"></select>
-              </label>
+            <!-- OUTPUT PANEL -->
+            <div class="panel" aria-label="Output panel">
+              <div class="panel-title">
+                <h3>Output</h3>
+                <small id="outputModeDisplay">Export as <strong>Text</strong></small>
+              </div>
 
-              <label class="checkbox-label">
-                <input type="checkbox" id="normalizeNEL" checked /> Normalize NEL (U+0085) → LF
-              </label>
+              <div class="controls">
+                <label class="select-row">Format
+                  <select id="outputAs" aria-label="output-format-select"></select>
+                </label>
 
-              <div class="muted-note ml-auto">Tip: When using Base64/Hex as input, choose the correct decode bytes with encoding.</div>
+                <label class="select-row">Encode string as
+                  <select id="encodeWith" aria-label="output-encoding-select"></select>
+                </label>
+
+                <label class="checkbox-label">
+                  <input type="checkbox" id="addBOM"> Add BOM
+                </label>
+              </div>
+
+              <div class="textarea-container">
+                <textarea id="outputArea" rows="10" readonly placeholder="Converted output will appear here..."></textarea>
+              </div>
+
+              <div class="action-row">
+                <button class="btn btn--outline" id="btnCopy">Copy</button>
+                <button class="btn btn--outline" id="btnDownload">Download</button>
+              </div>
+              <div class="metrics" id="outMetrics"></div>
+              <div class="compat-note" id="compat">
+                Browser support: <code>TextDecoder</code> decodes many legacy encodings; EBCDIC CP037 is implemented here via a built-in table. <code>TextEncoder</code> officially encodes UTF-8 only; UTF-16 here is manual.
+              </div>
             </div>
-
-            <div id="fileBox" class="file-input d-none">
-              <input type="file" id="fileInput" />
-              <span id="fileInfo" class="file-info"></span>
-            </div>
-
-            <div class="textarea-container">
-              <textarea id="inputArea" rows="10" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="Paste your text / Base64 / Hex / URL-encoded here..."></textarea>
-            </div>
-
-            <div class="action-row">
-              <button class="btn-primary" id="btnConvert">Convert ✨</button>
-              <button class="btn-ghost" id="btnSwap">Swap panels</button>
-              <button class="btn-ghost" id="btnClear">Clear</button>
-            </div>
-            <div class="metrics" id="inMetrics"></div>
           </div>
+        </section>
 
-          <!-- OUTPUT PANEL -->
-          <div class="panel" aria-label="Output panel">
-            <div class="panel-title">
-              <h3>Output</h3>
-              <small id="outputModeDisplay">Export as <strong>Text</strong></small>
-            </div>
-
-            <div class="controls">
-              <label class="select-row">Export as
-                <select id="outputAs" aria-label="output-format-select"></select>
-              </label>
-
-              <label class="select-row">Encode string as
-                <select id="encodeWith" aria-label="output-encoding-select"></select>
-              </label>
-
-              <label class="checkbox-label">
-                <input type="checkbox" id="addBOM"> Add BOM
-              </label>
-            </div>
-
-            <div class="textarea-container">
-              <textarea id="outputArea" rows="10" readonly placeholder="Converted output will appear here..."></textarea>
-            </div>
-
-            <div class="action-row">
-              <button class="btn-ghost" id="btnCopy">Copy</button>
-              <button class="btn-ghost" id="btnDownload">Download</button>
-            </div>
-            <div class="metrics" id="outMetrics"></div>
-            <div class="compat-note" id="compat">
-              Browser support: <code>TextDecoder</code> decodes many legacy encodings; EBCDIC CP037 is implemented here via a built-in table. <code>TextEncoder</code> officially encodes UTF-8 only; UTF-16 here is manual.
-            </div>
+        <!-- Notes Section - Right Side -->
+        <aside class="card notes-sidebar">
+          <div class="note-content">
+            <h4>Notes & Compatibility</h4>
+            <ul>
+              <li><strong>TextDecoder Support:</strong> Most modern browsers support a wide range of legacy encodings</li>
+              <li><strong>File Processing:</strong> Handles binary files directly in the browser</li>
+              <li><strong>Export Formats:</strong> Text, Base64, Hex, URL-encoded, and binary downloads</li>
+            </ul>
           </div>
-        </div>
-      </section>
-
-      <!-- Notes Section -->
-      <section class="card notes">
-        <div class="note-content">
-          <h4>Notes & Compatibility</h4>
-          <ul>
-            <li><strong>TextDecoder Support:</strong> Most modern browsers support a wide range of legacy encodings</li>
-            <li><strong>EBCDIC:</strong> Built-in CP037 table provides direct conversion without TextDecoder dependency</li>
-            <li><strong>File Processing:</strong> Handles binary files directly in the browser</li>
-            <li><strong>Export Formats:</strong> Text, Base64, Hex, URL-encoded, and binary downloads</li>
-            <li><strong>Dedicated EBCDIC Tool:</strong> For focused EBCDIC ↔ ASCII/Unicode conversion, use the dedicated EBCDIC Converter tool</li>
-          </ul>
-        </div>
-      </section>
+        </aside>
+      </div>
     </div>
   `;
 
