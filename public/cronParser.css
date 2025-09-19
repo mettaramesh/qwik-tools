@@ -535,6 +535,62 @@ select:focus-visible {
   color: #fff !important;
 }
 
+/* Very specific button overrides with IDs */
+#btnAdvancedApply:hover, #btnSpecialApply:hover, #btnParse:hover, #btnExplain:hover {
+  background: #666 !important;
+  color: #fff !important;
+  border: none !important;
+}
+
+#btnAdvancedApply:active, #btnSpecialApply:active, #btnParse:active, #btnExplain:active {
+  background: #555 !important;
+  color: #fff !important;
+  border: none !important;
+}
+
+#btnCopy:hover {
+  background: #f0f0f0 !important;
+  color: #333 !important;
+  border-color: #ccc !important;
+}
+
+#btnCopy:active {
+  background: #e0e0e0 !important;
+  color: #333 !important;
+  border-color: #999 !important;
+}
+
+/* Ultimate fallback - target all buttons in cron parser tool */
+[data-tool="cron-parser"] button:hover, 
+[data-tool="cron-parser"] .btn:hover,
+.tool-content button:hover,
+.tool-content .btn:hover {
+  background: #666 !important;
+  color: #fff !important;
+}
+
+[data-tool="cron-parser"] button:active, 
+[data-tool="cron-parser"] .btn:active,
+.tool-content button:active,
+.tool-content .btn:active {
+  background: #555 !important;
+  color: #fff !important;
+}
+
+[data-tool="cron-parser"] .btn--outline:hover,
+.tool-content .btn--outline:hover {
+  background: #f0f0f0 !important;
+  color: #333 !important;
+  border-color: #ccc !important;
+}
+
+[data-tool="cron-parser"] .btn--outline:active,
+.tool-content .btn--outline:active {
+  background: #e0e0e0 !important;
+  color: #333 !important;
+  border-color: #999 !important;
+}
+
 /* Success States */
 .success-animation {
   animation: successPulse 0.6s ease-out;
