@@ -75,6 +75,7 @@ export function setupRegexTester() {
     testRegex();
 }
 
-export function load(container, toolId) {
-    loadRegexTester(container);
+export async function load(container, toolId) {
+    await loadRegexTester(container);
+    setupRegexTester();
 }
