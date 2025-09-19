@@ -33,14 +33,14 @@ label { font-size: .9rem; color: var(--color-primary, #21808d); }
 .bar.cron-bar { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
 .bar.cron-bar .presets-label { flex:1 1 auto; min-width:180px; }
 .bar.cron-bar .switch { flex:0 0 auto; }
-.card select, .stack select, .field select { font-size:.93em; padding:7px 12px; border-radius:8px; min-width:90px; }
+/* Custom select styling for cron parser - removes font-size override to use global styles */
 .grid-cron { font-size:.97em; gap:14px 18px; }
 .card, .card.card--section { font-size:.96em; padding:12px 10px 14px 10px; }
 .stack { gap:7px; }
 .row { gap:12px; margin-bottom:6px; }
 .field { gap:4px; }
 label { font-size:.85em; }
-.card select, .stack select, .field select, .card input[type="text"], .stack input[type="text"], .field input[type="text"] { font-size:.93em; padding:7px 12px; border-radius:8px; min-width:90px; }
+/* Form control styling handled globally - keeping only layout customizations */
 .card input[type="text"], .stack input[type="text"], .field input[type="text"] { width:100%; box-sizing:border-box; }
 .btn, .btn.btn--primary, .btn.btn--outline { font-size:.93em; padding:7px 16px; border-radius:8px; }
 .bar.cron-bar .presets-label { flex:1 1 220px; min-width:0; padding-right:12px; white-space:normal; word-break:break-word; }

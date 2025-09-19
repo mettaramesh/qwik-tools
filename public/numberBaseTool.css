@@ -159,13 +159,7 @@
   }
 }
 
-/* Legacy Support for old CSS classes */
-.base-select {
-  font-size: 1em;
-  padding: 0.25em 0.5em;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
+/* The .base-select styles are now handled globally in style.css */
 
 #number-base-tool .input-section,
 #number-base-tool .output-section {

@@ -158,7 +158,6 @@
 
 /* Enhanced Input Styling */
 input[type="text"],
-select,
 .form-control {
   width: 100%;
   padding: 0.75rem 1rem;
@@ -171,8 +170,9 @@ select,
   box-sizing: border-box;
 }
 
+/* Selects use global .base-select styles from style.css */
+
 input[type="text"]:focus,
-select:focus,
 .form-control:focus {
   outline: none;
   border-color: var(--cron-primary);
@@ -180,8 +180,7 @@ select:focus,
   transform: translateY(-1px);
 }
 
-input[type="text"]:hover,
-select:hover {
+input[type="text"]:hover {
   border-color: var(--cron-primary-light);
 }
 
