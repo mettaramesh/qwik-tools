@@ -13,7 +13,7 @@ function loadTextInspectorStyles() {
   link.id = 'textinspector-css-link';
   link.rel = 'stylesheet';
   link.type = 'text/css';
-  link.href = '/textInspectorTool.css?v=' + Date.now(); // Cache busting
+  link.href = '/textInspectorTool.css?v=' + Date.now() + '&refresh=' + Math.random(); // Strong cache busting
   if (document.head) document.head.appendChild(link);
 }
 
@@ -142,11 +142,70 @@ export async function loadTextInspectorTool(container) {
         ];
         actions.forEach(([id, fn]) => {
             const btn = document.getElementById(id);
-            if (btn) btn.onclick = fn;
+            if (btn) {
+                btn.onclick = fn;
+                
+                // Add JavaScript hover effects to override CSS conflicts
+                btn.addEventListener('mouseenter', function() {
+                    this.style.background = '#f8f9fa';
+                    this.style.borderColor = '#2196f3';
+                    this.style.color = '#495057';
+                    this.style.transform = 'translateY(-1px)';
+                    this.style.boxShadow = '0 2px 6px rgba(0, 0, 0, 0.1)';
+                });
+                
+                btn.addEventListener('mouseleave', function() {
+                    // Reset to default styles
+                    if (this.classList.contains('btn--primary')) {
+                        this.style.background = '';
+                        this.style.borderColor = '';
+                        this.style.color = '';
+                    } else {
+                        this.style.background = 'transparent';
+                        this.style.borderColor = 'rgba(94, 82, 64, 0.2)';
+                        this.style.color = 'rgba(19, 52, 59, 1)';
+                    }
+                    this.style.transform = '';
+                    this.style.boxShadow = '';
+                });
+                
+                btn.addEventListener('mousedown', function() {
+                    this.style.background = '#e9ecef';
+                    this.style.borderColor = '#1976d2';
+                    this.style.color = '#495057';
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 1px 2px rgba(0, 0, 0, 0.1)';
+                });
+            }
         });
         const clearBtn = document.getElementById('clear-btn');
         if (clearBtn && input && output) {
             clearBtn.onclick = () => { input.value = ''; output.value = ''; updateStats(); };
+            
+            // Add hover effects for clear button
+            clearBtn.addEventListener('mouseenter', function() {
+                this.style.background = '#dc3545';
+                this.style.borderColor = '#dc3545';
+                this.style.color = 'white';
+                this.style.transform = 'translateY(-1px)';
+                this.style.boxShadow = '0 3px 8px rgba(0, 0, 0, 0.15)';
+            });
+            
+            clearBtn.addEventListener('mouseleave', function() {
+                this.style.background = '';
+                this.style.borderColor = '';
+                this.style.color = '';
+                this.style.transform = '';
+                this.style.boxShadow = '';
+            });
+            
+            clearBtn.addEventListener('mousedown', function() {
+                this.style.background = '#c82333';
+                this.style.borderColor = '#c82333';
+                this.style.color = 'white';
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.15)';
+            });
         }
         document.querySelectorAll('.copy-btn').forEach(btn => {
             btn.onclick = function() {
