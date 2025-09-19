@@ -501,15 +501,38 @@ select:focus-visible {
 
 /* Button Hover and Active States */
 .btn:hover {
-  background: #f0f0f0;
-  color: #333;
-  border-color: #ccc;
+  background: #f0f0f0 !important;
+  color: #333 !important;
+  border-color: #ccc !important;
 }
 
 .btn:active {
-  background: #e0e0e0;
-  color: #333;
-  border-color: #999;
+  background: #e0e0e0 !important;
+  color: #333 !important;
+  border-color: #999 !important;
+}
+
+/* Additional specific overrides for cron parser buttons */
+#cronBuilderPanel .btn:hover, #cronOutputPanel .btn:hover, .tool-interface .btn:hover {
+  background: #f0f0f0 !important;
+  color: #333 !important;
+  border-color: #ccc !important;
+}
+
+#cronBuilderPanel .btn:active, #cronOutputPanel .btn:active, .tool-interface .btn:active {
+  background: #e0e0e0 !important;
+  color: #333 !important;
+  border-color: #999 !important;
+}
+
+#cronBuilderPanel .btn.btn--primary:hover, #cronOutputPanel .btn.btn--primary:hover, .tool-interface .btn.btn--primary:hover {
+  background: #666 !important;
+  color: #fff !important;
+}
+
+#cronBuilderPanel .btn.btn--primary:active, #cronOutputPanel .btn.btn--primary:active, .tool-interface .btn.btn--primary:active {
+  background: #555 !important;
+  color: #fff !important;
 }
 
 /* Success States */
