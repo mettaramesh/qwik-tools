@@ -1,6 +1,7 @@
 // Text Inspector & Case Converter Tool
 // Provides text statistics, case conversions, and various text transformations
 import cssLoader from './cssLoader.js';
+import { safeSetup, createSafeSelector } from './domUtils.js';
 
 function getTextStats(text) {
     const lines = text.split(/\r?\n/);
@@ -99,10 +100,24 @@ export async function loadTextInspectorTool(container) {
         container.innerHTML = '<div class="error">Failed to load Text Inspector tool</div>';
         return;
     }
-    setTimeout(() => {
-        const input = document.getElementById('text-inspector-input');
-        const output = document.getElementById('text-inspector-output');
-        const stats = document.getElementById('text-inspector-stats');
+    
+    // Critical elements that must be available before setup
+    const criticalElements = [
+        'text-inspector-input',
+        'text-inspector-output',
+        'text-inspector-stats'
+    ];
+    
+    await safeSetup(() => setupTextInspectorEvents(), criticalElements);
+}
+
+function setupTextInspectorEvents() {
+    // Create safe element selector using domUtils
+    const $ = (id) => createSafeSelector(id);
+    
+    const input = $('text-inspector-input')();
+    const output = $('text-inspector-output')();
+    const stats = $('text-inspector-stats')();
         function updateStats() {
             if (!input || !stats) return;
             const s = getTextStats(input.value);
@@ -134,7 +149,7 @@ export async function loadTextInspectorTool(container) {
         function setActiveButton(buttonId) {
             // Reset all buttons to outline styling
             actions.forEach(([id]) => {
-                const btn = document.getElementById(id);
+                const btn = $(id)();
                 if (btn) {
                     btn.classList.remove('btn--primary');
                     btn.classList.add('btn--outline');
@@ -142,7 +157,7 @@ export async function loadTextInspectorTool(container) {
             });
             
             // Set the active button to primary styling
-            const activeBtn = document.getElementById(buttonId);
+            const activeBtn = $(buttonId)();
             if (activeBtn) {
                 activeBtn.classList.remove('btn--outline');
                 activeBtn.classList.add('btn--primary');
@@ -151,7 +166,7 @@ export async function loadTextInspectorTool(container) {
         }
         
         actions.forEach(([id, fn]) => {
-            const btn = document.getElementById(id);
+            const btn = $(id)();
             if (btn) {
                 btn.onclick = () => {
                     fn(); // Execute the transformation
@@ -195,7 +210,7 @@ export async function loadTextInspectorTool(container) {
         // Set initial active button
         setActiveButton('to-upper');
         
-        const clearBtn = document.getElementById('clear-btn');
+        const clearBtn = $('clear-btn')();
         if (clearBtn && input && output) {
             clearBtn.onclick = () => { input.value = ''; output.value = ''; updateStats(); };
             
@@ -227,7 +242,7 @@ export async function loadTextInspectorTool(container) {
         document.querySelectorAll('.copy-btn').forEach(btn => {
             btn.onclick = function() {
                 const targetId = btn.getAttribute('data-target');
-                const target = document.getElementById(targetId);
+                const target = $(targetId)();
                 if (target) {
                     navigator.clipboard.writeText(target.value).then(() => {
                         const oldText = btn.textContent;
@@ -237,7 +252,6 @@ export async function loadTextInspectorTool(container) {
                 }
             };
         });
-    }, 0);
 }
 
 export async function load(container, toolId) {

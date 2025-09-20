@@ -1,13 +1,21 @@
 // Lorem Ipsum Generator module
 // 100% code coverage: Handles lorem ipsum text generation and UI setup.
 
+import { safeSetup } from './domUtils.js';
+
 export async function loadLoremIpsum(container) {
     // Load HTML template from external file
     const html = await fetch('loremIpsum.html').then(r => r.text());
     container.innerHTML = html;
     
-    // Setup functionality after HTML is loaded
-    setupLoremIpsum();
+    // Critical elements that must be available before setup
+    const criticalElements = [
+        'lorem-type',
+        'lorem-count',
+        'lorem-output'
+    ];
+    
+    await safeSetup(() => setupLoremIpsum(), criticalElements);
 }
 
 export function setupLoremIpsum() {

@@ -1,6 +1,8 @@
 // Hex <-> ASCII Converter Tool (Qwik style)
 // Converts ASCII text to hexadecimal and vice versa
 
+import { safeSetup } from './domUtils.js';
+
 export async function loadHexAsciiConverter(container) {
     // Create HTML structure using DOM methods to avoid CSP issues
     container.innerHTML = '';
@@ -125,7 +127,13 @@ export async function loadHexAsciiConverter(container) {
     
     container.appendChild(swapRow);
     
-    setupHexAsciiConverter();
+    // Critical elements that must be available before setup
+    const criticalElements = [
+        'asciiInput',
+        'hexInput'
+    ];
+    
+    await safeSetup(() => setupHexAsciiConverter(), criticalElements);
 }
 
 function setupHexAsciiConverter() {

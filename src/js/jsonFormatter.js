@@ -1,5 +1,6 @@
 // JSON Formatter module
 // 100% code coverage: Handles JSON formatting, minifying, validating, and UI setup.
+import { safeSetup } from './domUtils.js';
 export async function loadJSONFormatter(container) {
     // Loads the JSON Formatter tool UI from external HTML template.
     try {
@@ -109,4 +110,12 @@ export function setupJSONFormatter() {
 
 export async function load(container, toolId) {
     await loadJSONFormatter(container);
+    
+    // Critical elements that must be available before setup
+    const criticalElements = [
+        'json-input',
+        'json-output'
+    ];
+    
+    await safeSetup(() => setupJSONFormatter(), criticalElements);
 }

@@ -1,4 +1,5 @@
 // Load external stylesheet for EBCDIC converter tool
+import { safeSetup } from './domUtils.js';
 function ensureEbcdicConverterStyle(){
   if (!document.getElementById('ebcdic-converter-css-link')) {
     const link = document.createElement('link');
@@ -129,6 +130,16 @@ export function loadEbcdicConverterTool(container) {
     </div>
   `;
 
+  // Critical elements that must be available before setup
+  const criticalElements = [
+    'ebcdic-input',
+    'ebcdic-output'
+  ];
+  
+  safeSetup(() => setupEbcdicConverter(), criticalElements);
+}
+
+function setupEbcdicConverter() {
   // CP037 mapping tables (EBCDIC → Unicode)
   const CP037_E2U = Uint16Array.from([
     0x00,0x01,0x02,0x03,0x9C,0x09,0x86,0x7F,0x97,0x8D,0x8E,0x0B,0x0C,0x0D,0x0E,0x0F,
@@ -492,7 +503,7 @@ export function loadEbcdicConverterTool(container) {
 }
 
 // Qwik dynamic loader
-export function load(container, toolId) {
+export async function load(container, toolId) {
   ensureEbcdicConverterStyle();
-  loadEbcdicConverterTool(container);
+  await loadEbcdicConverterTool(container);
 }

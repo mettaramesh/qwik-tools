@@ -1,6 +1,8 @@
 // Timestamp Converter module
 // 100% code coverage: Handles timestamp/date conversion and UI setup.
 
+import { safeSetup } from './domUtils.js';
+
 export async function loadTimestampConverter(container) {
     // Fetch and inject the external HTML template for the Timestamp Converter tool UI.
     try {
@@ -87,5 +89,12 @@ export function setupTimestampConverter() {
 
 export async function load(container, toolId) {
     await loadTimestampConverter(container);
-    setupTimestampConverter();
+    
+    // Critical elements that must be available before setup
+    const criticalElements = [
+        'timestamp-input',
+        'datetime-input'
+    ];
+    
+    await safeSetup(() => setupTimestampConverter(), criticalElements);
 }

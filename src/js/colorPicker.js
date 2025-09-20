@@ -1,4 +1,5 @@
 import { hexToRgb, rgbToHsl } from './utils.js';
+import { safeSetup } from './domUtils.js';
 window.hexToRgb = hexToRgb;
 window.rgbToHsl = rgbToHsl;
 
@@ -72,5 +73,13 @@ export function setupColorPicker() {
 
 export async function load(container, toolId) {
     await loadColorPicker(container);
-    setupColorPicker();
+    
+    // Critical elements that must be available before setup
+    const criticalElements = [
+        'color-picker',
+        'hex-input',
+        'color-preview'
+    ];
+    
+    await safeSetup(() => setupColorPicker(), criticalElements);
 }

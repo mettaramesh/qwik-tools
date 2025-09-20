@@ -1,6 +1,8 @@
 // Hex Viewer Tool: UTF-8 Char to Hex
 // Usage: loadHexViewerTool(container)
 
+import { safeSetup } from './domUtils.js';
+
 export async function loadHexViewerTool(container) {
     // Ensure CSS is loaded
     function ensureHexViewerToolStyle() {
@@ -28,7 +30,14 @@ export async function loadHexViewerTool(container) {
         }
         
         container.innerHTML = html;
-        setupHexViewerTool();
+        
+        // Critical elements that must be available before setup
+        const criticalElements = [
+            'hexInput',
+            'hexOutput'
+        ];
+        
+        await safeSetup(() => setupHexViewerTool(), criticalElements);
     } catch (error) {
         console.error('Error loading Hex Viewer:', error);
         container.innerHTML = '<div class="error">Failed to load Hex Viewer tool</div>';

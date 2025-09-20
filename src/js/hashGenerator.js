@@ -2,6 +2,7 @@
 // 100% code coverage: Handles hash generation (MD5, SHA1, SHA256, SHA512) and UI setup.
 
 import { simpleMD5 } from './utils.js';
+import { safeSetup } from './domUtils.js';
 
 window.simpleMD5 = simpleMD5;
 
@@ -57,7 +58,17 @@ export function setupHashGenerator() {
     if (typeof window.setupCopyButtons === 'function') window.setupCopyButtons();
 }
 
-export function load(container, toolId) {
-    loadHashGenerator(container);
-    setupHashGenerator();
+export async function load(container, toolId) {
+    await loadHashGenerator(container);
+    
+    // Critical elements that must be available before setup
+    const criticalElements = [
+        'hash-input',
+        'md5-output',
+        'sha1-output',
+        'sha256-output',
+        'sha512-output'
+    ];
+    
+    await safeSetup(() => setupHashGenerator(), criticalElements);
 }

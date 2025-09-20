@@ -2,6 +2,7 @@
 // UI and error styling matches XML Validator. Uses Ajv for JSON Schema validation.
 
 import { showStatus, setupCopyButtons } from './utils.js';
+import { safeSetup } from './domUtils.js';
 
 // Minimal Ajv-like validator (browser, no CDN, no install)
 // For real-world, use Ajv via npm and bundle, but here is a minimal version for demo:
@@ -51,7 +52,15 @@ export async function load(container) {
       throw new Error('Invalid HTML content - contains full page structure');
     }
     container.innerHTML = html;
-    setup();
+    
+    // Critical elements that must be available before setup
+    const criticalElements = [
+      'json-validator-input',
+      'json-validator-schema',
+      'json-validator-output'
+    ];
+    
+    await safeSetup(() => setup(), criticalElements);
   } catch (error) {
     console.error('Error loading JSON Validator:', error);
     container.innerHTML = '<div class="error">Failed to load JSON Validator tool</div>';

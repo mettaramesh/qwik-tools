@@ -9,6 +9,8 @@
 //  - Shift+Click Encode forces numeric encoding
 //  - Keyboard shortcuts: Ctrl/Cmd+E (Encode), Ctrl/Cmd+D (Decode), Ctrl/Cmd+K (Clear), Ctrl/Cmd+Shift+C (Copy)
 
+import { safeSetup } from './domUtils.js';
+
 export async function loadHTMLEntityTool(container) {
   // Load HTML template from external file
   try {
@@ -505,7 +507,16 @@ export function setupHTMLEntityTool(container) {
   setStatus('Ready. Sanitization: Moderate by default. Single-click preview toggle switches modes. Preview is sandboxed.', true, 9000);
 }
 
-export function load(container, toolId) {
-  loadHTMLEntityTool(container);
-  setupHTMLEntityTool(container);
+export async function load(container, toolId) {
+  await loadHTMLEntityTool(container);
+  
+  // Critical elements that must be available before setup
+  const criticalElements = [
+    'htmlInput',
+    'htmlOutput',
+    'btnEncode',
+    'btnDecode'
+  ];
+  
+  await safeSetup(() => setupHTMLEntityTool(container), criticalElements);
 }

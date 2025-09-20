@@ -1,4 +1,5 @@
 // Load external stylesheet for charset converter tool
+import { safeSetup } from './domUtils.js';
 function ensureCharsetConverterStyle(){
   if (!document.getElementById('charsetconverter-css-link')) {
     const link = document.createElement('link');
@@ -128,7 +129,17 @@ export function loadCharsetConverterTool(container) {
       </div>
     </div>
   `;
+  
+  // Critical elements that must be available before setup
+  const criticalElements = [
+    'textToConvert',
+    'conversionOutput'
+  ];
+  
+  safeSetup(() => setupCharsetConverter(), criticalElements);
+}
 
+function setupCharsetConverter() {
   // Keep all the original functionality
   const hasTextDecoder = typeof window.TextDecoder === 'function';
   const hasTextEncoder = typeof window.TextEncoder === 'function';
@@ -542,7 +553,7 @@ export function loadCharsetConverterTool(container) {
 }
 
 // Qwik dynamic loader
-export function load(container, toolId) {
+export async function load(container, toolId) {
   ensureCharsetConverterStyle();
-  loadCharsetConverterTool(container);
+  await loadCharsetConverterTool(container);
 }

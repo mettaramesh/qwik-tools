@@ -2,6 +2,7 @@
 // Fixed: checkboxes wired into diff algorithm + inline word-level diffs
 // Usage: import { load } from './text-comparer.js'; load(document.getElementById('myContainer'));
 import cssLoader from './cssLoader.js';
+import { safeSetup } from './domUtils.js';
 
 export async function load(container, toolId) {
   try {
@@ -19,14 +20,26 @@ export async function load(container, toolId) {
       throw new Error('Invalid HTML content - contains full page structure');
     }
     container.innerHTML = html;
+    
+    // Critical elements that must be available before setup
+    const criticalElements = [
+      'tc-text1',
+      'tc-text2',
+      'tc-result',
+      'tc-status'
+    ];
+    
+    await safeSetup(() => setupTextComparer(), criticalElements);
+    
   } catch (error) {
     console.error('Error loading Text Comparer:', error);
     container.innerHTML = '<div class="error">Failed to load Text Comparer tool</div>';
     return;
   }
 
+  function setupTextComparer() {
   // Wait a brief moment for DOM to be ready
-  await new Promise(resolve => setTimeout(resolve, 10));
+  // No longer needed with safeSetup, but kept for legacy compatibility
 
   // === refs ===
   const t1 = container.querySelector('#tc-text1');
@@ -662,4 +675,5 @@ export async function load(container, toolId) {
       scrollToCurrentMatch();
     });
   }
+  } // end setupTextComparer
 }

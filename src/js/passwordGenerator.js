@@ -2,6 +2,7 @@
 // Category: Generators
 // UI: Modern, clean, non-congested, project-style grid/cards/buttons/combos
 import cssLoader from './cssLoader.js';
+import { safeSetup, createSafeSelector } from './domUtils.js';
 
 export async function loadPasswordGeneratorTool(container) {
     // Load HTML template from external file
@@ -16,7 +17,15 @@ export async function loadPasswordGeneratorTool(container) {
             throw new Error('Invalid HTML content - contains full page structure');
         }
         container.innerHTML = html;
-        setupPasswordGeneratorTool();
+        
+        // Critical elements that must be available before setup
+        const criticalElements = [
+            'pwgen-len',
+            'pwgen-btnGen',
+            'pwgen-list'
+        ];
+        
+        await safeSetup(() => setupPasswordGeneratorTool(), criticalElements);
     } catch (error) {
         console.error('Error loading Password Generator:', error);
         container.innerHTML = '<div class="error">Failed to load Password Generator tool</div>';
@@ -35,35 +44,29 @@ export function setupPasswordGeneratorTool() {
     const SIMILAR = new Set('O0oIl1|S5B8Z2'.split(''));
     const AMBIG   = new Set('{}[]()/\\\'"`~,;:.'.split(''));
     
-    // DOM element helper with null check
-    const el = id => {
-        const element = document.getElementById(id);
-        if (!element) {
-            console.error(`Password Generator: Element with ID '${id}' not found`);
-        }
-        return element;
-    };
+    // Create safe element selector using domUtils
+    const $ = (id) => createSafeSelector(id);
     
-    // Get DOM elements
-    const len = el('pwgen-len');
-    const lenNum = el('pwgen-lenNum');
-    const lower = el('pwgen-lower');
-    const upper = el('pwgen-upper');
-    const digits = el('pwgen-digits');
-    const symbols = el('pwgen-symbols');
-    const symset = el('pwgen-symset');
-    const noSimilar = el('pwgen-noSimilar');
-    const noRepeat = el('pwgen-noRepeat');
-    const noAmbig = el('pwgen-noAmbig');
-    const count = el('pwgen-count');
-    const btnGen = el('pwgen-btnGen');
-    const btnCopyAll = el('pwgen-btnCopyAll');
-    const btnDownload = el('pwgen-btnDownload');
-    const list = el('pwgen-list');
-    const allOut = el('pwgen-allOut');
-    const metaLen = el('pwgen-metaLen');
-    const metaPool = el('pwgen-metaPool');
-    const metaEntropy = el('pwgen-metaEntropy');
+    // Get DOM elements using safe selectors
+    const len = $('pwgen-len')();
+    const lenNum = $('pwgen-lenNum')();
+    const lower = $('pwgen-lower')();
+    const upper = $('pwgen-upper')();
+    const digits = $('pwgen-digits')();
+    const symbols = $('pwgen-symbols')();
+    const symset = $('pwgen-symset')();
+    const noSimilar = $('pwgen-noSimilar')();
+    const noRepeat = $('pwgen-noRepeat')();
+    const noAmbig = $('pwgen-noAmbig')();
+    const count = $('pwgen-count')();
+    const btnGen = $('pwgen-btnGen')();
+    const btnCopyAll = $('pwgen-btnCopyAll')();
+    const btnDownload = $('pwgen-btnDownload')();
+    const list = $('pwgen-list')();
+    const allOut = $('pwgen-allOut')();
+    const metaLen = $('pwgen-metaLen')();
+    const metaPool = $('pwgen-metaPool')();
+    const metaEntropy = $('pwgen-metaEntropy')();
     
     // Check if critical elements exist
     const requiredElements = [len, lenNum, lower, upper, digits, symbols, btnGen, list, allOut, metaLen, metaPool, metaEntropy];

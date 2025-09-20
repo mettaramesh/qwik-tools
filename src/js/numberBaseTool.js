@@ -2,6 +2,7 @@
 // Supports bases 2–36 with BigInt precision, signed/unsigned, grouping, and prefix options
 
 import cssLoader from './cssLoader.js';
+import { safeSetup, createSafeSelector } from './domUtils.js';
 
 export async function loadNumberBaseTool(container) {
     // Load HTML template from external file
@@ -17,7 +18,10 @@ export async function loadNumberBaseTool(container) {
         }
         if (container) {
             container.innerHTML = html;
-            setupNumberBaseTool();
+            // Use safe setup to prevent timing issues
+            await safeSetup(setupNumberBaseTool, [
+                'base-input', 'base-select', 'convert-btn', 'clear-btn'
+            ], 'Number Base Tool');
         }
     } catch (error) {
         console.error('Error loading Number Base Tool:', error);
@@ -42,25 +46,25 @@ export async function load(container) {
 }
 
 export function setupNumberBaseTool() {
-    const el = id => document.getElementById(id);
+    const $ = createSafeSelector('Number Base Tool');
     const inputs = {
-        bin: el('nb-bin'),
-        oct: el('nb-oct'),
-        dec: el('nb-dec'),
-        hex: el('nb-hex'),
-        custom: el('nb-custom')
+        bin: $('nb-bin'),
+        oct: $('nb-oct'),
+        dec: $('nb-dec'),
+        hex: $('nb-hex'),
+        custom: $('nb-custom')
     };
     const msgs   = {
-        bin: el('nb-binMsg'),
-        oct: el('nb-octMsg'),
-        dec: el('nb-decMsg'),
-        hex: el('nb-hexMsg'),
-        custom: el('nb-customMsg')
+        bin: $('nb-binMsg'),
+        oct: $('nb-octMsg'),
+        dec: $('nb-decMsg'),
+        hex: $('nb-hexMsg'),
+        custom: $('nb-customMsg')
     };
-    const signedToggle = el('signedToggle');
-    const groupSizeSel = el('groupSize');
-    const prefixesSel  = el('prefixes');
-    const customBaseSel = el('customBase');
+    const signedToggle = $('signedToggle');
+    const groupSizeSel = $('groupSize');
+    const prefixesSel  = $('prefixes');
+    const customBaseSel = $('customBase');
 
     // Populate custom base 2..36
     if (customBaseSel) {

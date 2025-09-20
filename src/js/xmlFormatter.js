@@ -1,6 +1,7 @@
 // XML Formatter Tool for Qwik
 // No external dependencies, safe for commercial use
 import cssLoader from './cssLoader.js';
+import { safeSetup } from './domUtils.js';
 
 function formatXML(xml) {
   xml = xml.trim();
@@ -88,8 +89,13 @@ export async function load(container) {
     const html = await resp.text();
     container.innerHTML = html;
     
-    // Call setup after DOM is updated
-    if (typeof setup === 'function') setup();
+    // Critical elements that must be available before setup
+    const criticalElements = [
+      'xml-input',
+      'xml-output'
+    ];
+    
+    await safeSetup(() => setup(), criticalElements);
   } catch (error) {
     console.error('Error loading XML formatter:', error);
     container.innerHTML = `

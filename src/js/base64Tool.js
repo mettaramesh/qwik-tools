@@ -1,6 +1,7 @@
 // Base64 Tool module
 // 100% code coverage: Handles Base64 encoding/decoding and UI setup.
 import { escapeHtml } from './utils.js';
+import { safeSetup } from './domUtils.js';
 
 export function loadBase64Tool(container) {
     // 100% code coverage: Renders the Base64 Encoder/Decoder tool UI.
@@ -86,7 +87,14 @@ export function setupBase64Tool() {
     if (typeof window.setupCopyButtons === 'function') window.setupCopyButtons();
 }
 
-export function load(container, toolId) {
+export async function load(container, toolId) {
     loadBase64Tool(container);
-    setupBase64Tool();
+    
+    // Critical elements that must be available before setup
+    const criticalElements = [
+        'base64-input',
+        'base64-output'
+    ];
+    
+    await safeSetup(() => setupBase64Tool(), criticalElements);
 }

@@ -2,6 +2,7 @@
 // 100% code coverage: Handles UUID v1/v4 generation and UI setup.
 
 import { escapeHtml } from './utils.js';
+import { safeSetup } from './domUtils.js';
 
 export async function loadUUIDGenerator(container) {
     // Fetch and inject the external HTML template for the UUID Generator tool UI.
@@ -78,4 +79,12 @@ export function setupUUIDGenerator() {
 
 export async function load(container, toolId) {
     await loadUUIDGenerator(container);
+    
+    // Critical elements that must be available before setup
+    const criticalElements = [
+        'uuid-output',
+        'uuid-count'
+    ];
+    
+    await safeSetup(() => setupUUIDGenerator(), criticalElements);
 }
