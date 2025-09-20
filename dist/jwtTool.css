@@ -1,0 +1,87 @@
+/* JWT Tool Styles */
+
+/* Security banner */
+.security-banner {
+  border: 1px solid var(--warn, #f5a623);
+  background: #fff7e6;
+  padding: 10px;
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+}
+
+/* JWT-specific layout utilities */
+.jwt-hints {
+  margin-top: 6px;
+}
+
+.jwt-secret-row {
+  display: flex;
+  gap: 8px;
+}
+
+.jwt-secret-input {
+  flex: 1;
+}
+
+.grid-keys {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr 1fr;
+}
+
+/* JWT JS-injected utility classes */
+.jwks-note { 
+  margin-top: 4px; 
+}
+
+.jwt-mt-16 { 
+  margin-top: 16px; 
+}
+
+.jwt-mb-8 { 
+  margin-bottom: 8px; 
+}
+
+.jwt-gen-grid { 
+  display: grid; 
+  grid-template-columns: repeat(6, minmax(0,1fr)); 
+  gap: 8px; 
+  align-items: end; 
+}
+
+.jwt-col-span-2 { 
+  grid-column: span 2; 
+}
+
+.jwt-col-span-3 { 
+  grid-column: span 3; 
+}
+
+.jwt-col-span-4 { 
+  grid-column: span 4; 
+}
+
+.jwt-col-span-6 { 
+  grid-column: span 6; 
+}
+
+.jwt-claims-human { 
+  display: grid; 
+  grid-template-columns: 1fr 2fr 2fr 1fr; 
+  gap: 8px; 
+}
+
+.jwt-fw-600 { 
+  font-weight: 600; 
+}
+
+.jwt-grid-claims { 
+  display: grid; 
+  gap: 16px; 
+  grid-template-columns: 1fr 1fr 1fr; 
+  margin-top: 16px; 
+}
+
+.jwt-mt-10 { 
+  margin-top: 10px; 
+}
