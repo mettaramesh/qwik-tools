@@ -1,16 +1,5 @@
 // Qwik-style Cron Tool
-// Load external stylesheet for cron parser
-function ensureQwikCronStyle(){
-  if (!document.getElementById('qwik-cron-style-link')) {
-    const link = document.createElement('link');
-    link.id = 'qwik-cron-style-link';
-    link.rel = 'stylesheet';
-    link.type = 'text/css';
-    link.href = './cronParser.css';
-    document.head.appendChild(link);
-  }
-}
-ensureQwikCronStyle();
+import cssLoader from './cssLoader.js';
 
 // Enhanced User Feedback System
 function showSuccessAnimation(element) {
@@ -554,14 +543,15 @@ async function loadCronParserTool(container) {
 
 // Public entry
 export async function load(container) {
-  // Inject CSS via <link> if not already present
-  if (!document.getElementById('cronparser-css-link')) {
-    const link = document.createElement('link');
-    link.id = 'cronparser-css-link';
-    link.rel = 'stylesheet';
-    link.href = 'cronParser.css';
-    document.head.appendChild(link);
+  try {
+    // Load CSS using centralized loader
+    await cssLoader.loadCSS('cronParser.css', 'cronparser');
+    await ensureCronLibsLoaded();
+    await loadCronParserTool(container);
+  } catch (error) {
+    console.error('Cron Parser load error:', error);
+    if (container) {
+      container.innerHTML = '<div class="error">Failed to load Cron Parser Tool</div>';
+    }
   }
-  await ensureCronLibsLoaded();
-  await loadCronParserTool(container);
 }

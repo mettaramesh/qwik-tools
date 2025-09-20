@@ -4,26 +4,12 @@
 // security banner, HS256 Sample Generator, Ephemeral RS256/ES256 keypair + mint,
 // Human-readable claims panel, and **JWKS input with kid auto-selection**.
 
-// Load external stylesheet for JWT tool
-function loadJWTStyles() {
-  // Remove any existing CSS first
-  const existingLink = document.getElementById('jwt-css-link');
-  if (existingLink) {
-    existingLink.remove();
-  }
-  
-  const link = document.createElement('link');
-  link.id = 'jwt-css-link';
-  link.rel = 'stylesheet';
-  link.type = 'text/css';
-  link.href = '/jwtTool.css?v=' + Date.now(); // Cache busting
-  if (document.head) document.head.appendChild(link);
-}
+import cssLoader from './cssLoader.js';
 
 export async function loadJWTTool(container) {
   try {
-    // Load CSS first
-    loadJWTStyles();
+    // Load CSS using centralized loader
+    await cssLoader.loadCSS('jwtTool.css', 'jwt');
     
     const html = await fetch('jwtTool.html').then(r => r.text());
     

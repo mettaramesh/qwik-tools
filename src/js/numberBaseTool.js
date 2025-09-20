@@ -1,6 +1,8 @@
 // Number Base Converter Tool (Qwik style)
 // Supports bases 2–36 with BigInt precision, signed/unsigned, grouping, and prefix options
 
+import cssLoader from './cssLoader.js';
+
 export async function loadNumberBaseTool(container) {
     // Load HTML template from external file
     try {
@@ -27,42 +29,16 @@ export async function loadNumberBaseTool(container) {
 }
 
 export async function load(container) {
-    // Load CSS first with explicit function
-    await loadNumberBaseCSS();
-    await loadNumberBaseTool(container);
-}
-
-async function loadNumberBaseCSS() {
-    // Remove existing CSS link to ensure fresh load
-    const existingLink = document.getElementById('numberbase-css-link');
-    if (existingLink) {
-        existingLink.remove();
-    }
-    
-    // Create and load CSS link
-    const link = document.createElement('link');
-    link.id = 'numberbase-css-link';
-    link.rel = 'stylesheet';
-    link.type = 'text/css';
-    link.href = '/numberBaseTool.css?v=' + Date.now();
-    
-    // Wait for CSS to load before proceeding
-    return new Promise((resolve, reject) => {
-        link.onload = () => {
-            console.log('Number Base CSS loaded successfully');
-            resolve();
-        };
-        link.onerror = () => {
-            console.error('Failed to load Number Base CSS');
-            reject(new Error('CSS load failed'));
-        };
-        
-        if (document.head) {
-            document.head.appendChild(link);
-        } else {
-            reject(new Error('No document head'));
+    try {
+        // Load CSS using centralized loader
+        await cssLoader.loadCSS('numberBaseTool.css', 'numberbase');
+        await loadNumberBaseTool(container);
+    } catch (error) {
+        console.error('Number Base Tool load error:', error);
+        if (container) {
+            container.innerHTML = '<div class="error">Failed to load Number Base Tool</div>';
         }
-    });
+    }
 }
 
 export function setupNumberBaseTool() {
