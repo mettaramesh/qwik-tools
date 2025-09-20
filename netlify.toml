@@ -29,6 +29,7 @@
   to = "/assets/:splat"
   status = 200
 
+# JavaScript library files
 [[redirects]]
   from = "/js-yaml.min.js"
   to = "/js-yaml.min.js"
@@ -42,6 +43,122 @@
 [[redirects]]
   from = "/sidebar.js"
   to = "/sidebar.js"
+  status = 200
+
+[[redirects]]
+  from = "/cron-js-parser.min.js"
+  to = "/cron-js-parser.min.js"
+  status = 200
+
+[[redirects]]
+  from = "/cron-js-parser-backup.min.js"
+  to = "/cron-js-parser-backup.min.js"
+  status = 200
+
+[[redirects]]
+  from = "/cronstrue.min.js"
+  to = "/cronstrue.min.js"
+  status = 200
+
+[[redirects]]
+  from = "/diff.worker.js"
+  to = "/diff.worker.js"
+  status = 200
+
+[[redirects]]
+  from = "/readmeModal.js"
+  to = "/readmeModal.js"
+  status = 200
+
+[[redirects]]
+  from = "/subnetCalculator.js"
+  to = "/subnetCalculator.js"
+  status = 200
+
+[[redirects]]
+  from = "/vlsmCalculator.js"
+  to = "/vlsmCalculator.js"
+  status = 200
+
+# CSS files
+[[redirects]]
+  from = "/charsetConverterTool.css"
+  to = "/charsetConverterTool.css"
+  status = 200
+
+[[redirects]]
+  from = "/cronParser.css"
+  to = "/cronParser.css"
+  status = 200
+
+[[redirects]]
+  from = "/ebcdicConverter.css"
+  to = "/ebcdicConverter.css"
+  status = 200
+
+[[redirects]]
+  from = "/hexAsciiConverter.css"
+  to = "/hexAsciiConverter.css"
+  status = 200
+
+[[redirects]]
+  from = "/hexViewerTool.css"
+  to = "/hexViewerTool.css"
+  status = 200
+
+[[redirects]]
+  from = "/jwtTool.css"
+  to = "/jwtTool.css"
+  status = 200
+
+[[redirects]]
+  from = "/numberBaseTool.css"
+  to = "/numberBaseTool.css"
+  status = 200
+
+[[redirects]]
+  from = "/passwordGenerator.css"
+  to = "/passwordGenerator.css"
+  status = 200
+
+[[redirects]]
+  from = "/placeholderTool.css"
+  to = "/placeholderTool.css"
+  status = 200
+
+[[redirects]]
+  from = "/readmeModal.css"
+  to = "/readmeModal.css"
+  status = 200
+
+[[redirects]]
+  from = "/sqlFormatter.css"
+  to = "/sqlFormatter.css"
+  status = 200
+
+[[redirects]]
+  from = "/subnetCalculator.css"
+  to = "/subnetCalculator.css"
+  status = 200
+
+[[redirects]]
+  from = "/textComparer.css"
+  to = "/textComparer.css"
+  status = 200
+
+[[redirects]]
+  from = "/textInspectorTool.css"
+  to = "/textInspectorTool.css"
+  status = 200
+
+[[redirects]]
+  from = "/ui-components.css"
+  to = "/ui-components.css"
+  status = 200
+
+[[redirects]]
+  from = "/vlsmCalculator.css"
+  to = "/vlsmCalculator.css"
   status = 200
 
 [[redirects]]
