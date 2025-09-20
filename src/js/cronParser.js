@@ -192,11 +192,11 @@ function getOutputPanelHTML() {
 // --- Main builder logic ---
 function cronBuilderLogic() {
   // Create safe selectors for all elements
-  const $sel = (id) => createSafeSelector(id);
+  const $sel = createSafeSelector('Cron Parser');
   
   // Utilities to fill selects
   function fillSelect(id, start, end, withStarLabel) {
-    const sel = $sel(id)(); if (!sel) return;
+    const sel = $sel(id); if (!sel) return;
     sel.innerHTML = '';
     if (withStarLabel) {
       const o = document.createElement('option'); o.value='*'; o.textContent=withStarLabel; sel.appendChild(o);
@@ -204,13 +204,13 @@ function cronBuilderLogic() {
     for (let i=start;i<=end;i++){ const o=document.createElement('option'); o.value=String(i); o.textContent=String(i); sel.appendChild(o); }
   }
   function fillMonths(id){
-    const sel=$sel(id)(); if(!sel) return;
+    const sel=$sel(id); if(!sel) return;
     sel.innerHTML=''; const star=document.createElement('option'); star.value='*'; star.textContent='Every month *'; sel.appendChild(star);
     const months=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
     for(let i=1;i<=12;i++){ const o=document.createElement('option'); o.value=String(i); o.textContent=`${i} (${months[i-1]})`; sel.appendChild(o); }
   }
   function fillDOW(id, includeQuestion){
-    const sel=$sel(id)(); if(!sel) return;
+    const sel=$sel(id); if(!sel) return;
     sel.innerHTML='';
     if(includeQuestion){ const q=document.createElement('option'); q.value='?'; q.textContent='No specific day ?'; sel.appendChild(q); }
     else { const star=document.createElement('option'); star.value='*'; star.textContent='Every day *'; sel.appendChild(star); }
@@ -224,7 +224,7 @@ function cronBuilderLogic() {
   fillMonths('simple-month');
   fillDOW('simple-dow',true);
 
-  const tabs = $sel('tabs')();
+  const tabs = $sel('tabs');
   if (tabs) {
     tabs.addEventListener('click', (e)=>{
       const btn = e.target.closest?.('.tab'); if(!btn) return;
@@ -232,14 +232,14 @@ function cronBuilderLogic() {
       btn.classList.add('active');
       const id = btn.dataset.tab;
       for (const el of ['simple','advanced','special','parse']){
-        const node = $sel('tab-'+el)();
+        const node = $sel('tab-'+el);
         if (node) node.classList.toggle('hidden', el!==id);
       }
     });
   }
 
   // Enhanced Presets with Visual Feedback
-  const presets = $sel('cronPresets')();
+  const presets = $sel('cronPresets');
   if (presets) {
     presets.innerHTML='';
     const addPreset=(label,expr,description)=>{
@@ -260,11 +260,11 @@ function cronBuilderLogic() {
         const parts = expr.split(/\s+/);
         const [min, hr, dom, mon, dow] = parts;
         
-        const m=$sel('simple-minute')(); 
-        const h=$sel('simple-hour')();  
-        const d=$sel('simple-dom')();   
-        const mo=$sel('simple-month')();
-        const w=$sel('simple-dow')();   
+        const m=$sel('simple-minute'); 
+        const h=$sel('simple-hour');  
+        const d=$sel('simple-dom');   
+        const mo=$sel('simple-month');
+        const w=$sel('simple-dow');   
         
         if(m) m.value = min || '*';
         if(h) h.value = hr || '*';
@@ -273,23 +273,23 @@ function cronBuilderLogic() {
         if(w) w.value = dow || '*';
         
         // Update output with animation
-        const out=$sel('cronOut')(); 
+        const out=$sel('cronOut'); 
         if(out) {
           out.textContent = expr;
           showSuccessAnimation(out);
         }
         
         // Update explanation
-        const ex=$sel('explainText')(); 
+        const ex=$sel('explainText'); 
         if(ex) {
           ex.textContent = description || `Runs ${label.toLowerCase()}.`;
           showSuccessAnimation(ex);
         }
         
         // Update validation status
-        const vb=$sel('validBox')(); 
-        const vt=$sel('validTitle')(); 
-        const vd=$sel('validDetail')();
+        const vb=$sel('validBox'); 
+        const vt=$sel('validTitle'); 
+        const vd=$sel('validDetail');
         if(vb) vb.className='status ok';
         if(vt) vt.innerHTML='<strong>✓ Preset applied</strong>';
         if(vd) vd.textContent='Using predefined schedule pattern.';
@@ -319,11 +319,11 @@ function cronBuilderLogic() {
   }
 
   // Update Simple tab → cronOut
-  const minuteSel=$sel('simple-minute')();
-  const hourSel=$sel('simple-hour')();
-  const domSel=$sel('simple-dom')();
-  const monthSel=$sel('simple-month')();
-  const dowSel=$sel('simple-dow')();
+  const minuteSel=$sel('simple-minute');
+  const hourSel=$sel('simple-hour');
+  const domSel=$sel('simple-dom');
+  const monthSel=$sel('simple-month');
+  const dowSel=$sel('simple-dow');
 
   function explainCron(expr){
     const parts = expr.trim().split(/\s+/);
@@ -334,16 +334,16 @@ function cronBuilderLogic() {
   function updateSimpleCron(){
     const min=minuteSel?.value ?? '*', hr=hourSel?.value ?? '*', dom=domSel?.value ?? '*', mon=monthSel?.value ?? '*', dow=dowSel?.value ?? '*';
     const cron = `${min} ${hr} ${dom} ${mon} ${dow}`;
-    const out=$sel('cronOut')(); if(out) out.textContent=cron;
-    const ex=$sel('explainText')(); if(ex) ex.textContent=explainCron(cron);
-    const vb=$sel('validBox')(); if(vb) vb.className='status ok';
-    const vt=$sel('validTitle')(); if(vt) vt.innerHTML='<strong>Looks good.</strong>';
-    const vd=$sel('validDetail')(); if(vd) vd.textContent='Expression structure is valid.';
+    const out=$sel('cronOut'); if(out) out.textContent=cron;
+    const ex=$sel('explainText'); if(ex) ex.textContent=explainCron(cron);
+    const vb=$sel('validBox'); if(vb) vb.className='status ok';
+    const vt=$sel('validTitle'); if(vt) vt.innerHTML='<strong>Looks good.</strong>';
+    const vd=$sel('validDetail'); if(vd) vd.textContent='Expression structure is valid.';
   }
   [minuteSel, hourSel, domSel, monthSel, dowSel].forEach(sel => sel && sel.addEventListener('change', updateSimpleCron));
 
   // Info helper
-  const infoBox=$sel('cronInfoBox')(); let infoBoxTimeout=null;
+  const infoBox=$sel('cronInfoBox'); let infoBoxTimeout=null;
   function showInfo(msg,type='info'){
     if(!infoBox) return;
     infoBox.textContent=msg;
@@ -354,9 +354,9 @@ function cronBuilderLogic() {
   }
 
   // Enhanced Copy Button with Visual Feedback
-  const btnCopy=$sel('btnCopy')();
+  const btnCopy=$sel('btnCopy');
   if (btnCopy) btnCopy.addEventListener('click', async ()=>{
-    const cronOut = $sel('cronOut')();
+    const cronOut = $sel('cronOut');
     const txt = cronOut?.textContent?.trim() ?? '';
     
     if (!txt || txt === '* * * * *') {
@@ -392,10 +392,10 @@ function cronBuilderLogic() {
   });
 
   // Enhanced Explain Button with Better UX
-  const btnExplain=$sel('btnExplain')();
+  const btnExplain=$sel('btnExplain');
   if (btnExplain) btnExplain.addEventListener('click', async ()=>{
-    const cronOut = $sel('cronOut')();
-    const explainText = $sel('explainText')();
+    const cronOut = $sel('cronOut');
+    const explainText = $sel('explainText');
     const cronOutText = cronOut?.textContent?.trim();
     
     if (!cronOutText || cronOutText === '* * * * *') {
@@ -457,11 +457,11 @@ function cronBuilderLogic() {
   }
 
   // Advanced live validation
-  const advancedCronInput=$sel('advanced-cron')();
+  const advancedCronInput=$sel('advanced-cron');
   if (advancedCronInput) advancedCronInput.addEventListener('input', ()=>{
     const expr=advancedCronInput.value.trim();
-    const statusBox=$sel('validBox')(); if(!statusBox) return;
-    const vt=$sel('validTitle')(); const vd=$sel('validDetail')(); const desc=$sel('explainText')();
+    const statusBox=$sel('validBox'); if(!statusBox) return;
+    const vt=$sel('validTitle'); const vd=$sel('validDetail'); const desc=$sel('explainText');
 
     if (!expr){ statusBox.className='status'; vt && (vt.innerHTML='<strong>—</strong>'); vd && (vd.textContent='Enter a cron expression.'); return; }
 
@@ -471,43 +471,43 @@ function cronBuilderLogic() {
   });
 
   // Apply buttons
-  const btnAdvancedApply=$sel('btnAdvancedApply')();
+  const btnAdvancedApply=$sel('btnAdvancedApply');
   if (btnAdvancedApply) btnAdvancedApply.addEventListener('click', ()=>{
-    const expr=$sel('advanced-cron')()?.value?.trim() || '';
-    if(!expr){ showInfo('Advanced expression input is empty.','warn'); const vb=$sel('validBox')(); if(vb){ vb.className='status'; } return; }
+    const expr=$sel('advanced-cron')?.value?.trim() || '';
+    if(!expr){ showInfo('Advanced expression input is empty.','warn'); const vb=$sel('validBox'); if(vb){ vb.className='status'; } return; }
     const parts=expr.split(/\s+/);
     if(parts.length<5 || parts.length>6){ showInfo('Invalid cron expression. Must have 5 or 6 fields.','err'); return; }
     if (minuteSel) minuteSel.value=parts[0]; if (hourSel) hourSel.value=parts[1]; if (domSel) domSel.value=parts[2]; if (monthSel) monthSel.value=parts[3]; if (dowSel) dowSel.value=parts[4];
-    const out=$sel('cronOut')(); if(out) out.textContent=expr;
-    const ex=$sel('explainText')(); if(ex) ex.textContent='Updated from advanced expression.';
-    const error=validateCronExpression(expr); const vb=$sel('validBox')(); const vt=$sel('validTitle')(); const vd=$sel('validDetail')();
+    const out=$sel('cronOut'); if(out) out.textContent=expr;
+    const ex=$sel('explainText'); if(ex) ex.textContent='Updated from advanced expression.';
+    const error=validateCronExpression(expr); const vb=$sel('validBox'); const vt=$sel('validTitle'); const vd=$sel('validDetail');
     if(error){ vb && (vb.className='status err'); vt && (vt.innerHTML='<strong>Error:</strong>'); vd && (vd.textContent=error); }
     else { vb && (vb.className='status ok'); vt && (vt.innerHTML='<strong>Looks good.</strong>'); vd && (vd.textContent='Expression structure is valid.'); }
   });
 
-  const btnSpecialApply=$sel('btnSpecialApply')();
+  const btnSpecialApply=$sel('btnSpecialApply');
   if (btnSpecialApply) btnSpecialApply.addEventListener('click', ()=>{
-    const expr=$sel('special-cron')()?.value?.trim() || '';
-    if(!expr){ showInfo('Special expression input is empty.','warn'); const vb=$sel('validBox')(); if(vb){ vb.className='status'; } return; }
+    const expr=$sel('special-cron')?.value?.trim() || '';
+    if(!expr){ showInfo('Special expression input is empty.','warn'); const vb=$sel('validBox'); if(vb){ vb.className='status'; } return; }
     if(!/[WL\?#]/.test(expr)){ showInfo('Special expression must contain W, L, ?, or #.','err'); return; }
     if (domSel) domSel.value = expr.includes('L') ? '31' : '1';
     if (dowSel) dowSel.value = expr.includes('W') ? '1' : '0';
-    const out=$sel('cronOut')(); if(out) out.textContent=expr;
-    const ex=$sel('explainText')(); if(ex) ex.textContent='Updated from special expression.';
-    const error=validateCronExpression(expr); const vb=$sel('validBox')(); const vt=$sel('validTitle')(); const vd=$sel('validDetail')();
+    const out=$sel('cronOut'); if(out) out.textContent=expr;
+    const ex=$sel('explainText'); if(ex) ex.textContent='Updated from special expression.';
+    const error=validateCronExpression(expr); const vb=$sel('validBox'); const vt=$sel('validTitle'); const vd=$sel('validDetail');
     if(error){ vb && (vb.className='status err'); vt && (vt.innerHTML='<strong>Error:</strong>'); vd && (vd.textContent=error); }
     else { vb && (vb.className='status ok'); vt && (vt.innerHTML='<strong>Looks good.</strong>'); vd && (vd.textContent='Expression structure is valid.'); }
   });
 
   // Parse button
-  const btnParse=$sel('btnParse')();
+  const btnParse=$sel('btnParse');
   if (btnParse) btnParse.addEventListener('click', ()=>{
-    const expr=$sel('parse-cron')()?.value?.trim() || '';
+    const expr=$sel('parse-cron')?.value?.trim() || '';
     // Use parse section fields
-    const vb=$sel('parseValidBox')();
-    const vt=$sel('parseValidTitle')();
-    const vd=$sel('parseValidDetail')();
-    const ex=$sel('parseExplainText')();
+    const vb=$sel('parseValidBox');
+    const vt=$sel('parseValidTitle');
+    const vd=$sel('parseValidDetail');
+    const ex=$sel('parseExplainText');
     if(!expr){
       if(vb) vb.className='status';
       if(vt) vt.innerHTML='<strong>—</strong>';
