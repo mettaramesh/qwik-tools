@@ -1,5 +1,54 @@
 import { defineConfig } from 'vite';
 import wasm from 'vite-plugin-wasm';
+import { copyFileSync, readFileSync, writeFileSync } from 'fs';
+import { resolve } from 'path';
+
+// Custom plugin to copy index.html and favicons to root after build
+function copyIndexToRoot() {
+  return {
+    name: 'copy-index-to-root',
+    writeBundle() {
+      try {
+        // Read and modify index.html content
+        let indexContent = readFileSync(resolve('dist/html/index.html'), 'utf8');
+        
+        // Update favicon paths to use root files instead of assets
+        indexContent = indexContent.replace(
+          /href="\/assets\/favicon-[^"]+\.svg"/g,
+          'href="/favicon.svg"'
+        );
+        indexContent = indexContent.replace(
+          /href="\/assets\/favicon-[^"]+\.ico"/g,
+          'href="/favicon.ico"'
+        );
+        
+        // Write the modified index.html to root
+        writeFileSync(resolve('dist/index.html'), indexContent);
+        console.log('✓ Copied and updated index.html to dist root');
+        
+        // Copy favicon files from root to dist root
+        copyFileSync(
+          resolve('favicon.ico'),
+          resolve('dist/favicon.ico')
+        );
+        copyFileSync(
+          resolve('favicon.svg'),
+          resolve('dist/favicon.svg')
+        );
+        console.log('✓ Copied favicon files to dist root');
+        
+        // Create _redirects file for Netlify SPA routing
+        writeFileSync(
+          resolve('dist/_redirects'),
+          '/*    /index.html   200\n'
+        );
+        console.log('✓ Created _redirects file for Netlify');
+      } catch (error) {
+        console.error('Failed to copy files:', error);
+      }
+    }
+  };
+}
 
 export default defineConfig({
   base: '/', // changed from '/qwik/' for Netlify root deployment
@@ -11,7 +60,13 @@ export default defineConfig({
     outDir: 'dist',
     rollupOptions: {
       input: './html/index.html',
+      output: {
+        entryFileNames: 'assets/[name]-[hash].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]'
+      }
     },
+    copyPublicDir: true
   },
-  plugins: [wasm()]
+  plugins: [wasm(), copyIndexToRoot()]
 });
