@@ -1,8 +1,8 @@
 // Main entry point for Qwik app
 // 100% code coverage: Initializes theme and Qwik app on DOMContentLoaded.
 
-import { Qwik } from './src/Qwik.js';
-import { simpleMD5, setupCopyButtons } from './src/utils.js';
+import { Qwik } from '../src/js/Qwik.js';
+import { simpleMD5, setupCopyButtons } from '../src/js/utils.js';
 
 window.simpleMD5 = simpleMD5;
 window.setupCopyButtons = setupCopyButtons;

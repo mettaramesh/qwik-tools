@@ -1,7 +1,7 @@
 // Qwik XML Validator (xmllint-wasm ESM/async build)
 // Uses xmllint-wasm as an ES module for browser
 
-import * as xmllint from '/index-browser.mjs';
+import * as xmllint from '../../js/index-browser.mjs';
 
 export async function load(container) {
   const resp = await fetch('xmlValidator.html');

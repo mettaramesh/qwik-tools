@@ -82,10 +82,32 @@ function jsonToXml(obj, nodeName) {
 }
 
 function convertJsonToXml(json) {
+  // Handle different JSON structures
+  if (Array.isArray(json)) {
+    // JSON is an array - wrap in a root element
+    let result = '';
+    json.forEach((item, index) => {
+      result += jsonToXml(item, 'item');
+    });
+    return `<root>${result}</root>`;
+  }
+  
   const keys = Object.keys(json);
-  if (keys.length !== 1) throw new Error('JSON must have a single root element');
-  const rootName = keys[0];
-  return jsonToXml(json[rootName], rootName);
+  if (keys.length === 0) {
+    // Empty object
+    return '<root/>';
+  } else if (keys.length === 1) {
+    // Single root element - use it directly
+    const rootName = keys[0];
+    return jsonToXml(json[rootName], rootName);
+  } else {
+    // Multiple root elements - wrap in a root element
+    let result = '';
+    for (const key of keys) {
+      result += jsonToXml(json[key], key);
+    }
+    return `<root>${result}</root>`;
+  }
 }
 
 function unescapeXml(str) {
