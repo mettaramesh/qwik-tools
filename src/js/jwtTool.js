@@ -20,6 +20,16 @@ export async function loadJWTTool(container) {
     }
     
     container.innerHTML = html;
+    
+    // Wait for DOM to be ready before setting up event listeners
+    await new Promise(resolve => {
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', resolve);
+      } else {
+        // Use setTimeout to ensure elements are accessible
+        setTimeout(resolve, 0);
+      }
+    });
   } catch (error) {
     console.error('Failed to load JWT tool HTML:', error);
     container.innerHTML = '<div class="error">Failed to load JWT tool</div>';
@@ -27,7 +37,13 @@ export async function loadJWTTool(container) {
 }
 
 export function setupJWTTool() {
-  const $ = id => document.getElementById(id);
+  const $ = id => {
+    const element = document.getElementById(id);
+    if (!element) {
+      console.warn(`JWT Tool: Element with ID '${id}' not found`);
+    }
+    return element;
+  };
 
   const input = $('jwt-input');
   const header = $('jwt-header');
@@ -44,6 +60,12 @@ export function setupJWTTool() {
   const skewEl = $('jwt-skew');
   const claimsModeEl = $('jwt-claims-mode');
   const autoEl = $('jwt-auto');
+
+  // Early return if critical elements are missing
+  if (!input || !header || !payload || !signature) {
+    console.error('JWT Tool: Critical elements not found, setup aborted');
+    return;
+  }
 
   // HS256 generator
   const genSub = $('gen-sub');
