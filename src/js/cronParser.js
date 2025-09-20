@@ -86,19 +86,14 @@ function getCronParser() {
 
 // Cron Parser + Builder Tool (Qwik style)
 function setupCronParserTool() {
-  const $builderPanel = createSafeSelector('cronBuilderPanel');
-  const $outputPanel = createSafeSelector('cronOutputPanel');
-  
-  const builderPanel = $builderPanel();
-  const outputPanel = $outputPanel();
-  
+  const builderPanel = document.getElementById('cronBuilderPanel');
+  const outputPanel  = document.getElementById('cronOutputPanel');
   if (!builderPanel || !outputPanel) {
     console.error('cronBuilderPanel or cronOutputPanel not found in DOM');
     return;
   }
-  
   builderPanel.innerHTML = getBuilderPanelHTML();
-  outputPanel.innerHTML = getOutputPanelHTML();
+  outputPanel.innerHTML  = getOutputPanelHTML();
   setTimeout(cronBuilderLogic, 0);
 }
 
