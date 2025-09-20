@@ -11,8 +11,25 @@
 
 export async function loadHTMLEntityTool(container) {
   // Load HTML template from external file
-  const html = await fetch('htmlEntityTool.html').then(r => r.text());
-  container.innerHTML = html;
+  try {
+    const response = await fetch('htmlEntityTool.html');
+    if (!response.ok) {
+      throw new Error(`Failed to load HTML Entity Tool HTML: ${response.status}`);
+    }
+    const html = await response.text();
+    console.log('HTML Entity HTML loaded, length:', html.length, 'first 100 chars:', html.substring(0, 100));
+    
+    // Basic security check: ensure we're not loading a full HTML document
+    if (html.trim().toLowerCase().startsWith('<!doctype html') || html.trim().toLowerCase().startsWith('<html')) {
+      console.error('Invalid HTML detected - full page document:', html.substring(0, 200));
+      throw new Error('Invalid HTML content - contains full page structure');
+    }
+    container.innerHTML = html;
+  } catch (error) {
+    console.error('Error loading HTML Entity Tool:', error);
+    container.innerHTML = '<div class="error">Failed to load HTML Entity Tool</div>';
+    return;
+  }
 }
 
 export function setupHTMLEntityTool(container) {

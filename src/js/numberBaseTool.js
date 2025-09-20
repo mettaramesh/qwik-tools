@@ -27,15 +27,42 @@ export async function loadNumberBaseTool(container) {
 }
 
 export async function load(container) {
-    // Inject CSS via <link> if not already present
-    if (!document.getElementById('numberbase-css-link')) {
-        const link = document.createElement('link');
-        link.id = 'numberbase-css-link';
-        link.rel = 'stylesheet';
-        link.href = 'numberBaseTool.css'; // Load from public directory
-        if (document.head) document.head.appendChild(link);
-    }
+    // Load CSS first with explicit function
+    await loadNumberBaseCSS();
     await loadNumberBaseTool(container);
+}
+
+async function loadNumberBaseCSS() {
+    // Remove existing CSS link to ensure fresh load
+    const existingLink = document.getElementById('numberbase-css-link');
+    if (existingLink) {
+        existingLink.remove();
+    }
+    
+    // Create and load CSS link
+    const link = document.createElement('link');
+    link.id = 'numberbase-css-link';
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = '/numberBaseTool.css?v=' + Date.now();
+    
+    // Wait for CSS to load before proceeding
+    return new Promise((resolve, reject) => {
+        link.onload = () => {
+            console.log('Number Base CSS loaded successfully');
+            resolve();
+        };
+        link.onerror = () => {
+            console.error('Failed to load Number Base CSS');
+            reject(new Error('CSS load failed'));
+        };
+        
+        if (document.head) {
+            document.head.appendChild(link);
+        } else {
+            reject(new Error('No document head'));
+        }
+    });
 }
 
 export function setupNumberBaseTool() {

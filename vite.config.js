@@ -66,6 +66,36 @@ function copyIndexToRoot() {
           }
           console.log(`✓ Copied ${htmlFiles.length} HTML tool files to dist root`);
         }
+        
+        // Copy CSS files that are referenced directly by tools
+        const cssDir = resolve('dist/css');
+        if (existsSync(cssDir)) {
+          const cssFiles = readdirSync(cssDir).filter(file => file.endsWith('.css'));
+          
+          for (const file of cssFiles) {
+            copyFileSync(
+              join(cssDir, file),
+              resolve('dist', file)
+            );
+          }
+          console.log(`✓ Copied ${cssFiles.length} CSS files to dist root`);
+        }
+        
+        // Copy JavaScript files that are referenced directly by tools
+        const jsDir = resolve('dist/js');
+        if (existsSync(jsDir)) {
+          const jsFiles = readdirSync(jsDir).filter(file => 
+            file.endsWith('.js') && !file.includes('main') && !file.includes('service-worker')
+          );
+          
+          for (const file of jsFiles) {
+            copyFileSync(
+              join(jsDir, file),
+              resolve('dist', file)
+            );
+          }
+          console.log(`✓ Copied ${jsFiles.length} JS library files to dist root`);
+        }
       } catch (error) {
         console.error('Failed to copy files:', error);
       }
