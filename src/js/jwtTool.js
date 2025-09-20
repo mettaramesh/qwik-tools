@@ -9,6 +9,7 @@ import cssLoader from './cssLoader.js';
 export async function loadJWTTool(container) {
   try {
     // Load CSS using centralized loader
+    await cssLoader.loadCSS('ui-components.css', 'jwt-ui');
     await cssLoader.loadCSS('jwtTool.css', 'jwt');
     
     const html = await fetch('jwtTool.html').then(r => r.text());
