@@ -28,7 +28,7 @@ export async function load(container, toolId) {
     // Give a moment for DOM to settle before setup
     setTimeout(() => {
       setupTextComparer();
-    }, 100);
+    }, 200);
     
   } catch (error) {
     console.error('Error loading Text Comparer:', error);
@@ -87,6 +87,10 @@ export async function load(container, toolId) {
     'statusEl': !!statusEl,
     'compareBtn': !!compareBtn
   });
+
+  // Also check what's actually in the container
+  console.log('Container HTML snippet:', container.innerHTML.substring(0, 500));
+  console.log('All elements with IDs:', Array.from(container.querySelectorAll('[id]')).map(el => el.id));
 
   // Check if essential elements exist
   if (!t1 || !t2 || !statusEl) {
