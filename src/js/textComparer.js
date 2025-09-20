@@ -250,12 +250,12 @@ export async function load(container, toolId) {
       if (i < aTokens.length && j < bTokens.length && cmp(aTokens[i], bTokens[j])) {
         out += escapeHtml(String(bTokens[j])); i++; j++;
       } else if (j < bTokens.length && (i === aTokens.length || dp[i][j+1] >= dp[i+1][j])) {
-        out += `<span class="diff-add">${escapeHtml(String(bTokens[j]))}</span>`; j++;
+        out += `<span class="diff-added">${escapeHtml(String(bTokens[j]))}</span>`; j++;
       } else if (i < aTokens.length && (j === bTokens.length || dp[i][j+1] < dp[i+1][j])) {
-        out += `<span class="diff-del">${escapeHtml(String(aTokens[i]))}</span>`; i++;
+        out += `<span class="diff-removed">${escapeHtml(String(aTokens[i]))}</span>`; i++;
       } else {
-        if (i < aTokens.length) { out += `<span class="diff-del">${escapeHtml(String(aTokens[i]))}</span>`; i++; }
-        if (j < bTokens.length) { out += `<span class="diff-add">${escapeHtml(String(bTokens[j]))}</span>`; j++; }
+        if (i < aTokens.length) { out += `<span class="diff-removed">${escapeHtml(String(aTokens[i]))}</span>`; i++; }
+        if (j < bTokens.length) { out += `<span class="diff-added">${escapeHtml(String(bTokens[j]))}</span>`; j++; }
       }
     }
     return out;
@@ -337,7 +337,7 @@ export async function load(container, toolId) {
           html += `<div class="diff-line">${inline}</div>`;
           i++; j++;
         } else {
-          html += `<div class="diff-line"><span class="diff-add">${escapeHtml(rightLines[j])}</span></div>`;
+          html += `<div class="diff-line"><span class="diff-added">${escapeHtml(rightLines[j])}</span></div>`;
           j++;
         }
       } else if (i < leftLines.length && (j === rightLines.length || dp[i][j+1] < dp[i+1][j])) {
@@ -347,13 +347,13 @@ export async function load(container, toolId) {
           html += `<div class="diff-line">${inline}</div>`;
           i++; j++;
         } else {
-          html += `<div class="diff-line"><span class="diff-del">${escapeHtml(leftLines[i])}</span></div>`;
+          html += `<div class="diff-line"><span class="diff-removed">${escapeHtml(leftLines[i])}</span></div>`;
           i++;
         }
       } else {
         // fallback (both exist but dp not helpful)
-        if (i < leftLines.length) { html += `<div class="diff-line"><span class="diff-del">${escapeHtml(leftLines[i])}</span></div>`; i++; }
-        if (j < rightLines.length) { html += `<div class="diff-line"><span class="diff-add">${escapeHtml(rightLines[j])}</span></div>`; j++; }
+        if (i < leftLines.length) { html += `<div class="diff-line"><span class="diff-removed">${escapeHtml(leftLines[i])}</span></div>`; i++; }
+        if (j < rightLines.length) { html += `<div class="diff-line"><span class="diff-added">${escapeHtml(rightLines[j])}</span></div>`; j++; }
       }
     }
 
@@ -482,7 +482,6 @@ export async function load(container, toolId) {
   });
   
   if (compareBtn) compareBtn.addEventListener('click', ()=> updateResult(true));
-  if (searchInput) searchInput.addEventListener('input', ()=> scheduleUpdate(80));
 
   if (copyBtn) {
     copyBtn.addEventListener('click', async ()=>{
@@ -650,26 +649,26 @@ export async function load(container, toolId) {
   let searchIndex = 0;
 
   function highlightSearch() {
-    const q = (searchInput.value || '').trim();
+    const q = (searchInput ? searchInput.value || '' : '').trim();
     let html = resultEl.innerHTML;
     if (!q) {
       // Remove all highlights
-      resultEl.innerHTML = html.replace(/<span class="diff-chg">(.*?)<\/span>/g, '$1');
+      resultEl.innerHTML = html.replace(/<span class="tc-search-highlight"[^>]*>(.*?)<\/span>/g, '$1');
       searchMatches = [];
       searchIndex = 0;
       return;
     }
     // Remove old highlights
-    html = html.replace(/<span class="diff-chg">(.*?)<\/span>/g, '$1');
+    html = html.replace(/<span class="tc-search-highlight"[^>]*>(.*?)<\/span>/g, '$1');
     // Add new highlights
     const re = new RegExp(escapeRegExp(q), 'gi');
     let matchCount = 0;
     html = html.replace(re, m => {
       matchCount++;
-      return `<span class="diff-chg" data-match-idx="${matchCount-1}">${escapeHtml(m)}</span>`;
+      return `<span class="tc-search-highlight" data-match-idx="${matchCount-1}">${escapeHtml(m)}</span>`;
     });
     resultEl.innerHTML = html;
-    searchMatches = Array.from(resultEl.querySelectorAll('.diff-chg'));
+    searchMatches = Array.from(resultEl.querySelectorAll('.tc-search-highlight'));
     searchIndex = 0;
     scrollToCurrentMatch();
   }
@@ -678,7 +677,7 @@ export async function load(container, toolId) {
     if (!searchMatches.length) return;
     searchMatches.forEach((el, i) => {
       el.style.outline = (i === searchIndex) ? '2px solid #2563eb' : '';
-      el.style.background = (i === searchIndex) ? '#fff4ce' : '';
+      el.style.background = (i === searchIndex) ? '#dbeafe !important' : '';
     });
     const el = searchMatches[searchIndex];
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });

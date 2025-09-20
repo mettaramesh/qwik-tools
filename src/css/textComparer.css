@@ -571,3 +571,17 @@
   background: rgba(249, 115, 22, 0.2);
   color: #fdba74;
 }
+
+/* ===== SEARCH HIGHLIGHTING ===== */
+.tc-search-highlight {
+  background: #fff4ce !important;
+  color: #92400e !important;
+  padding: 0 0.125rem;
+  border-radius: 2px;
+  font-weight: 500;
+}
+
+[data-color-scheme="dark"] .tc-search-highlight {
+  background: #451a03 !important;
+  color: #fbbf24 !important;
+}
