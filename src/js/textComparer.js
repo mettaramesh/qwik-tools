@@ -10,7 +10,7 @@ export async function load(container, toolId) {
     await cssLoader.loadCSS('textComparer.css', 'text-comparer');
     await cssLoader.loadCSS('ui-components.css', 'text-comparer-ui');
     
-    const resp = await fetch('/textComparer.html');
+    const resp = await fetch('textComparer.html');
     if (!resp.ok) {
       throw new Error(`Failed to load Text Comparer HTML: ${resp.status}`);
     }
@@ -95,6 +95,10 @@ export async function load(container, toolId) {
       't2 (tc-text2)': !!t2, 
       'leftResultEl (tc-left-result)': !!leftResultEl,
       'rightResultEl (tc-right-result)': !!rightResultEl,
+      'leftGutterResult (tc-left-gutter)': !!leftGutterResult,
+      'rightGutterResult (tc-right-gutter)': !!rightGutterResult,
+      'leftContentResult (tc-left-content)': !!leftContentResult,
+      'rightContentResult (tc-right-content)': !!rightContentResult,
       'statusEl (tc-status)': !!statusEl,
       'compareBtn (tc-compare)': !!compareBtn,
       'wordLevelChk (tc-word-level)': !!wordLevelChk,

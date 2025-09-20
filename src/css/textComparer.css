@@ -328,6 +328,7 @@
   border-radius: 8px;
   margin: 0.5rem;
   overflow: hidden;
+  position: relative; /* Required for absolute positioned overlay */
 }
 
 /* ===== PANEL HEADERS ===== */
