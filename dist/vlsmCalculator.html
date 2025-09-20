@@ -1,0 +1,38 @@
+<link rel="stylesheet" href="../style.css">
+<div class="tool-header">
+  <h2>VLSM Calculator</h2>
+  <p>Variable Length Subnet Mask (VLSM) calculator with enhanced visual CIDR map.</p>
+</div>
+<div class="tool-interface">
+  <div class="tool-controls">
+    <label class="form-label" for="vlsm-base-ip">Base Network Address</label>
+    <input id="vlsm-base-ip" class="form-control" type="text" placeholder="e.g. 192.168.1.0" autocomplete="off" />
+    <label class="form-label" for="vlsm-base-mask">Base Subnet Mask / CIDR</label>
+    <input id="vlsm-base-mask" class="form-control" type="text" placeholder="e.g. 255.255.255.0 or /24" autocomplete="off" />
+    <label class="form-label" for="vlsm-hosts">Hosts per Subnet (comma separated)</label>
+    <input id="vlsm-hosts" class="form-control" type="text" placeholder="e.g. 100,50,25" autocomplete="off" />
+    <button class="btn btn--secondary" id="vlsm-calc-btn">Calculate</button>
+    <span id="vlsm-progress" class="progress-indicator hidden ml-10">Calculating...</span>
+    <span id="vlsm-feedback" class="user-feedback hidden ml-10"></span>
+  </div>
+  <div id="vlsm-results" class="output-section hidden mt-1-5em">
+    <div class="section-header"><label class="form-label">Results</label></div>
+    <div id="vlsm-error" class="error-message hidden"></div>
+    <table class="results-table" id="vlsm-results-table">
+      <thead>
+        <tr>
+          <th>Subnet</th>
+          <th>Network</th>
+          <th>Subnet Mask</th>
+          <th>CIDR</th>
+          <th>First Host</th>
+          <th>Last Host</th>
+          <th>Broadcast</th>
+          <th>Usable Hosts</th>
+          <th>Visual Map</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>

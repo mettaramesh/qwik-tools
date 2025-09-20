@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import wasm from 'vite-plugin-wasm';
-import { copyFileSync, readFileSync, writeFileSync } from 'fs';
-import { resolve } from 'path';
+import { copyFileSync, readFileSync, writeFileSync, readdirSync, existsSync } from 'fs';
+import { resolve, join } from 'path';
 
 // Custom plugin to copy index.html and favicons to root after build
 function copyIndexToRoot() {
@@ -37,12 +37,35 @@ function copyIndexToRoot() {
         );
         console.log('✓ Copied favicon files to dist root');
         
+        // Copy service worker
+        copyFileSync(
+          resolve('js/service-worker.js'),
+          resolve('dist/service-worker.js')
+        );
+        console.log('✓ Copied service worker to dist root');
+        
         // Create _redirects file for Netlify SPA routing
         writeFileSync(
           resolve('dist/_redirects'),
           '/*    /index.html   200\n'
         );
         console.log('✓ Created _redirects file for Netlify');
+        
+        // Copy all HTML files from dist/html to dist root (except index.html)
+        const htmlDir = resolve('dist/html');
+        if (existsSync(htmlDir)) {
+          const htmlFiles = readdirSync(htmlDir).filter(file => 
+            file.endsWith('.html') && file !== 'index.html'
+          );
+          
+          for (const file of htmlFiles) {
+            copyFileSync(
+              join(htmlDir, file),
+              resolve('dist', file)
+            );
+          }
+          console.log(`✓ Copied ${htmlFiles.length} HTML tool files to dist root`);
+        }
       } catch (error) {
         console.error('Failed to copy files:', error);
       }

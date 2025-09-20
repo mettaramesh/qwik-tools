@@ -1,0 +1,28 @@
+<div class="tool-header">
+    <h2>JSON ↔ XML Converter</h2>
+    <p>Convert between JSON and XML formats. Input must be valid and well-formed.</p>
+</div>
+<div class="tool-interface">
+    <div class="tool-controls">
+        <button class="btn btn--secondary" id="to-xml">JSON → XML</button>
+        <button class="btn btn--outline" id="to-json">XML → JSON</button>
+        <button class="btn btn--outline" id="json-xml-clear-btn">Clear</button>
+    </div>
+    <div class="io-container">
+        <div class="input-section">
+            <div class="section-header">
+                <label class="form-label">Input JSON or XML</label>
+                <button class="btn btn--sm copy-btn" data-target="json-xml-input">Copy</button>
+            </div>
+            <textarea id="json-xml-input" class="form-control code-input" placeholder="Paste or type JSON or XML here..." rows="12"></textarea>
+        </div>
+        <div class="output-section">
+            <div class="section-header">
+                <label class="form-label">Output</label>
+                <button class="btn btn--sm copy-btn" data-target="json-xml-output">Copy</button>
+            </div>
+            <textarea id="json-xml-output" class="form-control code-input" readonly rows="12"></textarea>
+        </div>
+    </div>
+    <div id="json-xml-status" class="hidden"></div>
+</div>

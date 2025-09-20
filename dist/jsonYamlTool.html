@@ -1,0 +1,29 @@
+<div class="tool-header">
+    <h2>JSON ↔ YAML Converter</h2>
+    <p>Convert between JSON and YAML formats</p>
+</div>
+<div class="tool-interface">
+    <button class="btn btn--secondary" id="to-yaml">JSON → YAML</button>
+    <button class="btn btn--outline" id="to-json">YAML → JSON</button>
+    <button class="btn btn--outline" id="json-yaml-clear-btn">Clear</button>
+    <label class="json-yaml-label">
+        <input type="checkbox" id="force-quotes-checkbox" class="json-yaml-checkbox">Quote all keys in YAML
+    </label>
+    <div class="io-container">
+        <div class="input-section">
+            <div class="section-header">
+                <label class="form-label">Input</label>
+                <button class="btn btn--sm copy-btn" data-target="json-yaml-input">Copy</button>
+            </div>
+            <textarea id="json-yaml-input" class="form-control code-input" placeholder="Paste or type JSON or YAML here..." rows="12"></textarea>
+        </div>
+        <div class="output-section">
+            <div class="section-header">
+                <label class="form-label">Output</label>
+                <button class="btn btn--sm copy-btn" data-target="json-yaml-output">Copy</button>
+            </div>
+            <textarea id="json-yaml-output" class="form-control code-input" readonly rows="12"></textarea>
+        </div>
+    </div>
+    <div id="json-yaml-status" class="hidden"></div>
+</div>

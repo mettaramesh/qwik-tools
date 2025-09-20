@@ -1,0 +1,24 @@
+<div class="tool-header"><h2>Markdown Preview</h2><p>Preview your Markdown as HTML</p></div>
+<div class="tool-interface">
+  <div class="tool-controls">
+    <button class="btn btn--secondary" id="md-preview-btn">Preview</button>
+    <button class="btn btn--outline" id="md-clear-btn">Clear</button>
+  </div>
+  <div class="io-container">
+    <div class="input-section">
+      <div class="section-header">
+        <label class="form-label">Markdown Input</label>
+        <button class="btn btn--sm copy-btn" data-target="md-input">Copy</button>
+      </div>
+      <textarea id="md-input" class="form-control code-input" placeholder="Paste or type your Markdown here..." rows="10"></textarea>
+    </div>
+    <div class="output-section">
+      <div class="section-header">
+        <label class="form-label">HTML Preview</label>
+        <button class="btn btn--sm copy-btn" data-target="md-output">Copy</button>
+      </div>
+  <div id="md-output" class="form-control code-input markdown-preview"></div>
+    </div>
+  </div>
+  <div id="md-error" class="error-message hidden"></div>
+</div>
