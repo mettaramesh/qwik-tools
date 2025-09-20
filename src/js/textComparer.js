@@ -25,7 +25,12 @@ export async function load(container, toolId) {
     const criticalElements = [
       'tc-text1',
       'tc-text2',
-      'tc-result',
+      'tc-left-result',
+      'tc-right-result',
+      'tc-left-gutter',
+      'tc-right-gutter', 
+      'tc-left-content',
+      'tc-right-content',
       'tc-status',
       'tc-compare',
       'tc-word-level',
@@ -59,7 +64,14 @@ export async function load(container, toolId) {
   const copyRightBtn = container.querySelector('#tc-copy-right');
   const pasteLeftBtn = container.querySelector('#tc-paste-left');
   const pasteRightBtn = container.querySelector('#tc-paste-right');
-  const resultEl = container.querySelector('#tc-result');
+  // Side-by-side result elements
+  const leftResultEl = container.querySelector('#tc-left-result');
+  const rightResultEl = container.querySelector('#tc-right-result');
+  const leftGutterResult = container.querySelector('#tc-left-gutter');
+  const rightGutterResult = container.querySelector('#tc-right-gutter');
+  const leftContentResult = container.querySelector('#tc-left-content');
+  const rightContentResult = container.querySelector('#tc-right-content');
+  // Status and metadata
   const statusEl = container.querySelector('#tc-status');
   const simEl = container.querySelector('#tc-similarity');
   const metaEl = container.querySelector('#tc-result-meta');
@@ -76,12 +88,13 @@ export async function load(container, toolId) {
   const rightWrap = container.querySelector('#right-wrap');
 
   // Check if essential elements exist
-  if (!t1 || !t2 || !resultEl || !statusEl) {
+  if (!t1 || !t2 || !statusEl || !leftResultEl || !rightResultEl) {
     console.error('Text Comparer: Missing essential DOM elements');
     console.error('Debug info:', {
       't1 (tc-text1)': !!t1,
       't2 (tc-text2)': !!t2, 
-      'resultEl (tc-result)': !!resultEl,
+      'leftResultEl (tc-left-result)': !!leftResultEl,
+      'rightResultEl (tc-right-result)': !!rightResultEl,
       'statusEl (tc-status)': !!statusEl,
       'compareBtn (tc-compare)': !!compareBtn,
       'wordLevelChk (tc-word-level)': !!wordLevelChk,
@@ -112,7 +125,7 @@ export async function load(container, toolId) {
     statusEl.classList.remove('status-ok', 'status-error');
     statusEl.classList.add(ok ? 'status-ok' : 'status-error');
   }
-  function notice(msg){ metaEl.textContent = msg || ''; }
+  function notice(msg){ if (metaEl) metaEl.textContent = msg || ''; }
   function escapeHtml(s){ return String(s).replace(/[&<>]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
   function escapeRegExp(s){ return String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
 
@@ -308,8 +321,8 @@ export async function load(container, toolId) {
     return {dp, n, m};
   }
 
-  // main builder that respects options
-  function buildDiffHtml(leftText, rightText, opts = {}) {
+  // main builder that respects options - SIDE-BY-SIDE VERSION
+  function buildSideBySideDiff(leftText, rightText, opts = {}) {
     const leftFmt = tryFormatStructured(leftText) || leftText;
     const rightFmt = tryFormatStructured(rightText) || rightText;
     const leftLines = leftFmt.split('\n');
@@ -324,40 +337,151 @@ export async function load(container, toolId) {
     };
 
     const {dp} = lcsMatrixLines(leftLines, rightLines, lineCmp);
-    let i=0,j=0, html = '';
+    
+    let leftResult = [];
+    let rightResult = [];
+    let leftLineNum = 1;
+    let rightLineNum = 1;
+    let i = 0, j = 0;
+
     while (i < leftLines.length || j < rightLines.length) {
       if (i < leftLines.length && j < rightLines.length && lineCmp(leftLines[i], rightLines[j])) {
-        // unchanged
-        html += `<div class="diff-line">${escapeHtml(leftLines[i])}</div>`; i++; j++;
+        // Lines match - show as unchanged on both sides
+        leftResult.push({
+          lineNum: leftLineNum++,
+          content: leftLines[i],
+          type: 'unchanged'
+        });
+        rightResult.push({
+          lineNum: rightLineNum++,
+          content: rightLines[j],
+          type: 'unchanged'
+        });
+        i++; j++;
       } else if (j < rightLines.length && (i === leftLines.length || dp[i][j+1] >= dp[i+1][j])) {
-        // added
-        // If word-level requested and left has a corresponding changed line (i < left.length), compute inline diff
-        if (opts.wordLevel && i < leftLines.length) {
-          const inline = inlineDiffHtml(leftLines[i], rightLines[j], opts);
-          html += `<div class="diff-line">${inline}</div>`;
-          i++; j++;
-        } else {
-          html += `<div class="diff-line"><span class="diff-added">${escapeHtml(rightLines[j])}</span></div>`;
-          j++;
-        }
+        // Line added in right side
+        leftResult.push({
+          lineNum: null,
+          content: '',
+          type: 'gap'
+        });
+        rightResult.push({
+          lineNum: rightLineNum++,
+          content: rightLines[j],
+          type: 'added'
+        });
+        j++;
       } else if (i < leftLines.length && (j === rightLines.length || dp[i][j+1] < dp[i+1][j])) {
-        // deleted
-        if (opts.wordLevel && j < rightLines.length) {
-          const inline = inlineDiffHtml(leftLines[i], rightLines[j], opts);
-          html += `<div class="diff-line">${inline}</div>`;
-          i++; j++;
-        } else {
-          html += `<div class="diff-line"><span class="diff-removed">${escapeHtml(leftLines[i])}</span></div>`;
-          i++;
-        }
+        // Line removed from left side
+        leftResult.push({
+          lineNum: leftLineNum++,
+          content: leftLines[i],
+          type: 'removed'
+        });
+        rightResult.push({
+          lineNum: null,
+          content: '',
+          type: 'gap'
+        });
+        i++;
       } else {
-        // fallback (both exist but dp not helpful)
-        if (i < leftLines.length) { html += `<div class="diff-line"><span class="diff-removed">${escapeHtml(leftLines[i])}</span></div>`; i++; }
-        if (j < rightLines.length) { html += `<div class="diff-line"><span class="diff-added">${escapeHtml(rightLines[j])}</span></div>`; j++; }
+        // Modified line - show both with word-level diff if enabled
+        if (opts.wordLevel && i < leftLines.length && j < rightLines.length) {
+          const inlineLeft = inlineDiffHtml(leftLines[i], rightLines[j], opts);
+          const inlineRight = inlineDiffHtml(leftLines[i], rightLines[j], opts);
+          
+          leftResult.push({
+            lineNum: leftLineNum++,
+            content: inlineLeft,
+            type: 'modified',
+            isHtml: true
+          });
+          rightResult.push({
+            lineNum: rightLineNum++,
+            content: inlineRight,
+            type: 'modified',
+            isHtml: true
+          });
+        } else {
+          leftResult.push({
+            lineNum: leftLineNum++,
+            content: leftLines[i] || '',
+            type: 'modified'
+          });
+          rightResult.push({
+            lineNum: rightLineNum++,
+            content: rightLines[j] || '',
+            type: 'modified'
+          });
+        }
+        i++; j++;
       }
     }
 
-    return { html, leftFormatted: leftFmt, rightFormatted: rightFmt };
+    return { 
+      leftResult, 
+      rightResult, 
+      leftFormatted: leftFmt, 
+      rightFormatted: rightFmt 
+    };
+  }
+
+  // Render side-by-side results
+  function renderSideBySideResults(leftResult, rightResult) {
+    let leftGutterHtml = '';
+    let leftContentHtml = '';
+    let rightGutterHtml = '';
+    let rightContentHtml = '';
+
+    const maxLines = Math.max(leftResult.length, rightResult.length);
+    
+    for (let i = 0; i < maxLines; i++) {
+      const leftLine = leftResult[i] || { lineNum: null, content: '', type: 'gap' };
+      const rightLine = rightResult[i] || { lineNum: null, content: '', type: 'gap' };
+      
+      // Left side
+      leftGutterHtml += `<div class="ln ${leftLine.type}">${leftLine.lineNum || ''}</div>`;
+      const leftContent = leftLine.isHtml ? leftLine.content : escapeHtml(leftLine.content);
+      leftContentHtml += `<div class="tc-result-line diff-${leftLine.type}">${leftContent}</div>`;
+      
+      // Right side  
+      rightGutterHtml += `<div class="ln ${rightLine.type}">${rightLine.lineNum || ''}</div>`;
+      const rightContent = rightLine.isHtml ? rightLine.content : escapeHtml(rightLine.content);
+      rightContentHtml += `<div class="tc-result-line diff-${rightLine.type}">${rightContent}</div>`;
+    }
+
+    // Update the side-by-side display
+    if (leftGutterResult) leftGutterResult.innerHTML = leftGutterHtml;
+    if (leftContentResult) leftContentResult.innerHTML = leftContentHtml;
+    if (rightGutterResult) rightGutterResult.innerHTML = rightGutterHtml;
+    if (rightContentResult) rightContentResult.innerHTML = rightContentHtml;
+    
+    // Show the result panels and hide textareas
+    if (leftResultEl) leftResultEl.style.display = 'flex';
+    if (rightResultEl) rightResultEl.style.display = 'flex';
+  }
+
+  // Hide side-by-side results and show textareas
+  function hideSideBySideResults() {
+    if (leftResultEl) leftResultEl.style.display = 'none';
+    if (rightResultEl) rightResultEl.style.display = 'none';
+  }
+
+  // Add scroll synchronization for side-by-side results
+  function attachResultScrollSync() {
+    if (!leftContentResult || !rightContentResult) return;
+    
+    leftContentResult.addEventListener('scroll', () => {
+      if (Math.abs(rightContentResult.scrollTop - leftContentResult.scrollTop) > 1) {
+        rightContentResult.scrollTop = leftContentResult.scrollTop;
+      }
+    }, { passive: true });
+    
+    rightContentResult.addEventListener('scroll', () => {
+      if (Math.abs(leftContentResult.scrollTop - rightContentResult.scrollTop) > 1) {
+        leftContentResult.scrollTop = rightContentResult.scrollTop;
+      }
+    }, { passive: true });
   }
 
   // similarity: normalized char based
@@ -437,31 +561,53 @@ export async function load(container, toolId) {
     setStatus('Computing diff...');
     const leftText = t1.value;
     const rightText = t2.value;
+    
+    // If both texts are empty, hide results
+    if (!leftText.trim() && !rightText.trim()) {
+      hideSideBySideResults();
+      setStatus('Ready to compare');
+      if (simEl) simEl.textContent = '';
+      return;
+    }
+    
     const opts = {
       wordLevel: wordLevelChk ? wordLevelChk.checked : false,
       ignoreWs: ignoreWsChk ? ignoreWsChk.checked : false,
       ignoreCase: ignoreCaseChk ? ignoreCaseChk.checked : false
     };
-    // Use worker for large files or always (here: always for demo)
-    useWorkerForDiff(leftText, rightText, opts,
-      (html, similarity, meta) => {
-        // Worker success
-  resultEl.innerHTML = html || '<div class="tc-no-diff">No differences</div>';
-        simEl.textContent = similarity ? `Similarity: ${similarity}%` : '';
-        notice(meta || '');
-        setStatus('Ready (worker)');
-        highlightSearch(); // <-- ensure search highlights are updated after diff
-      },
-      (err) => {
-        // Fallback to main-thread diff
-        const { html, leftFormatted, rightFormatted } = buildDiffHtml(leftText, rightText, opts);
-  resultEl.innerHTML = html || '<div class="tc-no-diff">No differences</div>';
-        simEl.textContent = `Similarity: ${computeSimilarity(leftText, rightText)}%`;
-        notice('');
-        setStatus('Ready (main thread)', false);
-        highlightSearch(); // <-- ensure search highlights are updated after diff
+    
+    try {
+      const { leftResult, rightResult, leftFormatted, rightFormatted } = buildSideBySideDiff(leftText, rightText, opts);
+      renderSideBySideResults(leftResult, rightResult);
+      
+      // Calculate similarity
+      const similarity = computeSimilarity(leftText, rightText);
+      if (simEl) simEl.textContent = `Similarity: ${similarity}%`;
+      
+      // Show diff statistics
+      const addedLines = rightResult.filter(line => line.type === 'added').length;
+      const removedLines = leftResult.filter(line => line.type === 'removed').length;
+      const modifiedLines = leftResult.filter(line => line.type === 'modified').length;
+      
+      let statsMsg = '';
+      if (addedLines + removedLines + modifiedLines === 0) {
+        statsMsg = 'No differences found';
+      } else {
+        const stats = [];
+        if (addedLines > 0) stats.push(`${addedLines} added`);
+        if (removedLines > 0) stats.push(`${removedLines} removed`);
+        if (modifiedLines > 0) stats.push(`${modifiedLines} modified`);
+        statsMsg = `${stats.join(', ')} lines`;
       }
-    );
+      
+      setStatus(`Ready - ${statsMsg}`);
+      highlightSearch(); // Update search highlights
+      
+    } catch (error) {
+      console.error('Error computing diff:', error);
+      setStatus('Error computing diff', false);
+      hideSideBySideResults();
+    }
   }
   function detectKind(s) {
     if (!s || !s.trim()) return null;
@@ -572,12 +718,12 @@ export async function load(container, toolId) {
     clearBtn.addEventListener('click', ()=>{
       if (t1) t1.value=''; 
       if (t2) t2.value=''; 
-      if (resultEl) resultEl.innerHTML=''; 
+      hideSideBySideResults();
       updateGutters(); 
       setStatus('Cleared'); 
       if (simEl) simEl.textContent=''; 
       notice(''); 
-      highlightSearch(); // <-- clear search highlights after clearing
+      highlightSearch(); // clear search highlights after clearing
     });
   }
 
@@ -632,6 +778,7 @@ export async function load(container, toolId) {
     gutterRight.addEventListener('click', (ev)=>{ const target = ev.target.closest('.ln'); if (!target) return; const idx = Array.prototype.indexOf.call(gutterRight.children, target); jumpToLine(t2, idx); });
   }
   attachScrollSync();
+  attachResultScrollSync();
 
   function jumpToLine(textarea, idx) {
     const pos = indexOfLineStart(textarea.value, idx);
@@ -650,37 +797,59 @@ export async function load(container, toolId) {
 
   function highlightSearch() {
     const q = (searchInput ? searchInput.value || '' : '').trim();
-    let html = resultEl.innerHTML;
-    if (!q) {
-      // Remove all highlights
-      resultEl.innerHTML = html.replace(/<span class="tc-search-highlight"[^>]*>(.*?)<\/span>/g, '$1');
-      searchMatches = [];
-      searchIndex = 0;
-      return;
-    }
-    // Remove old highlights
-    html = html.replace(/<span class="tc-search-highlight"[^>]*>(.*?)<\/span>/g, '$1');
-    // Add new highlights
-    const re = new RegExp(escapeRegExp(q), 'gi');
-    let matchCount = 0;
-    html = html.replace(re, m => {
-      matchCount++;
-      return `<span class="tc-search-highlight" data-match-idx="${matchCount-1}">${escapeHtml(m)}</span>`;
+    
+    // Clear previous highlights
+    [leftContentResult, rightContentResult].forEach(contentEl => {
+      if (!contentEl) return;
+      let html = contentEl.innerHTML;
+      contentEl.innerHTML = html.replace(/<span class="tc-search-highlight"[^>]*>(.*?)<\/span>/g, '$1');
     });
-    resultEl.innerHTML = html;
-    searchMatches = Array.from(resultEl.querySelectorAll('.tc-search-highlight'));
+    
+    searchMatches = [];
     searchIndex = 0;
+    
+    if (!q) return;
+    
+    // Add new highlights to both sides
+    let matchCount = 0;
+    const re = new RegExp(escapeRegExp(q), 'gi');
+    
+    [leftContentResult, rightContentResult].forEach((contentEl, sideIndex) => {
+      if (!contentEl) return;
+      
+      let html = contentEl.innerHTML;
+      html = html.replace(re, m => {
+        matchCount++;
+        return `<span class="tc-search-highlight" data-match-idx="${matchCount-1}" data-side="${sideIndex}">${escapeHtml(m)}</span>`;
+      });
+      contentEl.innerHTML = html;
+      
+      // Collect highlights from this side
+      const sideMatches = Array.from(contentEl.querySelectorAll('.tc-search-highlight'));
+      searchMatches.push(...sideMatches);
+    });
+    
     scrollToCurrentMatch();
   }
 
   function scrollToCurrentMatch() {
     if (!searchMatches.length) return;
+    
     searchMatches.forEach((el, i) => {
       el.style.outline = (i === searchIndex) ? '2px solid #2563eb' : '';
       el.style.background = (i === searchIndex) ? '#dbeafe !important' : '';
     });
+    
     const el = searchMatches[searchIndex];
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Also scroll the corresponding side
+      const side = el.getAttribute('data-side');
+      const contentEl = side === '0' ? leftContentResult : rightContentResult;
+      if (contentEl) {
+        contentEl.scrollTop = el.offsetTop - contentEl.clientHeight / 2;
+      }
+    }
   }
 
   if (searchInput) {

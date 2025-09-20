@@ -31,6 +31,11 @@
         <div id="gutter-left" class="tc-gutter"></div>
         <textarea id="tc-text1" class="tc-textarea" placeholder="Enter first text to compare..."></textarea>
       </div>
+      <!-- Left diff result overlay -->
+      <div id="tc-left-result" class="tc-side-result" style="display: none;">
+        <div class="tc-result-gutter" id="tc-left-gutter"></div>
+        <div class="tc-result-content" id="tc-left-content"></div>
+      </div>
     </div>
     
     <!-- Splitter -->
@@ -42,18 +47,21 @@
         <div id="gutter-right" class="tc-gutter"></div>
         <textarea id="tc-text2" class="tc-textarea" placeholder="Enter second text to compare..."></textarea>
       </div>
+      <!-- Right diff result overlay -->
+      <div id="tc-right-result" class="tc-side-result" style="display: none;">
+        <div class="tc-result-gutter" id="tc-right-gutter"></div>
+        <div class="tc-result-content" id="tc-right-content"></div>
+      </div>
     </div>
   </div>
   
-  <!-- Result section -->
+  <!-- Status and controls section -->
   <div class="tc-result-section">
     <div class="tc-result-header">
-      <h3>Comparison Result</h3>
       <div id="tc-status" class="tc-status">Ready to compare</div>
-    </div>
-    <div id="tc-result" class="tc-result" aria-live="polite"></div>
-    <div id="tc-result-meta" class="tc-meta">
-      <span id="tc-similarity" class="tc-similarity"></span>
+      <div id="tc-result-meta" class="tc-meta">
+        <span id="tc-similarity" class="tc-similarity"></span>
+      </div>
     </div>
   </div>
 </div>

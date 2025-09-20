@@ -1,5 +1,96 @@
 /* Text Comparer Tool CSS - Enhanced UI */
 
+/* ===== SIDE-BY-SIDE DIFF RESULTS ===== */
+.tc-side-result {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  display: flex;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.4;
+  z-index: 10;
+}
+
+.tc-result-gutter {
+  background: var(--color-gutter-bg, #f8f9fa);
+  border-right: 1px solid var(--color-border);
+  padding: 8px 4px;
+  min-width: 50px;
+  text-align: right;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  user-select: none;
+  overflow: hidden;
+}
+
+.tc-result-content {
+  flex: 1;
+  padding: 8px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.tc-result-line {
+  display: block;
+  min-height: 1.4em;
+  line-height: 1.4;
+  padding: 0 4px;
+  margin: 0;
+  border-left: 3px solid transparent;
+}
+
+.tc-result-line.diff-added {
+  background-color: var(--color-diff-added-bg, #e6ffed);
+  border-left-color: var(--color-diff-added, #28a745);
+}
+
+.tc-result-line.diff-removed {
+  background-color: var(--color-diff-removed-bg, #ffeef0);
+  border-left-color: var(--color-diff-removed, #d73a49);
+}
+
+.tc-result-line.diff-modified {
+  background-color: var(--color-diff-modified-bg, #fff3cd);
+  border-left-color: var(--color-diff-modified, #ffc107);
+}
+
+.tc-result-line.diff-unchanged {
+  background-color: transparent;
+}
+
+/* Dark mode support for side-by-side results */
+[data-theme="dark"] .tc-side-result {
+  background: var(--color-surface-dark, #1e1e1e);
+  border-color: var(--color-border-dark, #3e3e3e);
+}
+
+[data-theme="dark"] .tc-result-gutter {
+  background: var(--color-gutter-bg-dark, #252526);
+  color: var(--color-text-muted-dark, #858585);
+}
+
+[data-theme="dark"] .tc-result-line.diff-added {
+  background-color: var(--color-diff-added-bg-dark, #044317);
+  border-left-color: var(--color-diff-added-dark, #28a745);
+}
+
+[data-theme="dark"] .tc-result-line.diff-removed {
+  background-color: var(--color-diff-removed-bg-dark, #67060c);
+  border-left-color: var(--color-diff-removed-dark, #f85149);
+}
+
+[data-theme="dark"] .tc-result-line.diff-modified {
+  background-color: var(--color-diff-modified-bg-dark, #4d3800);
+  border-left-color: var(--color-diff-modified-dark, #ffc107);
+}
+
 /* ===== STATUS CLASSES ===== */
 .status-ok {
   color: var(--color-success) !important;
