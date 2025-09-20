@@ -1,0 +1,47 @@
+import{c as E}from"./cssLoader-DTPWrGuQ.js";const C=new Set(["select","from","where","group by","order by","having","limit","offset","insert","into","values","update","set","delete","with","union","except","intersect","create","table","primary key","foreign key","references","alter","drop","add","column","index","view","exists"]),j=new Set(["and","or","on","as","by","into","using","when","then","else"]),k=new Set(["select","from","where","group by","order by","having","limit","offset","insert","update","delete","with","union","except","intersect"]);function L(e){return/\s/.test(e)}function Q(e){return/[A-Za-z_@#]/.test(e)}function A(e){return/[A-Za-z0-9_\$@#]/.test(e)}function U(e){const t=[];let n=0;const s=e.length;for(;n<s;){const a=e[n];if(L(a)){let o=n+1;for(;o<s&&L(e[o]);)o++;t.push({type:"space",value:" "}),n=o;continue}if(a==="-"&&e[n+1]==="-"){let o=n+2;for(;o<s&&e[o]!==`
+`;)o++;t.push({type:"comment",value:e.slice(n,o)}),n=o;continue}if(a==="/"&&e[n+1]==="*"){let o=n+2;for(;o<s&&!(e[o]==="*"&&e[o+1]==="/");)o++;o=Math.min(o+2,s),t.push({type:"comment",value:e.slice(n,o)}),n=o;continue}if(a==="'"||a==='"'){const o=a;let i=n+1,c=o;for(;i<s;){if(c+=e[i],e[i]===o)if(e[i+1]===o){i+=2,c+=e[i-1]||"";continue}else{i++;break}i++}t.push({type:"string",value:c}),n=i;continue}if(a==="`"||a==="["){const o=a,i=a==="["?"]":"`";let c=n+1,h=o;for(;c<s;){if(h+=e[c],e[c]===i){c++;break}c++}t.push({type:"identifier",value:h}),n=c;continue}if(a==="$"){const o=e.slice(n).match(/^\$[A-Za-z0-9_]*\$/);if(o){const i=o[0];let c=n+i.length,h=e.indexOf(i,c);h===-1&&(h=s);const d=e.slice(n,h+i.length);t.push({type:"string",value:d}),n=h+i.length;continue}}if(a==="("||a===")"||a===","||a===";"){t.push({type:"punct",value:a}),n++;continue}if(["=","+","-","*","/","%","<",">","!","|","&","^","~"].includes(a)){let o=n+1;for(;o<s&&/[=<>]/.test(e[o]);)o++;t.push({type:"op",value:e.slice(n,o)}),n=o;continue}if(Q(a)||/[0-9]/.test(a)){let o=n;for(;o<s&&(A(e[o])||e[o]===".");)o++;const i=e.slice(n,o);t.push({type:"word",value:i}),n=o;continue}t.push({type:"char",value:a}),n++}return t}function F(e,t={}){if(!e||!e.trim())return"";e=e.replace(/\r\n/g,`
+`).replace(/\r/g,`
+`);const n=U(e),s=[];let a=0;const o="  ";let i=0,c=null,h=!1;function d(){if(s.length===0){s.push(`
+`),h=!1;return}s[s.length-1].endsWith(`
+`)||(s.push(`
+`),h=!1)}function p(){let r="";for(let b=0;b<a;b++)r+=o;s.push(r),h=!0}function f(r){s.push(r),h=!0}function v(){if(!(s.length?s[s.length-1]:"")){s.push("");return}const b=s.join("").slice(-1);b!==" "&&b!==`
+`&&s.push(" ")}function g(r){d(),p(),f(r.toUpperCase()),c=r.toLowerCase(),h=!0}for(;i<n.length;){const r=n[i];if(r.type==="space"){i++;continue}if(r.type==="comment"){d(),p(),f(r.value.trim()),d(),i++;continue}(u=>{const m=[];let y=u;for(;y<n.length&&m.length<3;){if(n[y].type==="space"){y++;continue}if(n[y].type==="word")m.push(n[y].value.toLowerCase()),y++;else break}return m.join(" ")})(i);let w=null;for(const u of[3,2,1]){const m=[];let y=i;for(;y<n.length&&m.length<u;){if(n[y].type==="space"){y++;continue}if(n[y].type==="word")m.push(n[y].value.toLowerCase()),y++;else break}if(!m.length)continue;const x=m.join(" ");if(k.has(x)||C.has(x)){w=x;break}}if(w){if(["union","except","intersect"].includes(w)){d(),p(),f(w.toUpperCase()),d(),i+=w.split(" ").length,c=w;continue}g(w);let u=w.split(" ").length,m=0;for(;m<u&&i<n.length;){if(n[i].type==="space"){i++;continue}i++,m++}w.toLowerCase();continue}if(r.type==="punct"&&r.value==="("){v(),f("("),a++,i++;continue}if(r.type==="punct"&&r.value===")"){a=Math.max(0,a-1),d(),p(),f(")"),i++;continue}if(r.type==="punct"&&r.value===","){f(","),["select","group by","order by","values","set"].includes(c)?(d(),p(),c==="select"&&p()):v(),i++;continue}if(r.type==="punct"&&r.value===";"){f(";"),d(),i++;continue}if(r.type==="string"||r.type==="identifier"){v(),f(r.value),i++;continue}if(r.type==="op"||r.type==="char"){v(),f(r.value),i++;continue}if(r.type==="word"){const u=r.value.toLowerCase();if(u==="case"){d(),p(),f("CASE"),a++,c="case",i++;continue}if(u==="when"||u==="then"){d(),p(),p(),f(r.value.toUpperCase()),i++;continue}if(u==="else"){d(),p(),f("ELSE"),i++;continue}if(u==="end"){a=Math.max(0,a-1),d(),p(),f("END"),i++;continue}if(u==="join"||u.endsWith("join")){d(),p(),f(r.value.toUpperCase()),c="join",i++;continue}if(u==="on"){d(),p(),f("ON"),v(),i++;continue}if(u==="and"||u==="or"){d(),p(),f(u.toUpperCase()),v(),i++;continue}if(k.has(u)){g(u),c=u,i++;continue}const m=r.value.toUpperCase();if((j.has(u)||C.has(u)||/^[A-Za-z]+$/.test(r.value)&&/[^a-z]/i.test(m)===!1)&&(C.has(u)||j.has(u)||k.has(u)||["select","from","where","group","order","having","limit","offset","insert","update","delete"].includes(u))){h?v():p(),f(m),c=u,i++;continue}h?v():p(),f(r.value),i++;continue}v(),f(r.value),i++}return s.join("").split(`
+`).map(r=>r.replace(/[ \t]+$/,"")).join(`
+`).replace(/^\n+/,"").replace(/\n+$/,"")}function M(e){if(!e)return"";let t=0,n=e.length,s="";for(;t<n;){if(e[t]==="'"||e[t]==='"'){const a=e[t];for(s+=a,t++;t<n;){if(s+=e[t],e[t]===a)if(e[t+1]===a){t+=2,s+=e[t-1]||"";continue}else{t++;break}t++}continue}if(e[t]==="-"&&e[t+1]==="-"){for(;t<n&&e[t]!==`
+`;)t++;continue}if(e[t]==="/"&&e[t+1]==="*"){for(t+=2;t<n&&!(e[t]==="*"&&e[t+1]==="/");)t++;t+=2;continue}if(L(e[t])){for(s+=" ";t<n&&L(e[t]);)t++;continue}s+=e[t],t++}return s.trim().replace(/\s*,\s*/g,", ").replace(/\s*\(\s*/g,"(").replace(/\s*\)\s*/g,")")}async function $(e){try{await E.loadCSS("sqlFormatter.css","sql-formatter"),await E.loadCSS("ui-components.css","sql-formatter-ui"),e.innerHTML=`
+    <div class="tool-header"><h2>SQL Formatter</h2><p class="small">Format, beautify, or minify SQL queries — robust tokenizer & formatter.</p></div>
+    <div class="card">
+  <div class="sql-flex-row">
+        <button class="btn btn--secondary" id="sql-format-btn">Format</button>
+        <button class="btn btn--outline" id="sql-minify-btn">Minify</button>
+        <button class="btn btn--outline" id="sql-clear-btn">Clear</button>
+  <label class="sql-label-flex">
+          <input type="checkbox" id="preserve-case" /> Preserve case (don't uppercase keywords)
+        </label>
+      </div>
+
+  <div class="sql-flex-wrap">
+  <div class="sql-flex-1">
+          <div class="sql-flex-between">
+            <label class="form-label">Input SQL</label>
+            <button class="btn btn--sm copy-btn" data-target="sql-input">Copy</button>
+          </div>
+          <textarea id="sql-input" class="form-control code-input sql-mono" placeholder="Paste or type your SQL here..." rows="12"></textarea>
+        </div>
+  <div class="sql-flex-1">
+          <div class="sql-flex-between">
+            <label class="form-label">Formatted Output</label>
+            <button class="btn btn--sm copy-btn" data-target="sql-output">Copy</button>
+          </div>
+          <textarea id="sql-output" class="form-control code-input sql-mono" readonly rows="12"></textarea>
+        </div>
+      </div>
+
+  <div id="sql-error" class="error-message hidden sql-error-mt"></div>
+    </div>
+  `}catch(t){console.error("Error loading SQL formatter:",t),e.innerHTML=`
+      <div class="tool-header">
+        <h2>SQL Formatter</h2>
+        <p>Error loading tool: ${t.message}</p>
+      </div>
+    `}}function K(e){if(!e||typeof e.querySelector!="function")throw new Error("SQL Formatter setup: container argument is required and must be a DOM element.");const t=e,n=t.querySelector("#sql-input"),s=t.querySelector("#sql-output"),a=t.querySelector("#sql-format-btn"),o=t.querySelector("#sql-minify-btn"),i=t.querySelector("#sql-clear-btn"),c=t.querySelector("#sql-error"),h=t.querySelectorAll(".copy-btn"),d=t.querySelector("#preserve-case"),p=document.createElement("span");p.className="small muted",p.style.marginLeft="12px",s.parentElement.appendChild(p);function f(l,S=!0,r=2200){p.textContent=l||"",p.style.color=S?"var(--color-success,#21808d)":"var(--color-error,#c0392b)",r&&l&&setTimeout(()=>{p.textContent===l&&(p.textContent="")},r)}function v(l){c.textContent=l,c.classList.remove("hidden")}function g(){c&&(c.textContent="",c.classList.add("hidden"))}a.addEventListener("click",()=>{g();try{let l=F(n.value||"");d.checked||(l=l.replace(/\b(select|from|where|group by|order by|having|limit|offset|insert|into|values|update|set|delete|with|union|except|intersect|join|left join|right join|inner join|outer join|on|as|and|or|case|when|then|else|end|in|is|null|not|create|table|primary key|foreign key|references|alter|drop|add|column|index|view|exists|between|like|desc|asc|cast|coalesce|with|recursive)\b/gi,S=>S.toUpperCase())),s.value=l,f("Formatted",!0)}catch(l){v("Formatting error: "+(l&&l.message?l.message:String(l)))}}),o.addEventListener("click",()=>{g();try{const l=M(n.value||"");s.value=l,f("Minified",!0)}catch(l){v("Minify error: "+(l&&l.message?l.message:String(l)))}}),i.addEventListener("click",()=>{n.value="",s.value="",g(),f("Cleared",!0)}),h.forEach(l=>{l.addEventListener("click",async S=>{const r=l.getAttribute("data-target"),b=t.querySelector(`#${r}`);if(b)try{await navigator.clipboard.writeText(b.value),f("Copied!",!0)}catch{f("Copy failed.",!1)}})}),t.addEventListener("keydown",l=>{(navigator.platform.toLowerCase().includes("mac")?l.metaKey:l.ctrlKey)&&(l.shiftKey&&l.key.toLowerCase()==="f"?(l.preventDefault(),a.click()):l.shiftKey&&l.key.toLowerCase()==="m"&&(l.preventDefault(),o.click()))}),n.addEventListener("focus",()=>n.select())}const z={load:$,setup:K,formatSQL:F,minifySQL:M};export{z as default,$ as load,K as setup};

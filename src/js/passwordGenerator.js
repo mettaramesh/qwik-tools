@@ -1,6 +1,7 @@
 // Password Generator Tool (Qwik style)
 // Category: Generators
 // UI: Modern, clean, non-congested, project-style grid/cards/buttons/combos
+import cssLoader from './cssLoader.js';
 
 export async function loadPasswordGeneratorTool(container) {
     // Load HTML template from external file
@@ -259,13 +260,19 @@ export function setupPasswordGeneratorTool() {
 
 // Qwik expects a default export named 'load' for dynamic tool loading
 export async function load(container) {
-    // Inject CSS via <link> if not already present
-    if (!document.getElementById('passwordgen-css-link')) {
-        const link = document.createElement('link');
-        link.id = 'passwordgen-css-link';
-        link.rel = 'stylesheet';
-        link.href = 'passwordGenerator.css';
-        document.head.appendChild(link);
+    try {
+        // Load CSS first for better visual experience
+        await cssLoader.loadCSS('passwordGenerator.css', 'password-generator');
+        await cssLoader.loadCSS('ui-components.css', 'password-generator-ui');
+        
+        await loadPasswordGeneratorTool(container);
+    } catch (error) {
+        console.error('Error loading password generator:', error);
+        container.innerHTML = `
+            <div class="tool-header">
+                <h2>Password Generator</h2>
+                <p>Error loading tool: ${error.message}</p>
+            </div>
+        `;
     }
-    await loadPasswordGeneratorTool(container);
 }

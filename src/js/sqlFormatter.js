@@ -1,17 +1,7 @@
 // SQL Formatter Tool for Qwik (robust, browser-only, no deps)
 // Drop-in module: call load(container) then setup(container).
 // Improved tokenizer + formatter to handle quotes, comments, parentheses, CASE, joins, subqueries, etc.
-
-// Load CSS for SQL Formatter
-function loadSQLFormatterCSS() {
-  const existingLink = document.querySelector('link[href*="sqlFormatter.css"]');
-  if (existingLink) return; // CSS already loaded
-  
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = './sqlFormatter.css';
-  document.head.appendChild(link);
-}
+import cssLoader from './cssLoader.js';
 
 const KEYWORD_CLAUSES = new Set([
   'select','from','where','group by','order by','having','limit','offset',
@@ -590,9 +580,11 @@ function minifySQL(sql) {
 }
 
 // UI Module (load + setup) — container-based
-export function load(container) {
-  // Load CSS styles
-  loadSQLFormatterCSS();
+export async function load(container) {
+  try {
+    // Load CSS first for better visual experience
+    await cssLoader.loadCSS('sqlFormatter.css', 'sql-formatter');
+    await cssLoader.loadCSS('ui-components.css', 'sql-formatter-ui');
   
   container.innerHTML = `
     <div class="tool-header"><h2>SQL Formatter</h2><p class="small">Format, beautify, or minify SQL queries — robust tokenizer & formatter.</p></div>
@@ -626,6 +618,15 @@ export function load(container) {
   <div id="sql-error" class="error-message hidden sql-error-mt"></div>
     </div>
   `;
+  } catch (error) {
+    console.error('Error loading SQL formatter:', error);
+    container.innerHTML = `
+      <div class="tool-header">
+        <h2>SQL Formatter</h2>
+        <p>Error loading tool: ${error.message}</p>
+      </div>
+    `;
+  }
 }
 
 export function setup(container) {

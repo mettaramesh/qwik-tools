@@ -1,21 +1,6 @@
 // Text Inspector & Case Converter Tool
 // Provides text statistics, case conversions, and various text transformations
-
-// Load external stylesheet for text inspector tool
-function loadTextInspectorStyles() {
-  // Remove any existing CSS first
-  const existingLink = document.getElementById('textinspector-css-link');
-  if (existingLink) {
-    existingLink.remove();
-  }
-  
-  const link = document.createElement('link');
-  link.id = 'textinspector-css-link';
-  link.rel = 'stylesheet';
-  link.type = 'text/css';
-  link.href = '/textInspectorTool.css?v=' + Date.now() + '&refresh=' + Math.random(); // Strong cache busting
-  if (document.head) document.head.appendChild(link);
-}
+import cssLoader from './cssLoader.js';
 
 function getTextStats(text) {
     const lines = text.split(/\r?\n/);
@@ -83,10 +68,11 @@ function removeDiacritics(text) {
 }
 
 export async function loadTextInspectorTool(container) {
-    // Load the CSS for this tool first
-    loadTextInspectorStyles();
-    
     try {
+        // Load CSS first for better visual experience
+        await cssLoader.loadCSS('textInspectorTool.css', 'text-inspector');
+        await cssLoader.loadCSS('ui-components.css', 'text-inspector-ui');
+        
         const resp = await fetch('textInspector.html');
         if (!resp.ok) {
             throw new Error(`Failed to load Text Inspector HTML: ${resp.status}`);

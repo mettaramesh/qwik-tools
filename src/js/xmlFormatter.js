@@ -1,5 +1,6 @@
 // XML Formatter Tool for Qwik
 // No external dependencies, safe for commercial use
+import cssLoader from './cssLoader.js';
 
 function formatXML(xml) {
   xml = xml.trim();
@@ -74,11 +75,30 @@ function unescapeXML(xml) {
 }
 
 export async function load(container) {
-  const resp = await fetch('xmlFormatter.html');
-  const html = await resp.text();
-  container.innerHTML = html;
-  // Call setup after DOM is updated
-  if (typeof setup === 'function') setup();
+  try {
+    // Load CSS first for better visual experience
+    await cssLoader.loadCSS('ui-components.css', 'xml-formatter');
+    
+    // Load the HTML content
+    const resp = await fetch('xmlFormatter.html');
+    if (!resp.ok) {
+      throw new Error(`Failed to load XML formatter HTML: ${resp.status}`);
+    }
+    
+    const html = await resp.text();
+    container.innerHTML = html;
+    
+    // Call setup after DOM is updated
+    if (typeof setup === 'function') setup();
+  } catch (error) {
+    console.error('Error loading XML formatter:', error);
+    container.innerHTML = `
+      <div class="tool-header">
+        <h2>XML Formatter</h2>
+        <p>Error loading tool: ${error.message}</p>
+      </div>
+    `;
+  }
 }
 
 export function setup() {

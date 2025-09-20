@@ -1,17 +1,18 @@
 // VLSM Calculator Tool with Enhanced Visual CIDR Map
 import { ipToInt, intToIp, maskToCidr, cidrToMask } from './utils.js';
+import cssLoader from './cssLoader.js';
 
-export function load(toolContent, toolId) {
+export async function load(toolContent, toolId) {
   // Only clear the tool content area, not the whole main-content
   if (!toolContent) return;
   toolContent.innerHTML = '';
 
-  if (!document.getElementById('vlsm-calc-css')) {
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'vlsmCalculator.css';
-    link.id = 'vlsm-calc-css';
-    document.head.appendChild(link);
+  try {
+    // Load CSS first for better visual experience
+    await cssLoader.loadCSS('vlsmCalculator.css', 'vlsm-calculator');
+    await cssLoader.loadCSS('ui-components.css', 'vlsm-calculator-ui');
+  } catch (cssError) {
+    console.warn('Failed to load CSS:', cssError);
   }
 
   const toolDiv = document.createElement('div');

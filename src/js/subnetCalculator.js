@@ -1,4 +1,5 @@
 import { ipToInt, intToIp, maskToCidr, cidrToMask } from './utils.js';
+import cssLoader from './cssLoader.js';
 
 // Subnet Calculator Tool
 // IPv4 subnet calculation logic and Qwik integration
@@ -78,12 +79,12 @@ export async function load(toolContent, toolId) {
   toolContent.innerHTML = '';
 
   // Inject CSS if not already present
-  if (!document.getElementById('subnet-calc-css')) {
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'subnetCalculator.css';
-    link.id = 'subnet-calc-css';
-    document.head.appendChild(link);
+  try {
+    // Load CSS first for better visual experience
+    await cssLoader.loadCSS('subnetCalculator.css', 'subnet-calculator');
+    await cssLoader.loadCSS('ui-components.css', 'subnet-calculator-ui');
+  } catch (cssError) {
+    console.warn('Failed to load CSS:', cssError);
   }
 
   // Create tool container

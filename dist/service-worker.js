@@ -1,4 +1,4 @@
-const CACHE = 'qwik-tools-v4';
+const CACHE = 'qwik-tools-v5';
 const SHELL = [
   './',
   './index.html',

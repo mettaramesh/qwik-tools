@@ -1,9 +1,14 @@
 // text-comparer.js
 // Fixed: checkboxes wired into diff algorithm + inline word-level diffs
 // Usage: import { load } from './text-comparer.js'; load(document.getElementById('myContainer'));
+import cssLoader from './cssLoader.js';
 
 export async function load(container, toolId) {
   try {
+    // Load CSS first for better visual experience
+    await cssLoader.loadCSS('textComparer.css', 'text-comparer');
+    await cssLoader.loadCSS('ui-components.css', 'text-comparer-ui');
+    
     const resp = await fetch('/textComparer.html');
     if (!resp.ok) {
       throw new Error(`Failed to load Text Comparer HTML: ${resp.status}`);
@@ -14,14 +19,6 @@ export async function load(container, toolId) {
       throw new Error('Invalid HTML content - contains full page structure');
     }
     container.innerHTML = html;
-
-    // Load CSS if not already loaded
-    if (!document.querySelector('link[href*="textComparer.css"]')) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = '/textComparer.css';
-      document.head.appendChild(link);
-    }
   } catch (error) {
     console.error('Error loading Text Comparer:', error);
     container.innerHTML = '<div class="error">Failed to load Text Comparer tool</div>';
