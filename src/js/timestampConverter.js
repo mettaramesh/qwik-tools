@@ -9,8 +9,11 @@ export async function loadTimestampConverter(container) {
             throw new Error(`Failed to load Timestamp Converter HTML: ${response.status}`);
         }
         const html = await response.text();
-        // Security check: ensure we're not loading the full page
-        if (html.includes('<!DOCTYPE html') || html.includes('<html')) {
+        console.log('Timestamp HTML loaded, length:', html.length, 'first 100 chars:', html.substring(0, 100));
+        
+        // Basic security check: ensure we're not loading a full HTML document
+        if (html.trim().toLowerCase().startsWith('<!doctype html') || html.trim().toLowerCase().startsWith('<html')) {
+            console.error('Invalid HTML detected - full page document:', html.substring(0, 200));
             throw new Error('Invalid HTML content - contains full page structure');
         }
         container.innerHTML = html;
