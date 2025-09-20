@@ -2,6 +2,7 @@
 // UI and error styling matches other tools. Validation before transform.
 
 import { showStatus, setupCopyButtons } from './utils.js';
+import { safeSetup } from './domUtils.js';
 
 function parseJSONSafe(str) {
     try {
@@ -586,7 +587,14 @@ export async function loadJSONXMLTool(container) {
 
 export async function load(container, toolId) {
   await loadJSONXMLTool(container);
-  setupJSONXmlTool();
+  await safeSetup(setupJSONXmlTool, [
+    'json-xml-input',
+    'json-xml-output', 
+    'json-xml-status',
+    'to-xml',
+    'to-json',
+    'json-xml-clear-btn'
+  ]);
 }
 
 export function setupJSONXmlTool() {
@@ -596,7 +604,11 @@ export function setupJSONXmlTool() {
     const toXmlBtn = document.getElementById('to-xml');
     const toJsonBtn = document.getElementById('to-json');
     const clearBtn = document.getElementById('json-xml-clear-btn');
-    if (!input || !output || !status) return;
+    
+    if (!input || !output || !status || !toXmlBtn || !toJsonBtn || !clearBtn) {
+        console.warn('JSON XML Converter: Required elements not found');
+        return;
+    }
     toXmlBtn.onclick = (e) => {
         e.preventDefault();
         e.stopPropagation();
