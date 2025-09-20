@@ -6,6 +6,8 @@ import { safeSetup } from './domUtils.js';
 
 export async function load(container, toolId) {
   try {
+    console.log('Loading Text Comparer...');
+    
     // Load CSS first for better visual experience
     await cssLoader.loadCSS('textComparer.css', 'text-comparer');
     await cssLoader.loadCSS('ui-components.css', 'text-comparer-ui');
@@ -21,25 +23,12 @@ export async function load(container, toolId) {
     }
     container.innerHTML = html;
     
-    // Critical elements that must be available before setup
-    const criticalElements = [
-      'tc-text1',
-      'tc-text2',
-      'tc-left-result',
-      'tc-right-result',
-      'tc-left-gutter',
-      'tc-right-gutter', 
-      'tc-left-content',
-      'tc-right-content',
-      'tc-status',
-      'tc-compare',
-      'tc-word-level',
-      'tc-ignore-ws',
-      'tc-ignore-case',
-      'tc-show-lines'
-    ];
+    console.log('HTML loaded, container content length:', container.innerHTML.length);
     
-    await safeSetup(() => setupTextComparer(), criticalElements);
+    // Give a moment for DOM to settle before setup
+    setTimeout(() => {
+      setupTextComparer();
+    }, 100);
     
   } catch (error) {
     console.error('Error loading Text Comparer:', error);
@@ -48,8 +37,7 @@ export async function load(container, toolId) {
   }
 
   function setupTextComparer() {
-  // Wait a brief moment for DOM to be ready
-  // No longer needed with safeSetup, but kept for legacy compatibility
+  console.log('Setting up Text Comparer...');
 
   // === refs ===
   const t1 = container.querySelector('#tc-text1');
@@ -87,30 +75,33 @@ export async function load(container, toolId) {
   const leftWrap = container.querySelector('#left-wrap');
   const rightWrap = container.querySelector('#right-wrap');
 
+  console.log('Element check:', {
+    't1': !!t1,
+    't2': !!t2,
+    'leftResultEl': !!leftResultEl,
+    'rightResultEl': !!rightResultEl,
+    'leftGutterResult': !!leftGutterResult,
+    'rightGutterResult': !!rightGutterResult,
+    'leftContentResult': !!leftContentResult,
+    'rightContentResult': !!rightContentResult,
+    'statusEl': !!statusEl,
+    'compareBtn': !!compareBtn
+  });
+
   // Check if essential elements exist
-  if (!t1 || !t2 || !statusEl || !leftResultEl || !rightResultEl) {
-    console.error('Text Comparer: Missing essential DOM elements');
-    console.error('Debug info:', {
-      't1 (tc-text1)': !!t1,
-      't2 (tc-text2)': !!t2, 
-      'leftResultEl (tc-left-result)': !!leftResultEl,
-      'rightResultEl (tc-right-result)': !!rightResultEl,
-      'leftGutterResult (tc-left-gutter)': !!leftGutterResult,
-      'rightGutterResult (tc-right-gutter)': !!rightGutterResult,
-      'leftContentResult (tc-left-content)': !!leftContentResult,
-      'rightContentResult (tc-right-content)': !!rightContentResult,
-      'statusEl (tc-status)': !!statusEl,
-      'compareBtn (tc-compare)': !!compareBtn,
-      'wordLevelChk (tc-word-level)': !!wordLevelChk,
-      'ignoreWsChk (tc-ignore-ws)': !!ignoreWsChk,
-      'ignoreCaseChk (tc-ignore-case)': !!ignoreCaseChk,
-      'showLinesChk (tc-show-lines)': !!showLinesChk,
-      'containerHTML': container.innerHTML.length + ' chars',
-      'containerChildrenCount': container.children.length
-    });
-    container.innerHTML = '<div class="error">Failed to initialize Text Comparer - missing elements</div>';
+  if (!t1 || !t2 || !statusEl) {
+    console.error('Text Comparer: Missing basic elements');
+    container.innerHTML = '<div class="error">Failed to initialize Text Comparer - missing basic elements</div>';
     return;
   }
+  
+  if (!leftResultEl || !rightResultEl || !leftGutterResult || !rightGutterResult || !leftContentResult || !rightContentResult) {
+    console.error('Text Comparer: Missing side-by-side result elements');
+    container.innerHTML = '<div class="error">Failed to initialize Text Comparer - missing result elements</div>';
+    return;
+  }
+
+  console.log('All essential elements found successfully');
   
   // Warn about missing optional elements
   if (!compareBtn) console.warn('Text Comparer: Compare button not found');
@@ -432,12 +423,34 @@ export async function load(container, toolId) {
 
   // Render side-by-side results
   function renderSideBySideResults(leftResult, rightResult) {
+    console.log('renderSideBySideResults called', { 
+      leftResult: leftResult.length, 
+      rightResult: rightResult.length,
+      hasLeftGutter: !!leftGutterResult,
+      hasLeftContent: !!leftContentResult,
+      hasRightGutter: !!rightGutterResult,
+      hasRightContent: !!rightContentResult,
+      hasLeftResultEl: !!leftResultEl,
+      hasRightResultEl: !!rightResultEl
+    });
+    
+    if (!leftGutterResult || !leftContentResult || !rightGutterResult || !rightContentResult) {
+      console.error('Missing result elements:', {
+        leftGutterResult: !!leftGutterResult,
+        leftContentResult: !!leftContentResult,
+        rightGutterResult: !!rightGutterResult,
+        rightContentResult: !!rightContentResult
+      });
+      return;
+    }
+    
     let leftGutterHtml = '';
     let leftContentHtml = '';
     let rightGutterHtml = '';
     let rightContentHtml = '';
 
     const maxLines = Math.max(leftResult.length, rightResult.length);
+    console.log('Processing', maxLines, 'lines');
     
     for (let i = 0; i < maxLines; i++) {
       const leftLine = leftResult[i] || { lineNum: null, content: '', type: 'gap' };
@@ -454,15 +467,37 @@ export async function load(container, toolId) {
       rightContentHtml += `<div class="tc-result-line diff-${rightLine.type}">${rightContent}</div>`;
     }
 
+    console.log('Generated HTML lengths:', {
+      leftGutter: leftGutterHtml.length,
+      leftContent: leftContentHtml.length,
+      rightGutter: rightGutterHtml.length,
+      rightContent: rightContentHtml.length
+    });
+
     // Update the side-by-side display
-    if (leftGutterResult) leftGutterResult.innerHTML = leftGutterHtml;
-    if (leftContentResult) leftContentResult.innerHTML = leftContentHtml;
-    if (rightGutterResult) rightGutterResult.innerHTML = rightGutterHtml;
-    if (rightContentResult) rightContentResult.innerHTML = rightContentHtml;
+    try {
+      leftGutterResult.innerHTML = leftGutterHtml;
+      leftContentResult.innerHTML = leftContentHtml;
+      rightGutterResult.innerHTML = rightGutterHtml;
+      rightContentResult.innerHTML = rightContentHtml;
+      console.log('Updated all content elements');
+    } catch (error) {
+      console.error('Error updating content:', error);
+    }
     
     // Show the result panels and hide textareas
-    if (leftResultEl) leftResultEl.style.display = 'flex';
-    if (rightResultEl) rightResultEl.style.display = 'flex';
+    try {
+      if (leftResultEl) {
+        leftResultEl.style.display = 'flex';
+        console.log('Showed left result panel');
+      }
+      if (rightResultEl) {
+        rightResultEl.style.display = 'flex';
+        console.log('Showed right result panel');
+      }
+    } catch (error) {
+      console.error('Error showing result panels:', error);
+    }
   }
 
   // Hide side-by-side results and show textareas
@@ -562,12 +597,14 @@ export async function load(container, toolId) {
   }
 
   function updateResult(force = false) {
+    console.log('updateResult called', { force, leftLength: t1?.value?.length, rightLength: t2?.value?.length });
     setStatus('Computing diff...');
     const leftText = t1.value;
     const rightText = t2.value;
     
     // If both texts are empty, hide results
     if (!leftText.trim() && !rightText.trim()) {
+      console.log('Both texts empty, hiding results');
       hideSideBySideResults();
       setStatus('Ready to compare');
       if (simEl) simEl.textContent = '';
@@ -580,8 +617,16 @@ export async function load(container, toolId) {
       ignoreCase: ignoreCaseChk ? ignoreCaseChk.checked : false
     };
     
+    console.log('Computing diff with options:', opts);
+    
     try {
       const { leftResult, rightResult, leftFormatted, rightFormatted } = buildSideBySideDiff(leftText, rightText, opts);
+      console.log('Diff computed successfully:', { 
+        leftLines: leftResult.length, 
+        rightLines: rightResult.length,
+        hasLeftElements: !!leftContentResult && !!leftGutterResult,
+        hasRightElements: !!rightContentResult && !!rightGutterResult
+      });
       renderSideBySideResults(leftResult, rightResult);
       
       // Calculate similarity
@@ -631,7 +676,15 @@ export async function load(container, toolId) {
     }
   });
   
-  if (compareBtn) compareBtn.addEventListener('click', ()=> updateResult(true));
+  if (compareBtn) {
+    console.log('Adding compare button event listener');
+    compareBtn.addEventListener('click', () => {
+      console.log('Compare button clicked');
+      updateResult(true);
+    });
+  } else {
+    console.warn('Compare button not found');
+  }
 
   if (copyBtn) {
     copyBtn.addEventListener('click', async ()=>{
