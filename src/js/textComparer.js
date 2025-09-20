@@ -26,7 +26,12 @@ export async function load(container, toolId) {
       'tc-text1',
       'tc-text2',
       'tc-result',
-      'tc-status'
+      'tc-status',
+      'tc-compare',
+      'tc-word-level',
+      'tc-ignore-ws',
+      'tc-ignore-case',
+      'tc-show-lines'
     ];
     
     await safeSetup(() => setupTextComparer(), criticalElements);
@@ -78,11 +83,27 @@ export async function load(container, toolId) {
       't2 (tc-text2)': !!t2, 
       'resultEl (tc-result)': !!resultEl,
       'statusEl (tc-status)': !!statusEl,
+      'compareBtn (tc-compare)': !!compareBtn,
+      'wordLevelChk (tc-word-level)': !!wordLevelChk,
+      'ignoreWsChk (tc-ignore-ws)': !!ignoreWsChk,
+      'ignoreCaseChk (tc-ignore-case)': !!ignoreCaseChk,
+      'showLinesChk (tc-show-lines)': !!showLinesChk,
       'containerHTML': container.innerHTML.length + ' chars',
       'containerChildrenCount': container.children.length
     });
     container.innerHTML = '<div class="error">Failed to initialize Text Comparer - missing elements</div>';
     return;
+  }
+  
+  // Warn about missing optional elements
+  if (!compareBtn) console.warn('Text Comparer: Compare button not found');
+  if (!wordLevelChk || !ignoreWsChk || !ignoreCaseChk || !showLinesChk) {
+    console.warn('Text Comparer: Some option checkboxes not found', {
+      'wordLevel': !!wordLevelChk,
+      'ignoreWs': !!ignoreWsChk, 
+      'ignoreCase': !!ignoreCaseChk,
+      'showLines': !!showLinesChk
+    });
   }
 
   // === utilities ===
@@ -125,6 +146,8 @@ export async function load(container, toolId) {
     }
   }
   function updateGutters() {
+    if (!t1 || !t2 || !gutterLeft || !gutterRight) return;
+    
     const leftCount = Math.max(1, t1.value.split('\n').length);
     const rightCount = Math.max(1, t2.value.split('\n').length);
     const lhLeft = getLineHeightPx(t1);
@@ -132,7 +155,7 @@ export async function load(container, toolId) {
     ensureGutterRows(gutterLeft, leftCount, lhLeft);
     ensureGutterRows(gutterRight, rightCount, lhRight);
     // show/hide gutter based on checkbox
-    if (showLinesChk.checked) {
+    if (showLinesChk && showLinesChk.checked) {
       gutterLeft.classList.remove('hidden'); gutterRight.classList.remove('hidden');
     } else {
       gutterLeft.classList.add('hidden'); gutterRight.classList.add('hidden');
@@ -415,9 +438,9 @@ export async function load(container, toolId) {
     const leftText = t1.value;
     const rightText = t2.value;
     const opts = {
-      wordLevel: wordLevelChk.checked,
-      ignoreWs: ignoreWsChk.checked,
-      ignoreCase: ignoreCaseChk.checked
+      wordLevel: wordLevelChk ? wordLevelChk.checked : false,
+      ignoreWs: ignoreWsChk ? ignoreWsChk.checked : false,
+      ignoreCase: ignoreCaseChk ? ignoreCaseChk.checked : false
     };
     // Use worker for large files or always (here: always for demo)
     useWorkerForDiff(leftText, rightText, opts,
@@ -448,9 +471,14 @@ export async function load(container, toolId) {
     return null;
   }
 
-  // hook control events to update
+  // hook control events to update (with safety checks)
   [wordLevelChk, ignoreWsChk, ignoreCaseChk, showLinesChk].filter(Boolean).forEach(cb=>{
-    if (cb) cb.addEventListener('change', ()=>{ updateGutters(); scheduleUpdate(60); });
+    if (cb && typeof cb.addEventListener === 'function') {
+      cb.addEventListener('change', ()=>{
+        updateGutters(); 
+        scheduleUpdate(60);
+      });
+    }
   });
   
   if (compareBtn) compareBtn.addEventListener('click', ()=> updateResult(true));
