@@ -265,7 +265,7 @@ export function setupNumberBaseTool() {
             setMsg('custom', `Digits: 0–${customBaseSel && customBaseSel.value ? Number(customBaseSel.value) - 1 : 1} (a–${DIGITS[customBaseSel && customBaseSel.value ? Number(customBaseSel.value) - 1 : 1] || ''} for ≥ 10)`);
         });
     }
-    const clearAllBtn = el('clearAll');
+    const clearAllBtn = $('clearAll');
     if (clearAllBtn) {
         clearAllBtn.addEventListener('click', () => {
             Object.values(inputs).forEach(i => { if (i) i.value = ''; });
