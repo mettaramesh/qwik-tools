@@ -173,6 +173,7 @@ function setupCharsetConverter() {
 
   // DOM (scoped to container) - Updated for new design
   const el = id => container.querySelector('#'+id);
+  const $ = el; // Add $ as alias for compatibility
   const inputModeSelect = /** @type {HTMLSelectElement} */(el('inputMode'));
   const byteDecode  = /** @type {HTMLSelectElement} */(el('byteDecode'));
   const normalizeNEL = /** @type {HTMLInputElement} */(el('normalizeNEL'));
