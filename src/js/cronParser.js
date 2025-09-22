@@ -360,24 +360,22 @@ function cronBuilderLogic() {
       else explanations.push(`at second ${sec}`);
     }
     
-    // Minutes
-    if (min === '*') explanations.push('every minute');
-    else if (min.includes('/')) explanations.push(`every ${min.split('/')[1]} minutes`);
-    else if (min.includes(',')) explanations.push(`at minutes ${min}`);
-    else if (min.includes('-')) explanations.push(`from minute ${min.split('-')[0]} to ${min.split('-')[1]}`);
-    else explanations.push(`at minute ${min}`);
+    // Minutes (handled in combination with hours above)
+    // Note: Minutes are now combined with hours for proper time display
     
-    // Hours
+    // Hours and Minutes - combine for proper time display
     if (hr === '*') explanations.push('every hour');
     else if (hr.includes('/')) explanations.push(`every ${hr.split('/')[1]} hours`);
     else if (hr.includes(',')) explanations.push(`at hours ${hr}`);
     else if (hr.includes('-')) explanations.push(`from hour ${hr.split('-')[0]} to ${hr.split('-')[1]}`);
     else {
       const hour24 = safeParseInt(hr);
+      const minute = safeParseInt(min);
       if (hour24 !== null) {
         const hour12 = hour24 === 0 ? 12 : hour24 > 12 ? hour24 - 12 : hour24;
         const ampm = hour24 < 12 ? 'AM' : 'PM';
-        explanations.push(`at ${hour12}:00 ${ampm} (${hr}:00)`);
+        const minuteStr = minute !== null && minute !== 0 ? `:${minute.toString().padStart(2, '0')}` : ':00';
+        explanations.push(`at ${hour12}${minuteStr} ${ampm}`);
       } else {
         explanations.push(`at hour ${hr}`);
       }
@@ -430,7 +428,8 @@ function cronBuilderLogic() {
       if (dayNumParsed !== null && weekNumParsed !== null) {
         const dayName = getDayName(dayNumParsed);
         const ordinal = getOrdinalSuffix(weekNumParsed);
-        explanations.push(`on the ${ordinal} ${dayName} of the month`);
+        // More natural explanation format
+        explanations.push(`on the ${ordinal} ${dayName} of every month`);
       } else {
         explanations.push(`on ${dow} (nth day of week pattern)`);
       }
@@ -463,6 +462,14 @@ function cronBuilderLogic() {
       }
     }
     
+    // Create a more natural explanation format
+    if (dow.includes('#')) {
+      const timeExplanation = explanations.find(e => e.includes(':'));
+      const dayExplanation = explanations.find(e => e.includes('day') || e.includes('week'));
+      const finalExplanation = `Schedule: Runs ${timeExplanation} ${dayExplanation}. The # character is used to specify the "nth" day of the week.`;
+      return finalExplanation;
+    }
+    
     return `Runs ${explanations.join(', ')}.`;
   }
   
@@ -483,6 +490,8 @@ function cronBuilderLogic() {
   }
   
   function getDayName(dayNum) {
+    // Standard cron day mapping: 0=Sunday, 1=Monday, 2=Tuesday, 3=Wednesday, 4=Thursday, 5=Friday, 6=Saturday
+    // Note: Some systems also use 1-7 where 1=Monday, but 0-6 is most common
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     return days[dayNum] || dayNum;
   }
