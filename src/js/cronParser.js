@@ -342,6 +342,12 @@ function cronBuilderLogic() {
       [min, hr, dom, mon, dow] = parts;
     }
     
+    // Helper function to safely parse integers
+    function safeParseInt(value) {
+      const parsed = parseInt(value);
+      return isNaN(parsed) ? null : parsed;
+    }
+    
     // Enhanced explanation for complex patterns
     const explanations = [];
     
@@ -367,10 +373,14 @@ function cronBuilderLogic() {
     else if (hr.includes(',')) explanations.push(`at hours ${hr}`);
     else if (hr.includes('-')) explanations.push(`from hour ${hr.split('-')[0]} to ${hr.split('-')[1]}`);
     else {
-      const hour24 = parseInt(hr);
-      const hour12 = hour24 === 0 ? 12 : hour24 > 12 ? hour24 - 12 : hour24;
-      const ampm = hour24 < 12 ? 'AM' : 'PM';
-      explanations.push(`at ${hour12}:00 ${ampm} (${hr}:00)`);
+      const hour24 = safeParseInt(hr);
+      if (hour24 !== null) {
+        const hour12 = hour24 === 0 ? 12 : hour24 > 12 ? hour24 - 12 : hour24;
+        const ampm = hour24 < 12 ? 'AM' : 'PM';
+        explanations.push(`at ${hour12}:00 ${ampm} (${hr}:00)`);
+      } else {
+        explanations.push(`at hour ${hr}`);
+      }
     }
     
     // Day of month
@@ -380,39 +390,78 @@ function cronBuilderLogic() {
     else if (dom.includes('L')) explanations.push('last day of the month');
     else if (dom.includes(',')) explanations.push(`on days ${dom} of the month`);
     else if (dom.includes('-')) explanations.push(`from day ${dom.split('-')[0]} to ${dom.split('-')[1]} of the month`);
-    else explanations.push(`on the ${dom}${getOrdinalSuffix(parseInt(dom))} day of the month`);
+    else {
+      const domNum = safeParseInt(dom);
+      if (domNum !== null) {
+        explanations.push(`on the ${dom}${getOrdinalSuffix(domNum)} day of the month`);
+      } else {
+        explanations.push(`on day ${dom} of the month`);
+      }
+    }
     
     // Month
     if (mon === '*') explanations.push('every month');
     else if (mon === '?') explanations.push('no specific month');
     else if (mon.includes('/')) explanations.push(`every ${mon.split('/')[1]} months`);
     else if (mon.includes(',')) {
-      const months = mon.split(',').map(m => getMonthName(parseInt(m))).join(', ');
+      const months = mon.split(',').map(m => {
+        const monthNum = safeParseInt(m);
+        return monthNum !== null ? getMonthName(monthNum) : m;
+      }).join(', ');
       explanations.push(`in ${months}`);
     } else if (mon.includes('-')) {
       const [start, end] = mon.split('-');
-      explanations.push(`from ${getMonthName(parseInt(start))} to ${getMonthName(parseInt(end))}`);
-    } else explanations.push(`in ${getMonthName(parseInt(mon))}`);
+      const startName = getMonthName(safeParseInt(start)) || start;
+      const endName = getMonthName(safeParseInt(end)) || end;
+      explanations.push(`from ${startName} to ${endName}`);
+    } else {
+      const monthNum = safeParseInt(mon);
+      const monthName = monthNum !== null ? getMonthName(monthNum) : mon;
+      explanations.push(`in ${monthName}`);
+    }
     
     // Day of week (most complex)
     if (dow === '*') explanations.push('every day of the week');
     else if (dow === '?') explanations.push('no specific day of week');
     else if (dow.includes('#')) {
       const [dayNum, weekNum] = dow.split('#');
-      const dayName = getDayName(parseInt(dayNum));
-      const ordinal = getOrdinalSuffix(parseInt(weekNum));
-      explanations.push(`on the ${ordinal} ${dayName} of the month`);
+      const dayNumParsed = safeParseInt(dayNum);
+      const weekNumParsed = safeParseInt(weekNum);
+      if (dayNumParsed !== null && weekNumParsed !== null) {
+        const dayName = getDayName(dayNumParsed);
+        const ordinal = getOrdinalSuffix(weekNumParsed);
+        explanations.push(`on the ${ordinal} ${dayName} of the month`);
+      } else {
+        explanations.push(`on ${dow} (nth day of week pattern)`);
+      }
     } else if (dow.includes('L')) {
       const dayNum = dow.replace('L', '');
-      const dayName = getDayName(parseInt(dayNum));
-      explanations.push(`on the last ${dayName} of the month`);
+      const dayNumParsed = safeParseInt(dayNum);
+      if (dayNumParsed !== null) {
+        const dayName = getDayName(dayNumParsed);
+        explanations.push(`on the last ${dayName} of the month`);
+      } else {
+        explanations.push(`on the last occurrence of ${dayNum}`);
+      }
     } else if (dow.includes(',')) {
-      const days = dow.split(',').map(d => getDayName(parseInt(d))).join(', ');
+      const days = dow.split(',').map(d => {
+        const dayNum = safeParseInt(d);
+        return dayNum !== null ? getDayName(dayNum) : d;
+      }).join(', ');
       explanations.push(`on ${days}`);
     } else if (dow.includes('-')) {
       const [start, end] = dow.split('-');
-      explanations.push(`from ${getDayName(parseInt(start))} to ${getDayName(parseInt(end))}`);
-    } else explanations.push(`on ${getDayName(parseInt(dow))}`);
+      const startName = getDayName(safeParseInt(start)) || start;
+      const endName = getDayName(safeParseInt(end)) || end;
+      explanations.push(`from ${startName} to ${endName}`);
+    } else {
+      const dayNum = safeParseInt(dow);
+      if (dayNum !== null) {
+        explanations.push(`on ${getDayName(dayNum)}`);
+      } else {
+        explanations.push(`on ${dow}`);
+      }
+    }
     
     return `Runs ${explanations.join(', ')}.`;
   }
@@ -544,19 +593,40 @@ function cronBuilderLogic() {
 <div style="font-family: monospace; background: var(--cron-bg-secondary, #f8f9fa); padding: 12px; border-radius: 6px; margin: 8px 0;">
 <strong>Breakdown:</strong><br/>`;
 
+        // Helper function to safely parse integers (same as in explainCron)
+        function safeParseInt(value) {
+          const parsed = parseInt(value);
+          return isNaN(parsed) ? null : parsed;
+        }
+
         if (sec !== null) {
           breakdown += `• <strong>${sec}:</strong> Seconds ${sec === '*' ? '(every second)' : sec === '0' ? '(at the 0th second)' : sec.includes('#') || sec.includes('L') || sec.includes('W') ? '(special)' : `(at second ${sec})`}<br/>`;
         }
         
         breakdown += `• <strong>${min}:</strong> Minutes ${min === '*' ? '(every minute)' : min === '0' ? '(at the 0th minute)' : min.includes('#') || min.includes('L') || min.includes('W') ? '(special)' : `(at minute ${min})`}<br/>`;
         
-        breakdown += `• <strong>${hr}:</strong> Hours ${hr === '*' ? '(every hour 0-23)' : hr.includes('#') || hr.includes('L') || hr.includes('W') ? '(special)' : `(at ${parseInt(hr) === 0 ? '12 AM' : parseInt(hr) <= 12 ? parseInt(hr) + ' AM' : (parseInt(hr) - 12) + ' PM'})`}<br/>`;
+        const hrNum = safeParseInt(hr);
+        breakdown += `• <strong>${hr}:</strong> Hours ${hr === '*' ? '(every hour 0-23)' : hr.includes('#') || hr.includes('L') || hr.includes('W') ? '(special)' : hrNum !== null ? `(at ${hrNum === 0 ? '12 AM' : hrNum <= 12 ? hrNum + ' AM' : (hrNum - 12) + ' PM'})` : `(at hour ${hr})`}<br/>`;
         
-        breakdown += `• <strong>${dom}:</strong> Day of month ${dom === '*' ? '(every day 1-31)' : dom === '?' ? '(no specific day of the month, as day of week is used)' : dom.includes('W') ? '(nearest weekday)' : dom.includes('L') ? '(last day of month)' : `(${dom}${getOrdinalSuffix(parseInt(dom))} day)`}<br/>`;
+        const domNum = safeParseInt(dom);
+        breakdown += `• <strong>${dom}:</strong> Day of month ${dom === '*' ? '(every day 1-31)' : dom === '?' ? '(no specific day of the month, as day of week is used)' : dom.includes('W') ? '(nearest weekday)' : dom.includes('L') ? '(last day of month)' : domNum !== null ? `(${dom}${getOrdinalSuffix(domNum)} day)` : `(${dom} day)`}<br/>`;
         
-        breakdown += `• <strong>${mon}:</strong> Month ${mon === '*' ? '(every month)' : mon === '?' ? '(no specific month)' : `(${getMonthName(parseInt(mon)) || mon})`}<br/>`;
+        const monNum = safeParseInt(mon);
+        breakdown += `• <strong>${mon}:</strong> Month ${mon === '*' ? '(every month)' : mon === '?' ? '(no specific month)' : monNum !== null ? `(${getMonthName(monNum) || mon})` : `(${mon})`}<br/>`;
         
-        breakdown += `• <strong>${dow}:</strong> Day of week ${dow === '*' ? '(every day 0-6)' : dow === '?' ? '(no specific day of week)' : dow.includes('#') ? `(the ${getOrdinalSuffix(parseInt(dow.split('#')[1]))} ${getDayName(parseInt(dow.split('#')[0]))}, where ${dow.split('#')[0]} represents ${getDayName(parseInt(dow.split('#')[0]))})` : dow.includes('L') ? '(last weekday)' : `(${getDayName(parseInt(dow)) || dow})`}`;
+        if (dow.includes('#')) {
+          const [dayPart, weekPart] = dow.split('#');
+          const dayNum = safeParseInt(dayPart);
+          const weekNum = safeParseInt(weekPart);
+          if (dayNum !== null && weekNum !== null) {
+            breakdown += `• <strong>${dow}:</strong> Day of week (the ${getOrdinalSuffix(weekNum)} ${getDayName(dayNum)}, where ${dayPart} represents ${getDayName(dayNum)})`;
+          } else {
+            breakdown += `• <strong>${dow}:</strong> Day of week (${dow} - nth occurrence pattern)`;
+          }
+        } else {
+          const dowNum = safeParseInt(dow);
+          breakdown += `• <strong>${dow}:</strong> Day of week ${dow === '*' ? '(every day 0-6)' : dow === '?' ? '(no specific day of week)' : dow.includes('L') ? '(last weekday)' : dowNum !== null ? `(${getDayName(dowNum)})` : `(${dow})`}`;
+        }
         
         breakdown += `
 </div>`;
