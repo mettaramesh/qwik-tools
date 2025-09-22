@@ -59,6 +59,11 @@
         <div id="gutter-left" class="tc-gutter"></div>
         <textarea id="tc-text1" class="tc-textarea" placeholder="Enter or paste the first text to compare..."></textarea>
       </div>
+      <!-- Left diff result overlay -->
+      <div id="tc-left-result" class="tc-side-result" style="display: none;">
+        <div class="tc-result-gutter" id="tc-left-gutter"></div>
+        <div class="tc-result-content" id="tc-left-content"></div>
+      </div>
     </div>
     
     <!-- Splitter -->
@@ -91,30 +96,21 @@
         <div id="gutter-right" class="tc-gutter"></div>
         <textarea id="tc-text2" class="tc-textarea" placeholder="Enter or paste the second text to compare..."></textarea>
       </div>
+      <!-- Right diff result overlay -->
+      <div id="tc-right-result" class="tc-side-result" style="display: none;">
+        <div class="tc-result-gutter" id="tc-right-gutter"></div>
+        <div class="tc-result-content" id="tc-right-content"></div>
+      </div>
     </div>
   </div>
   
-  <!-- Result section -->
+  <!-- Status and controls section -->
   <div class="tc-result-section">
     <div class="tc-result-header">
-      <div class="tc-result-title">
-        <h3>Comparison Result</h3>
-        <div id="tc-status" class="tc-status">Ready to compare</div>
+      <div id="tc-status" class="tc-status">Ready to compare</div>
+      <div id="tc-result-meta" class="tc-meta">
+        <span id="tc-similarity" class="tc-similarity"></span>
       </div>
-      <div class="tc-result-actions">
-        <button id="tc-copy" class="tc-btn tc-btn-copy" title="Copy comparison result">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-          Copy Result
-        </button>
-        <button id="tc-copy-diff-only" class="tc-btn tc-btn-secondary" title="Copy only the differences">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M9 3H5c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h4c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 9H5V5h4v4zm10-6h-4c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h4c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 6h-4V5h4v4zM9 13H5c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h4c1.1 0 2-.9 2-2v-4c0-1.1-.9-2-2-2zm0 6H5v-4h4v4z"/></svg>
-          Copy Diff
-        </button>
-      </div>
-    </div>
-    <div id="tc-result" class="tc-result" aria-live="polite"></div>
-    <div id="tc-result-meta" class="tc-meta">
-      <span id="tc-similarity" class="tc-similarity"></span>
     </div>
   </div>
 </div>

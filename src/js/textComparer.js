@@ -90,7 +90,16 @@ export async function load(container, toolId) {
 
   // Also check what's actually in the container
   console.log('Container HTML snippet:', container.innerHTML.substring(0, 500));
-  console.log('All elements with IDs:', Array.from(container.querySelectorAll('[id]')).map(el => el.id));
+  const allIds = Array.from(container.querySelectorAll('[id]')).map(el => el.id);
+  console.log('All elements with IDs:', allIds);
+  console.log('Looking for specific IDs:', {
+    'tc-left-result': container.querySelector('#tc-left-result'),
+    'tc-right-result': container.querySelector('#tc-right-result'),
+    'tc-left-gutter': container.querySelector('#tc-left-gutter'),
+    'tc-right-gutter': container.querySelector('#tc-right-gutter'),
+    'tc-left-content': container.querySelector('#tc-left-content'),
+    'tc-right-content': container.querySelector('#tc-right-content')
+  });
 
   // Check if essential elements exist
   if (!t1 || !t2 || !statusEl) {
