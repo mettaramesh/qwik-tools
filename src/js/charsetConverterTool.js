@@ -133,7 +133,11 @@ export function loadCharsetConverterTool(container) {
   // Critical elements that must be available before setup
   const criticalElements = [
     'inputArea',
-    'outputArea'
+    'outputArea',
+    'inputMode',
+    'byteDecode', 
+    'outputAs',
+    'encodeWith'
   ];
   
   safeSetup(() => setupCharsetConverter(), criticalElements);
@@ -217,7 +221,7 @@ function setupCharsetConverter() {
     updateOutputModeDisplay();
   }
 
-  // Populate selects
+  // Populate selects immediately since we now ensure they exist
   if (outputAs) {
     outputAs.innerHTML = `
       <option value="text">Text</option>
