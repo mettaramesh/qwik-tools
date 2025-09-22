@@ -20,7 +20,7 @@ export async function loadNumberBaseTool(container) {
             container.innerHTML = html;
             // Use safe setup to prevent timing issues
             await safeSetup(setupNumberBaseTool, [
-                'base-input', 'base-select', 'convert-btn', 'clear-btn'
+                'nb-bin', 'nb-oct', 'nb-dec', 'nb-hex', 'nb-custom', 'customBase', 'clearAll'
             ], 'Number Base Tool');
         }
     } catch (error) {

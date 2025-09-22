@@ -132,8 +132,8 @@ export function loadCharsetConverterTool(container) {
   
   // Critical elements that must be available before setup
   const criticalElements = [
-    'textToConvert',
-    'conversionOutput'
+    'inputArea',
+    'outputArea'
   ];
   
   safeSetup(() => setupCharsetConverter(), criticalElements);
