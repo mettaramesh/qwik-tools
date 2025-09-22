@@ -128,7 +128,8 @@ function getBuilderPanelHTML() {
         <label>Quick Info</label>
         <div class="help small">
           Enter a full cron expression (5 or 6 fields).<br/>Supports ranges, steps, lists, and special characters.<br/>
-          Example: <span class="kbd">0 0/5 1,15 * 1-5</span>
+          5-field: <span class="kbd">0 0/5 1,15 * 1-5</span> (min hr dom mon dow)<br/>
+          6-field: <span class="kbd">0 0 17 ? * 6#2</span> (sec min hr dom mon dow)
         </div>
       </div>
       <div class="btns"><button id="btnAdvancedApply" class="btn btn--primary">Apply</button></div>
@@ -329,10 +330,29 @@ function cronBuilderLogic() {
     const parts = expr.trim().split(/\s+/);
     if (parts.length < 5) return 'Invalid cron expression.';
     
-    let [min, hr, dom, mon, dow] = parts;
+    let sec, min, hr, dom, mon, dow;
+    
+    // Handle both 5-field and 6-field cron expressions
+    if (parts.length === 6) {
+      // 6-field: sec min hr dom mon dow
+      [sec, min, hr, dom, mon, dow] = parts;
+    } else {
+      // 5-field: min hr dom mon dow
+      sec = null;
+      [min, hr, dom, mon, dow] = parts;
+    }
     
     // Enhanced explanation for complex patterns
     const explanations = [];
+    
+    // Seconds (only for 6-field)
+    if (sec !== null) {
+      if (sec === '*') explanations.push('every second');
+      else if (sec.includes('/')) explanations.push(`every ${sec.split('/')[1]} seconds`);
+      else if (sec.includes(',')) explanations.push(`at seconds ${sec}`);
+      else if (sec.includes('-')) explanations.push(`from second ${sec.split('-')[0]} to ${sec.split('-')[1]}`);
+      else explanations.push(`at second ${sec}`);
+    }
     
     // Minutes
     if (min === '*') explanations.push('every minute');
@@ -510,15 +530,35 @@ function cronBuilderLogic() {
       // Generate detailed breakdown
       const parts = cronOutText.split(/\s+/);
       if (parts.length >= 5) {
-        const [min, hr, dom, mon, dow] = parts;
+        let sec, min, hr, dom, mon, dow;
+        
+        // Handle both 5-field and 6-field cron expressions
+        if (parts.length === 6) {
+          [sec, min, hr, dom, mon, dow] = parts;
+        } else {
+          sec = null;
+          [min, hr, dom, mon, dow] = parts;
+        }
+        
         breakdown = `
 <div style="font-family: monospace; background: var(--cron-bg-secondary, #f8f9fa); padding: 12px; border-radius: 6px; margin: 8px 0;">
-<strong>Breakdown:</strong><br/>
-• <strong>Minutes:</strong> ${min === '*' ? 'Any minute (0-59)' : min.includes('#') || min.includes('L') || min.includes('W') ? min + ' (special)' : min}<br/>
-• <strong>Hours:</strong> ${hr === '*' ? 'Any hour (0-23)' : hr.includes('#') || hr.includes('L') || hr.includes('W') ? hr + ' (special)' : hr + ' (' + (parseInt(hr) === 0 ? '12 AM' : parseInt(hr) <= 12 ? parseInt(hr) + ' AM' : (parseInt(hr) - 12) + ' PM') + ')'}<br/>
-• <strong>Day of Month:</strong> ${dom === '*' ? 'Any day (1-31)' : dom === '?' ? 'No specific day' : dom.includes('W') ? dom + ' (nearest weekday)' : dom.includes('L') ? 'Last day of month' : dom}<br/>
-• <strong>Month:</strong> ${mon === '*' ? 'Every month (1-12)' : mon === '?' ? 'No specific month' : mon}<br/>
-• <strong>Day of Week:</strong> ${dow === '*' ? 'Any day (0-6)' : dow === '?' ? 'No specific day' : dow.includes('#') ? dow + ' (nth weekday)' : dow.includes('L') ? dow + ' (last weekday)' : dow + ' (' + getDayName(parseInt(dow)) + ')'}
+<strong>Breakdown:</strong><br/>`;
+
+        if (sec !== null) {
+          breakdown += `• <strong>${sec}:</strong> Seconds ${sec === '*' ? '(every second)' : sec === '0' ? '(at the 0th second)' : sec.includes('#') || sec.includes('L') || sec.includes('W') ? '(special)' : `(at second ${sec})`}<br/>`;
+        }
+        
+        breakdown += `• <strong>${min}:</strong> Minutes ${min === '*' ? '(every minute)' : min === '0' ? '(at the 0th minute)' : min.includes('#') || min.includes('L') || min.includes('W') ? '(special)' : `(at minute ${min})`}<br/>`;
+        
+        breakdown += `• <strong>${hr}:</strong> Hours ${hr === '*' ? '(every hour 0-23)' : hr.includes('#') || hr.includes('L') || hr.includes('W') ? '(special)' : `(at ${parseInt(hr) === 0 ? '12 AM' : parseInt(hr) <= 12 ? parseInt(hr) + ' AM' : (parseInt(hr) - 12) + ' PM'})`}<br/>`;
+        
+        breakdown += `• <strong>${dom}:</strong> Day of month ${dom === '*' ? '(every day 1-31)' : dom === '?' ? '(no specific day of the month, as day of week is used)' : dom.includes('W') ? '(nearest weekday)' : dom.includes('L') ? '(last day of month)' : `(${dom}${getOrdinalSuffix(parseInt(dom))} day)`}<br/>`;
+        
+        breakdown += `• <strong>${mon}:</strong> Month ${mon === '*' ? '(every month)' : mon === '?' ? '(no specific month)' : `(${getMonthName(parseInt(mon)) || mon})`}<br/>`;
+        
+        breakdown += `• <strong>${dow}:</strong> Day of week ${dow === '*' ? '(every day 0-6)' : dow === '?' ? '(no specific day of week)' : dow.includes('#') ? `(the ${getOrdinalSuffix(parseInt(dow.split('#')[1]))} ${getDayName(parseInt(dow.split('#')[0]))}, where ${dow.split('#')[0]} represents ${getDayName(parseInt(dow.split('#')[0]))})` : dow.includes('L') ? '(last weekday)' : `(${getDayName(parseInt(dow)) || dow})`}`;
+        
+        breakdown += `
 </div>`;
       }
       
@@ -614,13 +654,15 @@ function cronBuilderLogic() {
     const parts=expr.split(/\s+/);
     if(parts.length<5 || parts.length>6){ showInfo('Invalid cron expression. Must have 5 or 6 fields.','err'); return; }
     
-    // Don't try to set simple fields for complex expressions with special characters
-    if (!/[#LW\?]/.test(expr)) {
+    // Don't try to set simple fields for complex expressions with special characters or 6-field expressions
+    if (!/[#LW\?]/.test(expr) && parts.length === 5) {
       if (minuteSel) minuteSel.value=parts[0]; 
       if (hourSel) hourSel.value=parts[1]; 
       if (domSel) domSel.value=parts[2]; 
       if (monthSel) monthSel.value=parts[3]; 
       if (dowSel) dowSel.value=parts[4];
+    } else if (parts.length === 6) {
+      showInfo('6-field cron expression detected (includes seconds). Simple tab will not be updated.', 'info');
     }
     
     const out=$sel('cronOut'); if(out) out.textContent=expr;
