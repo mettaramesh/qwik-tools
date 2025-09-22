@@ -328,14 +328,100 @@ function cronBuilderLogic() {
   function explainCron(expr){
     const parts = expr.trim().split(/\s+/);
     if (parts.length < 5) return 'Invalid cron expression.';
-    let [min,hr,dom,mon,dow] = parts;
-    return `Minute ${min}, hour ${hr}, day-of-month ${dom}, month ${mon}, day-of-week ${dow}`;
+    
+    let [min, hr, dom, mon, dow] = parts;
+    
+    // Enhanced explanation for complex patterns
+    const explanations = [];
+    
+    // Minutes
+    if (min === '*') explanations.push('every minute');
+    else if (min.includes('/')) explanations.push(`every ${min.split('/')[1]} minutes`);
+    else if (min.includes(',')) explanations.push(`at minutes ${min}`);
+    else if (min.includes('-')) explanations.push(`from minute ${min.split('-')[0]} to ${min.split('-')[1]}`);
+    else explanations.push(`at minute ${min}`);
+    
+    // Hours
+    if (hr === '*') explanations.push('every hour');
+    else if (hr.includes('/')) explanations.push(`every ${hr.split('/')[1]} hours`);
+    else if (hr.includes(',')) explanations.push(`at hours ${hr}`);
+    else if (hr.includes('-')) explanations.push(`from hour ${hr.split('-')[0]} to ${hr.split('-')[1]}`);
+    else {
+      const hour24 = parseInt(hr);
+      const hour12 = hour24 === 0 ? 12 : hour24 > 12 ? hour24 - 12 : hour24;
+      const ampm = hour24 < 12 ? 'AM' : 'PM';
+      explanations.push(`at ${hour12}:00 ${ampm} (${hr}:00)`);
+    }
+    
+    // Day of month
+    if (dom === '*') explanations.push('every day of the month');
+    else if (dom === '?') explanations.push('no specific day of month');
+    else if (dom.includes('W')) explanations.push(`nearest weekday to the ${dom.replace('W', '')}th`);
+    else if (dom.includes('L')) explanations.push('last day of the month');
+    else if (dom.includes(',')) explanations.push(`on days ${dom} of the month`);
+    else if (dom.includes('-')) explanations.push(`from day ${dom.split('-')[0]} to ${dom.split('-')[1]} of the month`);
+    else explanations.push(`on the ${dom}${getOrdinalSuffix(parseInt(dom))} day of the month`);
+    
+    // Month
+    if (mon === '*') explanations.push('every month');
+    else if (mon === '?') explanations.push('no specific month');
+    else if (mon.includes('/')) explanations.push(`every ${mon.split('/')[1]} months`);
+    else if (mon.includes(',')) {
+      const months = mon.split(',').map(m => getMonthName(parseInt(m))).join(', ');
+      explanations.push(`in ${months}`);
+    } else if (mon.includes('-')) {
+      const [start, end] = mon.split('-');
+      explanations.push(`from ${getMonthName(parseInt(start))} to ${getMonthName(parseInt(end))}`);
+    } else explanations.push(`in ${getMonthName(parseInt(mon))}`);
+    
+    // Day of week (most complex)
+    if (dow === '*') explanations.push('every day of the week');
+    else if (dow === '?') explanations.push('no specific day of week');
+    else if (dow.includes('#')) {
+      const [dayNum, weekNum] = dow.split('#');
+      const dayName = getDayName(parseInt(dayNum));
+      const ordinal = getOrdinalSuffix(parseInt(weekNum));
+      explanations.push(`on the ${ordinal} ${dayName} of the month`);
+    } else if (dow.includes('L')) {
+      const dayNum = dow.replace('L', '');
+      const dayName = getDayName(parseInt(dayNum));
+      explanations.push(`on the last ${dayName} of the month`);
+    } else if (dow.includes(',')) {
+      const days = dow.split(',').map(d => getDayName(parseInt(d))).join(', ');
+      explanations.push(`on ${days}`);
+    } else if (dow.includes('-')) {
+      const [start, end] = dow.split('-');
+      explanations.push(`from ${getDayName(parseInt(start))} to ${getDayName(parseInt(end))}`);
+    } else explanations.push(`on ${getDayName(parseInt(dow))}`);
+    
+    return `Runs ${explanations.join(', ')}.`;
+  }
+  
+  function getOrdinalSuffix(num) {
+    const teens = [11, 12, 13];
+    const lastDigit = num % 10;
+    if (teens.includes(num % 100)) return num + 'th';
+    if (lastDigit === 1) return num + 'st';
+    if (lastDigit === 2) return num + 'nd';
+    if (lastDigit === 3) return num + 'rd';
+    return num + 'th';
+  }
+  
+  function getMonthName(monthNum) {
+    const months = ['', 'January', 'February', 'March', 'April', 'May', 'June',
+                   'July', 'August', 'September', 'October', 'November', 'December'];
+    return months[monthNum] || monthNum;
+  }
+  
+  function getDayName(dayNum) {
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    return days[dayNum] || dayNum;
   }
   function updateSimpleCron(){
     const min=minuteSel?.value ?? '*', hr=hourSel?.value ?? '*', dom=domSel?.value ?? '*', mon=monthSel?.value ?? '*', dow=dowSel?.value ?? '*';
     const cron = `${min} ${hr} ${dom} ${mon} ${dow}`;
     const out=$sel('cronOut'); if(out) out.textContent=cron;
-    const ex=$sel('explainText'); if(ex) ex.textContent=explainCron(cron);
+    const ex=$sel('explainText'); if(ex) ex.innerHTML = explainCron(cron);
     const vb=$sel('validBox'); if(vb) vb.className='status ok';
     const vt=$sel('validTitle'); if(vt) vt.innerHTML='<strong>Looks good.</strong>';
     const vd=$sel('validDetail'); if(vd) vd.textContent='Expression structure is valid.';
@@ -396,6 +482,7 @@ function cronBuilderLogic() {
   if (btnExplain) btnExplain.addEventListener('click', async ()=>{
     const cronOut = $sel('cronOut');
     const explainText = $sel('explainText');
+    const cronInfoBox = $sel('cronInfoBox');
     const cronOutText = cronOut?.textContent?.trim();
     
     if (!cronOutText || cronOutText === '* * * * *') {
@@ -418,24 +505,52 @@ function cronBuilderLogic() {
       await ensureCronLibsLoaded();
       
       let explanation;
+      let breakdown = '';
+      
+      // Generate detailed breakdown
+      const parts = cronOutText.split(/\s+/);
+      if (parts.length >= 5) {
+        const [min, hr, dom, mon, dow] = parts;
+        breakdown = `
+<div style="font-family: monospace; background: var(--cron-bg-secondary, #f8f9fa); padding: 12px; border-radius: 6px; margin: 8px 0;">
+<strong>Breakdown:</strong><br/>
+• <strong>Minutes:</strong> ${min === '*' ? 'Any minute (0-59)' : min.includes('#') || min.includes('L') || min.includes('W') ? min + ' (special)' : min}<br/>
+• <strong>Hours:</strong> ${hr === '*' ? 'Any hour (0-23)' : hr.includes('#') || hr.includes('L') || hr.includes('W') ? hr + ' (special)' : hr + ' (' + (parseInt(hr) === 0 ? '12 AM' : parseInt(hr) <= 12 ? parseInt(hr) + ' AM' : (parseInt(hr) - 12) + ' PM') + ')'}<br/>
+• <strong>Day of Month:</strong> ${dom === '*' ? 'Any day (1-31)' : dom === '?' ? 'No specific day' : dom.includes('W') ? dom + ' (nearest weekday)' : dom.includes('L') ? 'Last day of month' : dom}<br/>
+• <strong>Month:</strong> ${mon === '*' ? 'Every month (1-12)' : mon === '?' ? 'No specific month' : mon}<br/>
+• <strong>Day of Week:</strong> ${dow === '*' ? 'Any day (0-6)' : dow === '?' ? 'No specific day' : dow.includes('#') ? dow + ' (nth weekday)' : dow.includes('L') ? dow + ' (last weekday)' : dow + ' (' + getDayName(parseInt(dow)) + ')'}
+</div>`;
+      }
+      
+      // Try to use cronstrue first, fallback to enhanced explainCron
       if (window.cronstrue?.toString) {
         try {
           explanation = window.cronstrue.toString(cronOutText, { 
-            use24HourTimeFormat: true,
+            use24HourTimeFormat: false,
             verbose: true 
           });
           createToast('Expression explained successfully!', 'success');
         } catch (cronstrueErr) {
-          console.warn('cronstrue failed, using fallback:', cronstrueErr);
+          console.warn('cronstrue failed, using enhanced fallback:', cronstrueErr);
           explanation = explainCron(cronOutText);
-          createToast('Generated basic explanation', 'warning');
+          createToast('Generated enhanced explanation', 'success');
         }
       } else {
         explanation = explainCron(cronOutText);
-        createToast('Generated basic explanation', 'warning');
+        createToast('Generated enhanced explanation', 'success');
       }
       
-      explainText.textContent = explanation;
+      explainText.innerHTML = explanation + breakdown;
+      
+      // Show additional info for special patterns
+      if (cronOutText.includes('#')) {
+        showInfo('This uses the # special character for "nth weekday of month" (e.g., 6#2 = second Friday)', 'info');
+      } else if (cronOutText.includes('L')) {
+        showInfo('This uses the L special character for "last" (e.g., L = last day of month, 5L = last Friday)', 'info');
+      } else if (cronOutText.includes('W')) {
+        showInfo('This uses the W special character for "nearest weekday" (e.g., 15W = nearest weekday to 15th)', 'info');
+      }
+      
       showSuccessAnimation(explainText);
       
     } catch (err) {
@@ -466,8 +581,29 @@ function cronBuilderLogic() {
     if (!expr){ statusBox.className='status'; vt && (vt.innerHTML='<strong>—</strong>'); vd && (vd.textContent='Enter a cron expression.'); return; }
 
     const error = validateCronExpression(expr);
-    if (error){ statusBox.className='status err'; vt && (vt.innerHTML='<strong>Error:</strong>'); vd && (vd.textContent=error); desc && (desc.textContent=''); }
-    else { statusBox.className='status ok'; vt && (vt.innerHTML='<strong>Looks good.</strong>'); vd && (vd.textContent='Expression is valid.'); desc && (desc.textContent=(window.cronstrue?.toString?.(expr) || '')); }
+    if (error){ 
+      statusBox.className='status err'; 
+      vt && (vt.innerHTML='<strong>Error:</strong>'); 
+      vd && (vd.textContent=error); 
+      desc && (desc.innerHTML=''); 
+    } else { 
+      statusBox.className='status ok'; 
+      vt && (vt.innerHTML='<strong>Looks good.</strong>'); 
+      vd && (vd.textContent='Expression is valid.'); 
+      
+      // Use enhanced explanation
+      let explanation = '';
+      if (window.cronstrue?.toString) {
+        try {
+          explanation = window.cronstrue.toString(expr, { use24HourTimeFormat: false, verbose: true });
+        } catch {
+          explanation = explainCron(expr);
+        }
+      } else {
+        explanation = explainCron(expr);
+      }
+      desc && (desc.innerHTML = explanation);
+    }
   });
 
   // Apply buttons
@@ -477,12 +613,58 @@ function cronBuilderLogic() {
     if(!expr){ showInfo('Advanced expression input is empty.','warn'); const vb=$sel('validBox'); if(vb){ vb.className='status'; } return; }
     const parts=expr.split(/\s+/);
     if(parts.length<5 || parts.length>6){ showInfo('Invalid cron expression. Must have 5 or 6 fields.','err'); return; }
-    if (minuteSel) minuteSel.value=parts[0]; if (hourSel) hourSel.value=parts[1]; if (domSel) domSel.value=parts[2]; if (monthSel) monthSel.value=parts[3]; if (dowSel) dowSel.value=parts[4];
+    
+    // Don't try to set simple fields for complex expressions with special characters
+    if (!/[#LW\?]/.test(expr)) {
+      if (minuteSel) minuteSel.value=parts[0]; 
+      if (hourSel) hourSel.value=parts[1]; 
+      if (domSel) domSel.value=parts[2]; 
+      if (monthSel) monthSel.value=parts[3]; 
+      if (dowSel) dowSel.value=parts[4];
+    }
+    
     const out=$sel('cronOut'); if(out) out.textContent=expr;
-    const ex=$sel('explainText'); if(ex) ex.textContent='Updated from advanced expression.';
-    const error=validateCronExpression(expr); const vb=$sel('validBox'); const vt=$sel('validTitle'); const vd=$sel('validDetail');
-    if(error){ vb && (vb.className='status err'); vt && (vt.innerHTML='<strong>Error:</strong>'); vd && (vd.textContent=error); }
-    else { vb && (vb.className='status ok'); vt && (vt.innerHTML='<strong>Looks good.</strong>'); vd && (vd.textContent='Expression structure is valid.'); }
+    
+    // Use enhanced explanation
+    const ex=$sel('explainText'); 
+    if(ex) {
+      let explanation = '';
+      if (window.cronstrue?.toString) {
+        try {
+          explanation = window.cronstrue.toString(expr, { use24HourTimeFormat: false, verbose: true });
+        } catch {
+          explanation = explainCron(expr);
+        }
+      } else {
+        explanation = explainCron(expr);
+      }
+      ex.innerHTML = explanation;
+    }
+    
+    const error=validateCronExpression(expr); 
+    const vb=$sel('validBox'); 
+    const vt=$sel('validTitle'); 
+    const vd=$sel('validDetail');
+    if(error){ 
+      vb && (vb.className='status err'); 
+      vt && (vt.innerHTML='<strong>Error:</strong>'); 
+      vd && (vd.textContent=error); 
+    } else { 
+      vb && (vb.className='status ok'); 
+      vt && (vt.innerHTML='<strong>Looks good.</strong>'); 
+      vd && (vd.textContent='Expression structure is valid.'); 
+      
+      // Show additional info for special patterns
+      if (expr.includes('#')) {
+        showInfo('Applied expression with # special character for "nth weekday of month"', 'info');
+      } else if (expr.includes('L')) {
+        showInfo('Applied expression with L special character for "last"', 'info');
+      } else if (expr.includes('W')) {
+        showInfo('Applied expression with W special character for "nearest weekday"', 'info');
+      } else {
+        showInfo('Advanced expression applied successfully', 'info');
+      }
+    }
   });
 
   const btnSpecialApply=$sel('btnSpecialApply');
@@ -490,13 +672,40 @@ function cronBuilderLogic() {
     const expr=$sel('special-cron')?.value?.trim() || '';
     if(!expr){ showInfo('Special expression input is empty.','warn'); const vb=$sel('validBox'); if(vb){ vb.className='status'; } return; }
     if(!/[WL\?#]/.test(expr)){ showInfo('Special expression must contain W, L, ?, or #.','err'); return; }
-    if (domSel) domSel.value = expr.includes('L') ? '31' : '1';
-    if (dowSel) dowSel.value = expr.includes('W') ? '1' : '0';
+    
+    // Don't set simple fields for special expressions
     const out=$sel('cronOut'); if(out) out.textContent=expr;
-    const ex=$sel('explainText'); if(ex) ex.textContent='Updated from special expression.';
-    const error=validateCronExpression(expr); const vb=$sel('validBox'); const vt=$sel('validTitle'); const vd=$sel('validDetail');
-    if(error){ vb && (vb.className='status err'); vt && (vt.innerHTML='<strong>Error:</strong>'); vd && (vd.textContent=error); }
-    else { vb && (vb.className='status ok'); vt && (vt.innerHTML='<strong>Looks good.</strong>'); vd && (vd.textContent='Expression structure is valid.'); }
+    
+    // Use enhanced explanation
+    const ex=$sel('explainText'); 
+    if(ex) {
+      let explanation = '';
+      if (window.cronstrue?.toString) {
+        try {
+          explanation = window.cronstrue.toString(expr, { use24HourTimeFormat: false, verbose: true });
+        } catch {
+          explanation = explainCron(expr);
+        }
+      } else {
+        explanation = explainCron(expr);
+      }
+      ex.innerHTML = explanation;
+    }
+    
+    const error=validateCronExpression(expr); 
+    const vb=$sel('validBox'); 
+    const vt=$sel('validTitle'); 
+    const vd=$sel('validDetail');
+    if(error){ 
+      vb && (vb.className='status err'); 
+      vt && (vt.innerHTML='<strong>Error:</strong>'); 
+      vd && (vd.textContent=error); 
+    } else { 
+      vb && (vb.className='status ok'); 
+      vt && (vt.innerHTML='<strong>Looks good.</strong>'); 
+      vd && (vd.textContent='Expression structure is valid.'); 
+      showInfo('Special expression applied successfully', 'info');
+    }
   });
 
   // Parse button
@@ -528,13 +737,41 @@ function cronBuilderLogic() {
     if(vb) vb.className='status ok';
     if(vt) vt.innerHTML='<strong>Looks good.</strong>';
     if(vd) vd.textContent='Expression is valid.';
-    if(ex) ex.textContent = (window.cronstrue?.toString?.(expr) || 'Could not generate description.');
+    
+    // Use enhanced explanation
+    if(ex) {
+      let explanation = '';
+      if (window.cronstrue?.toString) {
+        try {
+          explanation = window.cronstrue.toString(expr, { use24HourTimeFormat: false, verbose: true });
+        } catch {
+          explanation = explainCron(expr);
+        }
+      } else {
+        explanation = explainCron(expr);
+      }
+      ex.innerHTML = explanation;
+    }
+    
     // Optionally show next run info in infoBox
     const Parser = getCronParser();
     if (Parser) {
-      try { const interval=Parser.parseExpression(expr); const next=interval.next().toString(); showInfo('Next run: '+next,'info'); } catch {/* ignore */}
+      try { 
+        const interval=Parser.parseExpression(expr); 
+        const next=interval.next().toString(); 
+        showInfo('Next run: '+next,'info'); 
+      } catch {/* ignore */}
     }
     if (/^\* \* \* \* \*$/.test(expr)) showInfo('Warning: This cron runs every minute. This can be risky!','warn');
+    
+    // Show pattern info
+    if (expr.includes('#')) {
+      showInfo('This expression uses # for "nth weekday of month" (e.g., 6#2 = second Friday)', 'info');
+    } else if (expr.includes('L')) {
+      showInfo('This expression uses L for "last" (e.g., L = last day, 5L = last Friday)', 'info');
+    } else if (expr.includes('W')) {
+      showInfo('This expression uses W for "nearest weekday" (e.g., 15W = nearest weekday to 15th)', 'info');
+    }
   });
 }
 
