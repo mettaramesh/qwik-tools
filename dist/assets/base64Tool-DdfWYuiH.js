@@ -1,4 +1,4 @@
-import{e as l}from"./index-DPKIDNlV.js";import{s as b}from"./domUtils-BxdcSh8e.js";function p(s){s.innerHTML=`
+import{e as l}from"./index-BKVAbVAU.js";import{s as b}from"./domUtils-BxdcSh8e.js";function p(s){s.innerHTML=`
         <div class="tool-header">
             <h2>Base64 Text Encoder/Decoder</h2>
             <p>Encode and decode Base64 text</p>

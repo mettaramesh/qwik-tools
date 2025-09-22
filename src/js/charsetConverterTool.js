@@ -140,10 +140,10 @@ export function loadCharsetConverterTool(container) {
     'encodeWith'
   ];
   
-  safeSetup(() => setupCharsetConverter(), criticalElements);
+  safeSetup(() => setupCharsetConverter(container), criticalElements);
 }
 
-function setupCharsetConverter() {
+function setupCharsetConverter(container) {
   // Keep all the original functionality
   const hasTextDecoder = typeof window.TextDecoder === 'function';
   const hasTextEncoder = typeof window.TextEncoder === 'function';
